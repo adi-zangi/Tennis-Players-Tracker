@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:key="notifications"
+        app:title="Notifications">
+
+        <SwitchPreferenceCompat
+            app:key="notifications_enabled"
+            app:title="Enable notifications"
+            app:defaultValue="true" />
+
+        <ListPreference
+            app:key="notification_frequency"
+            app:title="Notification frequency"
+            app:entries="@array/pref_notif_freq_entries"
+            app:entryValues="@array/pref_notif_freq_values"
+            app:defaultValue="daily"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:key="notif_day_of_week"
+            app:title="Day of the week"
+            app:entries="@array/pref_notif_day_of_week_entries"
+            app:entryValues="@array/pref_notif_day_of_week_values"
+            app:defaultValue="Sunday"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:key="notification_time"
+            app:title="Notification time"
+            app:entries="@array/pref_notif_time_entries"
+            app:entryValues="@array/pref_notif_time_values"
+            app:defaultValue="9:00"
+            app:useSimpleSummaryProvider="true" />
+
+        <Preference
+            app:key="more_notif_settings"
+            app:title="More notification settings"
+            app:summary="Change sound, vibration, and priority" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="network_preferences"
+        app:title="Network preferences">
+
+        <SwitchPreferenceCompat
+            app:key="wifi_only"
+            app:title="Use wifi only"
+            app:summary="This app uses the network for a short time daily. If this is enabled,
+             network operations will occur only when wifi is connected."
+            app:defaultValue="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
