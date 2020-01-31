@@ -16,6 +16,6 @@ All classes have comments in the headers but some have not been implemented yet.
 This project was started in November 2019 and it is in progress.
 
 ## Tools Used
-Development environemnt: Android Studio
-Programming language: Java
-Markup language: XML
+Development environemnt: Android Studio <br />
+Programming language: Java <br />
+Markup language: XML <br />
