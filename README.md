@@ -10,7 +10,7 @@ and who won each tournament.
 Planning, design, and code: Adi Zangi
 
 ## Project Status
-All classes have comments in the headers but most of them have not been implemented yet. The project does not have tests yet.
+The application is under development. The classes for the application are defined with comments in the header about future implementation.
 
 ## History
 This project was started in November 2019 and it is in progress.
