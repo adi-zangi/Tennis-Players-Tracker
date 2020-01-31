@@ -7,7 +7,7 @@ It also sends notifications to inform the user about when the selected players a
 and who won each tournament.
 
 ## Collaborators
-Planning, Design, and code: Adi Zangi
+Planning, design, and code: Adi Zangi
 
 ## Project Status
 All classes have comments in the headers but some have not been implemented yet. The project does not have tests yet.
