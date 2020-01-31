@@ -10,7 +10,7 @@ and who won each tournament.
 Planning, design, and code: Adi Zangi
 
 ## Project Status
-All classes have comments in the headers but some have not been implemented yet. The project does not have tests yet.
+All classes have comments in the headers but most of them have not been implemented yet. The project does not have tests yet.
 
 ## History
 This project was started in November 2019 and it is in progress.
@@ -19,3 +19,4 @@ This project was started in November 2019 and it is in progress.
 Development environment: Android Studio <br />
 Programming language: Java <br />
 Markup language: XML <br />
+External libraries: Jsoup
