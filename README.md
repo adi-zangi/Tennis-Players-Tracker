@@ -1,6 +1,21 @@
 # MyPlayers
 The app MyPlayers lets the user stay informed about tennis players’ scores and about tennis tournaments that are going on.
-It enables to select tennis players to track and view those players' latest scores, which are updated daily.
-It also sends notifications to inform the user when the selected players areplaying, which tournament is currently going on,
+
+## Features
+The app enables to select tennis players to track and view those players' latest scores, which are updated daily.
+It also sends notifications to inform the user about when the selected players are playing, which tournament is currently going on,
 and who won each tournament.
-This project is unfinished and many of the classes have not been implemented yet. It does not have tests.
+
+## Collaborators
+Planning, Design, and code: Adi Zangi
+
+## Project Status
+All classes have comments in the headers but some have not been implemented yet. The project does not have tests yet.
+
+## History
+This project was started in November 2019 and it is in progress.
+
+## Tools Used
+Development environemnt: Android Studio
+Programming language: Java
+Markup language: XML
