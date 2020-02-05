@@ -1,4 +1,3 @@
-
 /*
    Goes through the ESPN tennis website and extracts information
  */
@@ -29,7 +28,9 @@ public class ExtractDataHelper {
 
     /*
        Constructs an ExtractDataHelper
-       Fetches and parses HTML pages from the ESPN tennis website
+       Fetches and parses HTML documents of the Men's Tennis Rankings,
+       Women's Tennis Rankings, Daily Results, and Yesterday's Results
+       from the ESPN tennis website
        Throws IOException if there was an error while getting an HTML page
      */
     public ExtractDataHelper() throws IOException {
@@ -38,9 +39,6 @@ public class ExtractDataHelper {
         SimpleDateFormat dateFormat =
                 new SimpleDateFormat("yyyyMMdd", Locale.US);
         String dateOfYesterday = dateFormat.format(calendar.getTime());
-
-        // Gets HTML Documents for Men's Tennis Rankings, Women's Tennis Rankings,
-        // Daily Results, and Yesterday's Results web pages
         mRankings = Jsoup.connect("https://www.espn.com/tennis/rankings").get();
         wRankings = Jsoup.connect
                 ("https://www.espn.com/tennis/rankings/_/type/wta").get();
