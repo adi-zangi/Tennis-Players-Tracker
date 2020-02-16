@@ -1,7 +1,6 @@
 /*
    Adi Zangi
    2019-2020
-
  */
 
 package com.adizangi.myplayers;
@@ -29,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(getClass().getSimpleName(), "Instance of MainActivity created");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }

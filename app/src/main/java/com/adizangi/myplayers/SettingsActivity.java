@@ -1,7 +1,3 @@
-/*
-   The settings window of the app
- */
-
 package com.adizangi.myplayers;
 
 import android.os.Bundle;
@@ -26,9 +22,6 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    /*
-       Displays the app preferences and responds to preference changes
-     */
     public static class SettingsFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
