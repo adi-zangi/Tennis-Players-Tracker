@@ -32,8 +32,8 @@ public class PlayerChoicesGetter {
        The list contains the top 100 men players and the top 100 women players
        It is sorted by ranking in descending order, and with each man tennis
        player followed by a woman tennis player with the same ranking
-       The ESPN website has an empty rankings table at certain times of the
-       year when there are no tennis tournaments
+       The ESPN website doesn't have tennis rankings when a new year starts
+       and there have not been any tennis tournaments in the new year
        In this case, returns an empty list
      */
     public List<String> getPlayerChoicesList() {
