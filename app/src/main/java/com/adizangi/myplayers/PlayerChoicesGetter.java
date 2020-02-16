@@ -29,14 +29,19 @@ public class PlayerChoicesGetter {
 
     /*
        Returns the player choices list
-       The list contains the top 100 men tennis players and the top 100 women
-       tennis players
-       It is sorted by ranking in descending order, and with each men tennis
+       The list contains the top 100 men players and the top 100 women players
+       It is sorted by ranking in descending order, and with each man tennis
        player followed by a woman tennis player with the same ranking
+       The ESPN website has an empty rankings table at certain times of the
+       year when there are no tennis tournaments
+       In this case, returns an empty list
      */
     public List<String> getPlayerChoicesList() {
         List<String> playerChoices = new ArrayList<>();
         Element mRankingsTable = mRankings.selectFirst("table");
+        if (mRankingsTable == null) {
+            return playerChoices;
+        }
         Elements mRows = mRankingsTable.select("tr");
         Element wRankingsTable = wRankings.selectFirst("table");
         Elements wRows = wRankingsTable.select("tr");
