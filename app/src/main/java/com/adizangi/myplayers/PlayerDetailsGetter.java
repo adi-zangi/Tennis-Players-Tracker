@@ -40,8 +40,9 @@ public class PlayerDetailsGetter {
                 Document playerDetailsDocument = Jsoup.connect(playerDetailsURL).get();
                 System.out.println(getName(playerDetailsDocument));
                 System.out.println(getRanking(playerDetailsDocument));
-                /*
                 getTitles();
+
+                /*
                 getTournamentStanding();
                 getCurrentTournament();
                 getLatestMatchResult();
@@ -85,8 +86,15 @@ public class PlayerDetailsGetter {
     }
 
     private String getRanking(Document playerDetails) {
-        Element generalInfoList = playerDetails.selectFirst("ul.general-info");
-        return generalInfoList.text();
+        Element detailsList = playerDetails.select("ul").get(1);
+        Elements listItems = detailsList.select("li");
+        String rankingFullText = listItems.get(0).text();
+        String ranking = rankingFullText.substring(rankingFullText.indexOf("#") + 1);
+        return "Current ranking: " + ranking;
+    }
+
+    private String getTitles(Document playerDetails) {
+
     }
 
 }
