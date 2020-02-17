@@ -40,7 +40,7 @@ public class PlayerDetailsGetter {
                 Document playerDetailsDocument = Jsoup.connect(playerDetailsURL).get();
                 System.out.println(getName(playerDetailsDocument));
                 System.out.println(getRanking(playerDetailsDocument));
-                getTitles();
+                System.out.println(getTitles(playerDetailsDocument));
 
                 /*
                 getTournamentStanding();
@@ -94,7 +94,14 @@ public class PlayerDetailsGetter {
     }
 
     private String getTitles(Document playerDetails) {
-
+        Element playerStatsDiv = playerDetails.selectFirst("div.player-stats");
+        String statsFullTitle = playerStatsDiv.selectFirst("p").text();
+        String year = statsFullTitle.substring(0, statsFullTitle.indexOf(" "));
+        Element statsTable = playerStatsDiv.selectFirst("table");
+        String singlesTitles = statsTable.select("tr").get(1)
+                .selectFirst("td").text();
+        return year + " singles titles: " + singlesTitles;
     }
+
 
 }
