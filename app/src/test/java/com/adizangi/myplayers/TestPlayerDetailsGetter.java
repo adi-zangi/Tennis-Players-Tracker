@@ -14,7 +14,7 @@ public class TestPlayerDetailsGetter {
             PlayerDetailsGetter detailsGetter = new PlayerDetailsGetter(mRankings, wRankings);
             detailsGetter.getPlayerDetailsMap();
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 

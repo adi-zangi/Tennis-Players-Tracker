@@ -39,11 +39,11 @@ public class PlayerDetailsGetter {
                 String playerDetailsURL = playerNameLink.attr("abs:href");
                 Document playerDetailsDocument = Jsoup.connect(playerDetailsURL).get();
                 System.out.println(getName(playerDetailsDocument));
-                System.out.println(getRanking(playerDetailsDocument));
-                System.out.println(getTitles(playerDetailsDocument));
+                //System.out.println(getRanking(playerDetailsDocument));
+                //System.out.println(getTitles(playerDetailsDocument));
+                //System.out.println(getTournamentStanding(playerDetailsDocument));
 
                 /*
-                getTournamentStanding();
                 getCurrentTournament();
                 getLatestMatchResult();
                 getUpcomingMatch();
@@ -82,7 +82,12 @@ public class PlayerDetailsGetter {
     }
 
     private String getName(Document playerDetails) {
-        return playerDetails.selectFirst("div.mod-content > h1").text();
+        Element div = playerDetails.selectFirst("div.mod-content");
+        System.out.println("has div: " + div);
+        Elements h1s = div.select("h1");
+        System.out.println("h1: " + h1s.size());
+        return "";
+        //return playerDetails.selectFirst("div.mod-content > h1").text();
     }
 
     private String getRanking(Document playerDetails) {
@@ -103,5 +108,51 @@ public class PlayerDetailsGetter {
         return year + " singles titles: " + singlesTitles;
     }
 
+    private String getTournamentStanding(Document playerDetails) {
+        Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
+        String latestTournamentTitle = latestTournamentDiv.selectFirst("h4").text();
+        Element latestTournamentTable = latestTournamentDiv.selectFirst("table");
+        System.out.println(latestTournamentTitle);
+        System.out.println(latestTournamentTable.text());
+        /*
+        Element latestTournamentTable = playerDetails.select("table").get(1);
+        Elements rows = latestTournamentTable.select("tr");
+        for (int row = 0; row < rows.size(); row++) {
+            System.out.println("Row: " + row);
+            System.out.println(rows.get(row).text());
+        }
+        /*
+        String tableText = latestTournamentTable.text();
+        System.out.println(tableText);
+        if (!tableText.contains("CURRENT TOURNAMENT") ||
+                !tableText.contains("Singles")) {
+            return "not playing";
+        }
+        Elements rows = latestTournamentTable.select("tr");
+        int numOfRows = rows.size();
+        int row = 2;
+        while (row < numOfRows) {
+            Elements columns = rows.get(row).select("td");
+            System.out.println(columns.text());
+            if (columns.size() < 4) {
+                break;
+            }
+            String matchResult = columns.get(2).text();
+            if (matchResult.equals("L")) {
+                return "out";
+            }
+            row++;
+        }
+        Element lastSinglesRow = rows.get(row - 1);
+        System.out.println("Last singles row: " + lastSinglesRow.text());
+        String roundNumber = lastSinglesRow.selectFirst("td").text();
+        if (roundNumber.equals("1st")) {
+            return roundNumber;
+        } else {
+            return "advanced to " + roundNumber;
+        }
+         */
+        return "";
+    }
 
 }
