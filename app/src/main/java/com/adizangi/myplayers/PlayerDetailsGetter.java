@@ -41,9 +41,9 @@ public class PlayerDetailsGetter {
                 System.out.println(getTitles(playerDetailsDocument));
                 System.out.println(getTournamentStanding(playerDetailsDocument));
                 System.out.println(getCurrentTournament(playerDetailsDocument));
+                System.out.println(getLatestMatchResult(playerDetailsDocument));
 
                 /*
-                getLatestMatchResult();
                 getUpcomingMatch();
                 getAllMatchResultsURL();
 
@@ -136,7 +136,32 @@ public class PlayerDetailsGetter {
     }
 
     private String getCurrentTournament(Document playerDetails) {
+        // only call if needed
+        Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
+        return latestTournamentDiv.selectFirst("a").text();
+    }
 
+    private String getLatestMatchResult(Document playerDetails) {
+        // only call if needed- makes error otherwise
+        Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
+        Element latestTournamentTable = latestTournamentDiv.select("table").get(1);
+        Elements rows = latestTournamentTable.select("tr");
+        int numOfRows = rows.size();
+        int row = 2;
+        while (row < numOfRows) {
+            Elements columns = rows.get(row).select("td");
+            if (columns.size() < 4) {
+                row--;
+                break;
+            }
+            String matchResult = columns.get(2).text();
+            if (matchResult.equals("L")) {
+                break;
+            }
+            row++;
+        }
+        Element lastMatchResultRow = rows.get(row);
+        
     }
 
 }
