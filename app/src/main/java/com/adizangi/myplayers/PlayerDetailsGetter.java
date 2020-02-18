@@ -6,9 +6,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PlayerDetailsGetter {
@@ -39,9 +37,9 @@ public class PlayerDetailsGetter {
                 String playerDetailsURL = playerNameLink.attr("abs:href");
                 Document playerDetailsDocument = Jsoup.connect(playerDetailsURL).get();
                 System.out.println(getName(playerDetailsDocument));
-                //System.out.println(getRanking(playerDetailsDocument));
-                //System.out.println(getTitles(playerDetailsDocument));
-                //System.out.println(getTournamentStanding(playerDetailsDocument));
+                System.out.println(getRanking(playerDetailsDocument));
+                System.out.println(getTitles(playerDetailsDocument));
+                System.out.println(getTournamentStanding(playerDetailsDocument));
 
                 /*
                 getCurrentTournament();
@@ -82,12 +80,7 @@ public class PlayerDetailsGetter {
     }
 
     private String getName(Document playerDetails) {
-        Element div = playerDetails.selectFirst("div.mod-content");
-        System.out.println("has div: " + div);
-        Elements h1s = div.select("h1");
-        System.out.println("h1: " + h1s.size());
-        return "";
-        //return playerDetails.selectFirst("div.mod-content > h1").text();
+        return playerDetails.selectFirst("h1").text();
     }
 
     private String getRanking(Document playerDetails) {
@@ -109,22 +102,12 @@ public class PlayerDetailsGetter {
     }
 
     private String getTournamentStanding(Document playerDetails) {
+        // Can cause error
         Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
         String latestTournamentTitle = latestTournamentDiv.selectFirst("h4").text();
-        Element latestTournamentTable = latestTournamentDiv.selectFirst("table");
-        System.out.println(latestTournamentTitle);
-        System.out.println(latestTournamentTable.text());
-        /*
-        Element latestTournamentTable = playerDetails.select("table").get(1);
-        Elements rows = latestTournamentTable.select("tr");
-        for (int row = 0; row < rows.size(); row++) {
-            System.out.println("Row: " + row);
-            System.out.println(rows.get(row).text());
-        }
-        /*
+        Element latestTournamentTable = latestTournamentDiv.select("table").get(1);
         String tableText = latestTournamentTable.text();
-        System.out.println(tableText);
-        if (!tableText.contains("CURRENT TOURNAMENT") ||
+        if (!latestTournamentTitle.equals("CURRENT TOURNAMENT") ||
                 !tableText.contains("Singles")) {
             return "not playing";
         }
@@ -133,7 +116,6 @@ public class PlayerDetailsGetter {
         int row = 2;
         while (row < numOfRows) {
             Elements columns = rows.get(row).select("td");
-            System.out.println(columns.text());
             if (columns.size() < 4) {
                 break;
             }
@@ -151,8 +133,6 @@ public class PlayerDetailsGetter {
         } else {
             return "advanced to " + roundNumber;
         }
-         */
-        return "";
     }
 
 }
