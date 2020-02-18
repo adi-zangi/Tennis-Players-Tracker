@@ -40,9 +40,9 @@ public class PlayerDetailsGetter {
                 System.out.println(getRanking(playerDetailsDocument));
                 System.out.println(getTitles(playerDetailsDocument));
                 System.out.println(getTournamentStanding(playerDetailsDocument));
+                System.out.println(getCurrentTournament(playerDetailsDocument));
 
                 /*
-                getCurrentTournament();
                 getLatestMatchResult();
                 getUpcomingMatch();
                 getAllMatchResultsURL();
@@ -102,13 +102,14 @@ public class PlayerDetailsGetter {
     }
 
     private String getTournamentStanding(Document playerDetails) {
-        // Can cause error
         Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
         String latestTournamentTitle = latestTournamentDiv.selectFirst("h4").text();
+        if (!latestTournamentTitle.equals("CURRENT TOURNAMENT")) {
+            return "not playing";
+        }
         Element latestTournamentTable = latestTournamentDiv.select("table").get(1);
         String tableText = latestTournamentTable.text();
-        if (!latestTournamentTitle.equals("CURRENT TOURNAMENT") ||
-                !tableText.contains("Singles")) {
+        if (!tableText.contains("Singles")) {
             return "not playing";
         }
         Elements rows = latestTournamentTable.select("tr");
@@ -126,13 +127,16 @@ public class PlayerDetailsGetter {
             row++;
         }
         Element lastSinglesRow = rows.get(row - 1);
-        System.out.println("Last singles row: " + lastSinglesRow.text());
         String roundNumber = lastSinglesRow.selectFirst("td").text();
         if (roundNumber.equals("1st")) {
             return roundNumber;
         } else {
             return "advanced to " + roundNumber;
         }
+    }
+
+    private String getCurrentTournament(Document playerDetails) {
+
     }
 
 }
