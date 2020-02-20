@@ -151,7 +151,11 @@ public class PlayerDetailsGetter {
         while (row < numOfRows) {
             Elements columns = rows.get(row).select("td");
             if (columns.size() < 4) {
-                row--;
+                Element lastRow = rows.get(row - 1);
+                String lastRound = lastRow.selectFirst("td").text();
+                if (lastRound.equals("Final")) {
+
+                }
                 break;
             }
             String matchResult = columns.get(2).text();
@@ -161,7 +165,7 @@ public class PlayerDetailsGetter {
             row++;
         }
         Element lastMatchResultRow = rows.get(row);
-        
+
     }
 
 }
