@@ -106,7 +106,8 @@ public class PlayerDetailsGetter {
 
     private String getTournamentStanding(Document playerDetails) {
         // doubles and team cup? more complicated because can lose and not be out
-        // might say advanced to final if player already won final
+        // might say advanced to final if player already won final- could say advanced
+        // if reaches - and won if never reaches -
         Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
         String latestTournamentTitle = latestTournamentDiv.selectFirst("h4").text();
         if (!latestTournamentTitle.equals("CURRENT TOURNAMENT")) {
@@ -151,17 +152,20 @@ public class PlayerDetailsGetter {
         int row = 2;
         while (row < numOfRows) {
             Elements columns = rows.get(row).select("td");
-            String matchResult = columns.get(2).text();
-            if (matchResult.equals("-")) {
-                row--;
-                break;
-            }
-            if (!matchResult.equals("W")) {
+            if (columns.size() < 4) {
                 break;
             }
             row++;
         }
-        Element lastMatchResultRow = rows.get(row);
+        Element latestResultRow = rows.get(row - 1);
+        Elements columns = latestResultRow.select("td");
+        String matchResult = columns.get(2).text();
+        if (matchResult.equals("-")) {
+            latestResultRow = rows.get(row - 2);
+            columns = latestResultRow.select("td");
+            matchResult = columns.get(2).text();
+        }
+        // decide on format of latest match result
         return null;
     }
 
