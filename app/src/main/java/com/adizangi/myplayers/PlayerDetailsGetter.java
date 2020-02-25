@@ -106,6 +106,7 @@ public class PlayerDetailsGetter {
 
     private String getTournamentStanding(Document playerDetails) {
         // doubles and team cup? more complicated because can lose and not be out
+        // might say advanced to final if player already won final
         Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
         String latestTournamentTitle = latestTournamentDiv.selectFirst("h4").text();
         if (!latestTournamentTitle.equals("CURRENT TOURNAMENT")) {
@@ -125,28 +126,24 @@ public class PlayerDetailsGetter {
                 break;
             }
             String matchResult = columns.get(2).text();
-            if (matchResult.equals("L")) {
+            if (!matchResult.equals("W") && !matchResult.equals("-")) {
                 return "out";
             }
             row++;
         }
         Element lastSinglesRow = rows.get(row - 1);
         String roundNumber = lastSinglesRow.selectFirst("td").text();
-        if (roundNumber.equals("1st")) {
-            return roundNumber;
-        } else {
-            return "advanced to " + roundNumber;
-        }
+        return "advanced to " + roundNumber;
     }
 
     private String getCurrentTournament(Document playerDetails) {
-        // only call if needed
+        // only call if playing is playing (our or in)- makes error otherwise
         Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
         return latestTournamentDiv.selectFirst("a").text();
     }
 
     private String getLatestMatchResult(Document playerDetails) {
-        // only call if needed- makes error otherwise
+        // only call if playing is playing (our or in)- makes error otherwise
         Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
         Element latestTournamentTable = latestTournamentDiv.select("table").get(1);
         Elements rows = latestTournamentTable.select("tr");
@@ -154,16 +151,12 @@ public class PlayerDetailsGetter {
         int row = 2;
         while (row < numOfRows) {
             Elements columns = rows.get(row).select("td");
-            if (columns.size() < 4) {
-                Element lastRow = rows.get(row - 1);
-                String lastRound = lastRow.selectFirst("td").text();
-                if (lastRound.equals("Final")) {
-
-                }
+            String matchResult = columns.get(2).text();
+            if (matchResult.equals("-")) {
+                row--;
                 break;
             }
-            String matchResult = columns.get(2).text();
-            if (matchResult.equals("L")) {
+            if (!matchResult.equals("W")) {
                 break;
             }
             row++;
