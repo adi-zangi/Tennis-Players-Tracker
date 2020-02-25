@@ -48,6 +48,7 @@ public class PlayerDetailsGetter {
                 if (standing.contains("advanced")) {
                     System.out.println(getUpcomingMatch(playerDetailsDocument));
                 }
+                System.out.println(getAllMatchResultsURL(playerDetailsDocument));
                 /*
                 getUpcomingMatch();
                 getAllMatchResultsURL();
@@ -204,7 +205,9 @@ public class PlayerDetailsGetter {
     }
 
     private String getAllMatchResultsURL(Document playerDetails) {
-        return null;
+        String resultsURL = playerDetails.selectFirst("a:contains(Results)")
+                .attr("abs:href");
+        return resultsURL;
     }
 
 }
