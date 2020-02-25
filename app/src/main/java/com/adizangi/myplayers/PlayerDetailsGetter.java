@@ -36,16 +36,18 @@ public class PlayerDetailsGetter {
                 Element playerNameLink = mColumns.get(2).selectFirst("a");
                 String playerDetailsURL = playerNameLink.attr("abs:href");
                 Document playerDetailsDocument = Jsoup.connect(playerDetailsURL).get();
-                if (rowIndex == 1) {
-                    System.out.println(playerDetailsDocument);
+                System.out.println(getName(playerDetailsDocument));
+                System.out.println(getRanking(playerDetailsDocument));
+                System.out.println(getTitles(playerDetailsDocument));
+                String standing = getTournamentStanding(playerDetailsDocument);
+                System.out.println(standing);
+                if (!standing.equals("not playing")) {
+                    System.out.println(getCurrentTournament(playerDetailsDocument));
+                    System.out.println(getLatestMatchResult(playerDetailsDocument));
                 }
-                //System.out.println(getName(playerDetailsDocument));
-                //System.out.println(getRanking(playerDetailsDocument));
-                //System.out.println(getTitles(playerDetailsDocument));
-                //System.out.println(getTournamentStanding(playerDetailsDocument));
-                //System.out.println(getCurrentTournament(playerDetailsDocument));
-                //System.out.println(getLatestMatchResult(playerDetailsDocument));
-
+                if (standing.contains("advanced")) {
+                    System.out.println(getUpcomingMatch(playerDetailsDocument));
+                }
                 /*
                 getUpcomingMatch();
                 getAllMatchResultsURL();
@@ -106,19 +108,18 @@ public class PlayerDetailsGetter {
 
     private String getTournamentStanding(Document playerDetails) {
         // doubles and team cup? more complicated because can lose and not be out
-        // might say advanced to final if player already won final- could say advanced
-        // if reaches - and won if never reaches -
+        // check if last check is relevant
         Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
         String latestTournamentTitle = latestTournamentDiv.selectFirst("h4").text();
         if (!latestTournamentTitle.equals("CURRENT TOURNAMENT")) {
             return "not playing";
         }
         Element latestTournamentTable = latestTournamentDiv.select("table").get(1);
-        String tableText = latestTournamentTable.text();
-        if (!tableText.contains("Singles")) {
+        Elements rows = latestTournamentTable.select("tr");
+        String tournamentType = rows.get(1).text();
+        if (!tournamentType.contains("Singles")) {
             return "not playing";
         }
-        Elements rows = latestTournamentTable.select("tr");
         int numOfRows = rows.size();
         int row = 2;
         while (row < numOfRows) {
@@ -133,8 +134,13 @@ public class PlayerDetailsGetter {
             row++;
         }
         Element lastSinglesRow = rows.get(row - 1);
-        String roundNumber = lastSinglesRow.selectFirst("td").text();
-        return "advanced to " + roundNumber;
+        Elements columns = lastSinglesRow.select("td");
+        String matchResult = columns.get(2).text();
+        if (matchResult.equals("-")) {
+            String roundNumber = columns.get(0).text();
+            return "advanced to " + roundNumber;
+        }
+        return "winner";
     }
 
     private String getCurrentTournament(Document playerDetails) {
@@ -145,6 +151,7 @@ public class PlayerDetailsGetter {
 
     private String getLatestMatchResult(Document playerDetails) {
         // only call if playing is playing (our or in)- makes error otherwise
+        // might want to change format of match result
         Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
         Element latestTournamentTable = latestTournamentDiv.select("table").get(1);
         Elements rows = latestTournamentTable.select("tr");
@@ -165,7 +172,38 @@ public class PlayerDetailsGetter {
             columns = latestResultRow.select("td");
             matchResult = columns.get(2).text();
         }
-        // decide on format of latest match result
+        String round = columns.get(0).text();
+        String opponent = columns.get(1).text();
+        String score = columns.get(3).text();
+        return round + "- " + opponent + " " + score;
+    }
+
+    private String getUpcomingMatch(Document playerDetails) {
+        // only call if advanced
+        String playerName = playerDetails.selectFirst("h1").text();
+        Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
+        Element latestTournamentTable = latestTournamentDiv.select("table").get(1);
+        Elements rows = latestTournamentTable.select("tr");
+        int numOfRows = rows.size();
+        int row = 2;
+        while (row < numOfRows) {
+            Elements columns = rows.get(row).select("td");
+            String matchResult = columns.get(2).text();
+            if (matchResult.equals("-")) {
+                break;
+            }
+            row++;
+        }
+        Element upcomingMatchRow = rows.get(row);
+        Elements columns = upcomingMatchRow.select("td");
+        String upcomingMatchDetails = columns.get(3).text();
+        int secondSpaceIndex = upcomingMatchDetails
+                .indexOf(" ", upcomingMatchDetails.indexOf(" ") + 1);
+        String upcomingMatchTime = upcomingMatchDetails.substring(secondSpaceIndex + 1);
+        return playerName + " is playing today at " + upcomingMatchTime;
+    }
+
+    private String getAllMatchResultsURL(Document playerDetails) {
         return null;
     }
 
