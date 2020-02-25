@@ -36,50 +36,47 @@ public class PlayerDetailsGetter {
                 Element playerNameLink = mColumns.get(2).selectFirst("a");
                 String playerDetailsURL = playerNameLink.attr("abs:href");
                 Document playerDetailsDocument = Jsoup.connect(playerDetailsURL).get();
-                System.out.println(getName(playerDetailsDocument));
-                System.out.println(getRanking(playerDetailsDocument));
-                System.out.println(getTitles(playerDetailsDocument));
-                String standing = getTournamentStanding(playerDetailsDocument);
-                System.out.println(standing);
-                if (!standing.equals("not playing")) {
-                    System.out.println(getCurrentTournament(playerDetailsDocument));
-                    System.out.println(getLatestMatchResult(playerDetailsDocument));
+                try {
+                    System.out.println(getName(playerDetailsDocument));
+                    System.out.println(getRanking(playerDetailsDocument));
+                    System.out.println(getTitles(playerDetailsDocument));
+                    String standing = getTournamentStanding(playerDetailsDocument);
+                    System.out.println(standing);
+                    if (!standing.equals("not playing")) {
+                        System.out.println(getCurrentTournament(playerDetailsDocument));
+                        System.out.println(getLatestMatchResult(playerDetailsDocument));
+                    }
+                    if (standing.contains("advanced")) {
+                        System.out.println(getUpcomingMatch(playerDetailsDocument));
+                    }
+                    System.out.println(getAllMatchResultsURL(playerDetailsDocument));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                if (standing.contains("advanced")) {
-                    System.out.println(getUpcomingMatch(playerDetailsDocument));
-                }
-                System.out.println(getAllMatchResultsURL(playerDetailsDocument));
-                /*
-                getUpcomingMatch();
-                getAllMatchResultsURL();
 
-                String name = columns.get(2).text();
-                String rankingDescription = "Current ranking: " + columns.get(0).text();
-                String titlesDescription = getTitlesDescription(playerPage);
-                String currentTournament = getCurrentTournament(playerPage);
-                String tournamentStatus = getTournamentStatus(playerPage);
-                String latestMatchResult = getLatestMatchResult(playerPage);
-                String upcomingMatch = getUpcomingMatch(playerPage);
-                String resultsPageURL = playerPage.selectFirst("a:contains(Results)")
-                        .attr("abs:href");
-
-                PlayerData playerData = new PlayerData.PlayerDataBuilder(name)
-                        .setRanking(rankingDescription)
-                        .setTitles(titlesDescription)
-                        .setCurrentTournament(currentTournament)
-                        .setTournamentStatus(tournamentStatus)
-                        .setLatestMatchResult(latestMatchResult)
-                        .setUpcomingMatch(upcomingMatch)
-                        .setResultsPageURL(resultsPageURL)
-                        .build();
-
-                 */
             }
             if (rowIndex < wNumOfRows) {
                 Elements wColumns = wRows.get(rowIndex).select("td");
-                String playerName = wColumns.get(2).text();
-                String playerRanking = wColumns.get(0).text();
-                //playerChoices.add(playerName + " (" + playerRanking + ")");
+                Element playerNameLink = wColumns.get(2).selectFirst("a");
+                String playerDetailsURL = playerNameLink.attr("abs:href");
+                Document playerDetailsDocument = Jsoup.connect(playerDetailsURL).get();
+                try {
+                    System.out.println(getName(playerDetailsDocument));
+                    System.out.println(getRanking(playerDetailsDocument));
+                    System.out.println(getTitles(playerDetailsDocument));
+                    String standing = getTournamentStanding(playerDetailsDocument);
+                    System.out.println(standing);
+                    if (!standing.equals("not playing")) {
+                        System.out.println(getCurrentTournament(playerDetailsDocument));
+                        System.out.println(getLatestMatchResult(playerDetailsDocument));
+                    }
+                    if (standing.contains("advanced")) {
+                        System.out.println(getUpcomingMatch(playerDetailsDocument));
+                    }
+                    System.out.println(getAllMatchResultsURL(playerDetailsDocument));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         return playerDetailsMap;
