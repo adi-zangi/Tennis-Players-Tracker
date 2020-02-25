@@ -36,12 +36,15 @@ public class PlayerDetailsGetter {
                 Element playerNameLink = mColumns.get(2).selectFirst("a");
                 String playerDetailsURL = playerNameLink.attr("abs:href");
                 Document playerDetailsDocument = Jsoup.connect(playerDetailsURL).get();
-                System.out.println(getName(playerDetailsDocument));
-                System.out.println(getRanking(playerDetailsDocument));
-                System.out.println(getTitles(playerDetailsDocument));
-                System.out.println(getTournamentStanding(playerDetailsDocument));
-                System.out.println(getCurrentTournament(playerDetailsDocument));
-                System.out.println(getLatestMatchResult(playerDetailsDocument));
+                if (rowIndex == 1) {
+                    System.out.println(playerDetailsDocument);
+                }
+                //System.out.println(getName(playerDetailsDocument));
+                //System.out.println(getRanking(playerDetailsDocument));
+                //System.out.println(getTitles(playerDetailsDocument));
+                //System.out.println(getTournamentStanding(playerDetailsDocument));
+                //System.out.println(getCurrentTournament(playerDetailsDocument));
+                //System.out.println(getLatestMatchResult(playerDetailsDocument));
 
                 /*
                 getUpcomingMatch();
@@ -102,6 +105,7 @@ public class PlayerDetailsGetter {
     }
 
     private String getTournamentStanding(Document playerDetails) {
+        // doubles and team cup? more complicated because can lose and not be out
         Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
         String latestTournamentTitle = latestTournamentDiv.selectFirst("h4").text();
         if (!latestTournamentTitle.equals("CURRENT TOURNAMENT")) {
@@ -165,7 +169,7 @@ public class PlayerDetailsGetter {
             row++;
         }
         Element lastMatchResultRow = rows.get(row);
-
+        return null;
     }
 
 }
