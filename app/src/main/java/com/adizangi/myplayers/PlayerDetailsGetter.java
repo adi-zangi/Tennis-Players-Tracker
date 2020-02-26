@@ -96,6 +96,9 @@ public class PlayerDetailsGetter {
 
     private String getTitles(Document playerDetails) {
         Element playerStatsDiv = playerDetails.selectFirst("div.player-stats");
+        if (playerStatsDiv.select("p").isEmpty()) { // check needed due to bug in website
+            return "Singles titles: unknown";
+        }
         String statsFullTitle = playerStatsDiv.selectFirst("p").text();
         String year = statsFullTitle.substring(0, statsFullTitle.indexOf(" "));
         Element statsTable = playerStatsDiv.selectFirst("table");
