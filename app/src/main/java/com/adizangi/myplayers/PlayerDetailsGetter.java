@@ -1,3 +1,8 @@
+/*
+   Gets information from the ESPN website about each player from the player
+   choices
+ */
+
 package com.adizangi.myplayers;
 
 import org.jsoup.Jsoup;
@@ -14,11 +19,20 @@ public class PlayerDetailsGetter {
     private Document mRankings;
     private Document wRankings;
 
+    /*
+       Constructs a PlayerDetailsGetter with the given HTML documents of the
+       men's tennis rankings and women's tennis rankings from ESPN
+     */
     public PlayerDetailsGetter(Document mRankings, Document wRankings) {
         this.mRankings = mRankings;
         this.wRankings = wRankings;
     }
 
+    /*
+       Returns a map from player to a PlayerDetails object
+       The keys are each player's name followed by ranking in parenthesis
+       May throw IOException
+     */
     public Map<String, PlayerDetails> getPlayerDetailsMap()
             throws IOException {
         Map<String, PlayerDetails> playerDetailsMap = new HashMap<>();
@@ -54,12 +68,19 @@ public class PlayerDetailsGetter {
         return playerDetailsMap;
     }
 
+    /*
+       Returns the key for the player whose information is in the given
+       document
+     */
     private String getPlayerKey(Document playerDocument) {
         String playerName = getName(playerDocument);
         String playerRanking = getRanking(playerDocument);
         return playerName + " (" + playerRanking + ")";
     }
 
+    /*
+       Returns
+     */
     private PlayerDetails getPlayerDetails(Document playerDocument) {
         String name = getName(playerDocument);
         String ranking = "Current ranking: " + getRanking(playerDocument);
@@ -133,15 +154,16 @@ public class PlayerDetailsGetter {
             if (columns.size() < 4) {
                 break;
             }
-            String matchResult = columns.get(2).text();
-            if (matchResult.equals("-")) {
-                String roundNumber = columns.get(0).text();
-                return "advanced to " + roundNumber;
-            }
-            if (!matchResult.equals("W")) {
-                return "out";
-            }
             row++;
+        }
+        Element lastSinglesRow = rows.get(row - 1);
+        Elements columns = lastSinglesRow.select("td");
+        String matchResult = columns.get(2).text();
+        if (matchResult.equals("-")) {
+            String roundNumber = columns.get(0).text();
+            return "advanced to " + roundNumber;
+        } else if (!matchResult.equals("W")) {
+            return "out";
         }
         return "winner";
     }
@@ -175,7 +197,6 @@ public class PlayerDetailsGetter {
         if (matchResult.equals("-")) {
             latestResultRow = rows.get(row - 2);
             columns = latestResultRow.select("td");
-            matchResult = columns.get(2).text();
         }
         String round = columns.get(0).text();
         String opponent = columns.get(1).text();

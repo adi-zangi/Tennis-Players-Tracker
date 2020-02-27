@@ -32,6 +32,7 @@ public class PlayerChoicesGetter {
        The list contains the top 100 men players and the top 100 women players
        It is sorted by ranking in descending order, and with each man tennis
        player followed by a woman tennis player with the same ranking
+       Each player is represented by name followed by ranking in parenthesis
        The ESPN website doesn't have tennis rankings when a new year starts
        and there have not been any tennis tournaments in the new year
        In this case, returns an empty list
