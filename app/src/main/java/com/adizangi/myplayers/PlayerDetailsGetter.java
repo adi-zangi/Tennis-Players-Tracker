@@ -112,12 +112,15 @@ public class PlayerDetailsGetter {
     }
 
     private String getTournamentStanding(Document playerDocument) {
-        Element latestTournamentDiv = playerDocument.selectFirst("#my-players-table");
-        String latestTournamentTitle = latestTournamentDiv.selectFirst("h4").text();
+        Element latestTournamentDiv =
+                playerDocument.selectFirst("#my-players-table");
+        String latestTournamentTitle = latestTournamentDiv.selectFirst("h4")
+                .text();
         if (!latestTournamentTitle.equals("CURRENT TOURNAMENT")) {
             return "not playing";
         }
-        Element latestTournamentTable = latestTournamentDiv.select("table").get(1);
+        Element latestTournamentTable =
+                latestTournamentDiv.select("table").get(1);
         Elements rows = latestTournamentTable.select("tr");
         String tournamentType = rows.get(1).text();
         if (!tournamentType.contains("Singles")) {
@@ -131,31 +134,31 @@ public class PlayerDetailsGetter {
                 break;
             }
             String matchResult = columns.get(2).text();
-            if (!matchResult.equals("W") && !matchResult.equals("-")) {
+            if (matchResult.equals("-")) {
+                String roundNumber = columns.get(0).text();
+                return "advanced to " + roundNumber;
+            }
+            if (!matchResult.equals("W")) {
                 return "out";
             }
             row++;
-        }
-        Element lastSinglesRow = rows.get(row - 1);
-        Elements columns = lastSinglesRow.select("td");
-        String matchResult = columns.get(2).text();
-        if (matchResult.equals("-")) {
-            String roundNumber = columns.get(0).text();
-            return "advanced to " + roundNumber;
         }
         return "winner";
     }
 
     private String getCurrentTournament(Document playerDocument) {
         // only call if playing is playing (our or in)- makes error otherwise
-        Element latestTournamentDiv = playerDocument.selectFirst("#my-players-table");
+        Element latestTournamentDiv =
+                playerDocument.selectFirst("#my-players-table");
         return latestTournamentDiv.selectFirst("a").text();
     }
 
     private String getLatestMatchResult(Document playerDocument) {
         // only call if is playing (our or in)- makes error otherwise
-        Element latestTournamentDiv = playerDocument.selectFirst("#my-players-table");
-        Element latestTournamentTable = latestTournamentDiv.select("table").get(1);
+        Element latestTournamentDiv =
+                playerDocument.selectFirst("#my-players-table");
+        Element latestTournamentTable =
+                latestTournamentDiv.select("table").get(1);
         Elements rows = latestTournamentTable.select("tr");
         int numOfRows = rows.size();
         int row = 2;
@@ -183,8 +186,10 @@ public class PlayerDetailsGetter {
     private String getUpcomingMatch(Document playerDocument) {
         // only call if advanced
         String playerName = playerDocument.selectFirst("h1").text();
-        Element latestTournamentDiv = playerDocument.selectFirst("#my-players-table");
-        Element latestTournamentTable = latestTournamentDiv.select("table").get(1);
+        Element latestTournamentDiv =
+                playerDocument.selectFirst("#my-players-table");
+        Element latestTournamentTable =
+                latestTournamentDiv.select("table").get(1);
         Elements rows = latestTournamentTable.select("tr");
         int numOfRows = rows.size();
         int row = 2;
@@ -201,7 +206,8 @@ public class PlayerDetailsGetter {
         String upcomingMatchDetails = columns.get(3).text();
         int secondSpaceIndex = upcomingMatchDetails
                 .indexOf(" ", upcomingMatchDetails.indexOf(" ") + 1);
-        String upcomingMatchTime = upcomingMatchDetails.substring(secondSpaceIndex + 1);
+        String upcomingMatchTime =
+                upcomingMatchDetails.substring(secondSpaceIndex + 1);
         return playerName + " is playing today at " + upcomingMatchTime;
     }
 
