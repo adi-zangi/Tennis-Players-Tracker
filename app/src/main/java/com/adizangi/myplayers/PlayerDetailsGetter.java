@@ -227,6 +227,9 @@ public class PlayerDetailsGetter {
         String upcomingMatchDetails = columns.get(3).text();
         int secondSpaceIndex = upcomingMatchDetails
                 .indexOf(" ", upcomingMatchDetails.indexOf(" ") + 1);
+        String upcomingMatchDate =
+                upcomingMatchDetails.substring(secondSpaceIndex);
+        // check if date is today
         String upcomingMatchTime =
                 upcomingMatchDetails.substring(secondSpaceIndex + 1);
         return playerName + " is playing today at " + upcomingMatchTime;
