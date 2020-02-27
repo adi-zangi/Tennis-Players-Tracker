@@ -49,7 +49,6 @@ public class TestPlayerChoicesGetter {
             System.out.println("Failed- error when getting documents");
             e.printStackTrace();
         }
-
     }
 
 }

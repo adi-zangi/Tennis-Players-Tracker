@@ -11,8 +11,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class PlayerDetailsGetter {
 
@@ -225,19 +230,39 @@ public class PlayerDetailsGetter {
         Element upcomingMatchRow = rows.get(row);
         Elements columns = upcomingMatchRow.select("td");
         String upcomingMatchDetails = columns.get(3).text();
-        int secondSpaceIndex = upcomingMatchDetails
-                .indexOf(" ", upcomingMatchDetails.indexOf(" ") + 1);
-        String upcomingMatchDate =
-                upcomingMatchDetails.substring(secondSpaceIndex);
-        // check if date is today
-        String upcomingMatchTime =
-                upcomingMatchDetails.substring(secondSpaceIndex + 1);
-        return playerName + " is playing today at " + upcomingMatchTime;
+        if (matchWithin24Hours(upcomingMatchDetails)) {
+
+        }
+        if (upcomingMatchDetails.contains("ET")) {
+            int secondSpaceIndex = upcomingMatchDetails
+                    .indexOf(" ", upcomingMatchDetails.indexOf(" ") + 1);
+            String upcomingMatchDate =
+                    upcomingMatchDetails.substring(0, secondSpaceIndex);
+            TimeZone timeZone = TimeZone.getTimeZone("US/Eastern");
+            Calendar calendar = Calendar.getInstance(timeZone);
+
+            String pattern = "MMMMM d";
+            SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.US);
+            String date = dateFormat.format(new Date());
+            if (date.equals(upcomingMatchDate)) {
+                String upcomingMatchTime =
+                        upcomingMatchDetails.substring(secondSpaceIndex + 1);
+                System.out.println(getName(playerDocument));
+                System.out.println(upcomingMatchDetails);
+                System.out.println(date);
+                return playerName + " is playing today at " + upcomingMatchTime;
+            }
+        }
+        return "";
     }
 
     private String getResultsURL(Document playerDocument) {
         return playerDocument.selectFirst("a:contains(Results)")
                 .attr("abs:href");
+    }
+
+    private boolean matchWithin24Hours(String matchDetails) {
+
     }
 
 }

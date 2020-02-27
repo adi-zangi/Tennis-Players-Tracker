@@ -5,6 +5,8 @@
 
 package com.adizangi.myplayers;
 
+import androidx.annotation.NonNull;
+
 public class PlayerDetails {
 
     private String name;
