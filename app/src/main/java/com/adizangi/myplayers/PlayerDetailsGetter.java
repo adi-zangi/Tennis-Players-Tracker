@@ -19,7 +19,8 @@ public class PlayerDetailsGetter {
         this.wRankings = wRankings;
     }
 
-    public Map<String, PlayerDetails> getPlayerDetailsMap() throws IOException {
+    public Map<String, PlayerDetails> getPlayerDetailsMap()
+            throws IOException {
         Map<String, PlayerDetails> playerDetailsMap = new HashMap<>();
         Element mRankingsTable = mRankings.selectFirst("table");
         if (mRankingsTable == null) {
@@ -34,68 +35,71 @@ public class PlayerDetailsGetter {
             if (rowIndex < mNumOfRows) {  // Check is needed due to bug in the website
                 Elements mColumns = mRows.get(rowIndex).select("td");
                 Element playerNameLink = mColumns.get(2).selectFirst("a");
-                String playerDetailsURL = playerNameLink.attr("abs:href");
-                Document playerDetailsDocument = Jsoup.connect(playerDetailsURL).get();
-                try {
-                    System.out.println(getName(playerDetailsDocument));
-                    System.out.println(getRanking(playerDetailsDocument));
-                    System.out.println(getTitles(playerDetailsDocument));
-                    String standing = getTournamentStanding(playerDetailsDocument);
-                    System.out.println(standing);
-                    if (!standing.equals("not playing")) {
-                        System.out.println(getCurrentTournament(playerDetailsDocument));
-                        System.out.println(getLatestMatchResult(playerDetailsDocument));
-                    }
-                    if (standing.contains("advanced")) {
-                        System.out.println(getUpcomingMatch(playerDetailsDocument));
-                    }
-                    System.out.println(getAllMatchResultsURL(playerDetailsDocument));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+                String playerURL = playerNameLink.attr("abs:href");
+                Document playerDocument = Jsoup.connect(playerURL).get();
+                String playerKey = getPlayerKey(playerDocument);
+                PlayerDetails playerDetails = getPlayerDetails(playerDocument);
+                playerDetailsMap.put(playerKey, playerDetails);
             }
             if (rowIndex < wNumOfRows) {
                 Elements wColumns = wRows.get(rowIndex).select("td");
                 Element playerNameLink = wColumns.get(2).selectFirst("a");
-                String playerDetailsURL = playerNameLink.attr("abs:href");
-                Document playerDetailsDocument = Jsoup.connect(playerDetailsURL).get();
-                try {
-                    System.out.println(getName(playerDetailsDocument));
-                    System.out.println(getRanking(playerDetailsDocument));
-                    System.out.println(getTitles(playerDetailsDocument));
-                    String standing = getTournamentStanding(playerDetailsDocument);
-                    System.out.println(standing);
-                    if (!standing.equals("not playing")) {
-                        System.out.println(getCurrentTournament(playerDetailsDocument));
-                        System.out.println(getLatestMatchResult(playerDetailsDocument));
-                    }
-                    if (standing.contains("advanced")) {
-                        System.out.println(getUpcomingMatch(playerDetailsDocument));
-                    }
-                    System.out.println(getAllMatchResultsURL(playerDetailsDocument));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                String playerURL = playerNameLink.attr("abs:href");
+                Document playerDocument = Jsoup.connect(playerURL).get();
+                String playerKey = getPlayerKey(playerDocument);
+                PlayerDetails playerDetails = getPlayerDetails(playerDocument);
+                playerDetailsMap.put(playerKey, playerDetails);
             }
         }
         return playerDetailsMap;
     }
 
-    private String getName(Document playerDetails) {
-        return playerDetails.selectFirst("h1").text();
+    private String getPlayerKey(Document playerDocument) {
+        String playerName = getName(playerDocument);
+        String playerRanking = getRanking(playerDocument);
+        return playerName + " (" + playerRanking + ")";
     }
 
-    private String getRanking(Document playerDetails) {
-        Element detailsList = playerDetails.select("ul").get(1);
+    private PlayerDetails getPlayerDetails(Document playerDocument) {
+        String name = getName(playerDocument);
+        String ranking = "Current ranking: " + getRanking(playerDocument);
+        String titles = getTitles(playerDocument);
+        String standing = getTournamentStanding(playerDocument);
+        String currentTournament = "";
+        String latestMatchResult = "";
+        if (!standing.equals("not playing")) {
+            currentTournament = getCurrentTournament(playerDocument);
+            latestMatchResult = getLatestMatchResult(playerDocument);
+        }
+        String upcomingMatch = "";
+        if (standing.contains("advanced")) {
+            upcomingMatch = getUpcomingMatch(playerDocument);
+        }
+        String resultsURL = getResultsURL(playerDocument);
+        return new PlayerDetails(
+                name,
+                ranking,
+                titles,
+                standing,
+                currentTournament,
+                latestMatchResult,
+                upcomingMatch,
+                resultsURL);
+    }
+
+    private String getName(Document playerDocument) {
+        return playerDocument.selectFirst("h1").text();
+    }
+
+    private String getRanking(Document playerDocument) {
+        Element detailsList = playerDocument.select("ul").get(1);
         Elements listItems = detailsList.select("li");
         String rankingFullText = listItems.get(0).text();
-        String ranking = rankingFullText.substring(rankingFullText.indexOf("#") + 1);
-        return "Current ranking: " + ranking;
+        return rankingFullText.substring(rankingFullText.indexOf("#") + 1);
     }
 
-    private String getTitles(Document playerDetails) {
-        Element playerStatsDiv = playerDetails.selectFirst("div.player-stats");
+    private String getTitles(Document playerDocument) {
+        Element playerStatsDiv = playerDocument.selectFirst("div.player-stats");
         if (playerStatsDiv.select("p").isEmpty()) { // check needed due to bug in website
             return "Singles titles: unknown";
         }
@@ -107,10 +111,8 @@ public class PlayerDetailsGetter {
         return year + " singles titles: " + singlesTitles;
     }
 
-    private String getTournamentStanding(Document playerDetails) {
-        // doubles and team cup? more complicated because can lose and not be out
-        // check if last check is relevant
-        Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
+    private String getTournamentStanding(Document playerDocument) {
+        Element latestTournamentDiv = playerDocument.selectFirst("#my-players-table");
         String latestTournamentTitle = latestTournamentDiv.selectFirst("h4").text();
         if (!latestTournamentTitle.equals("CURRENT TOURNAMENT")) {
             return "not playing";
@@ -144,16 +146,15 @@ public class PlayerDetailsGetter {
         return "winner";
     }
 
-    private String getCurrentTournament(Document playerDetails) {
+    private String getCurrentTournament(Document playerDocument) {
         // only call if playing is playing (our or in)- makes error otherwise
-        Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
+        Element latestTournamentDiv = playerDocument.selectFirst("#my-players-table");
         return latestTournamentDiv.selectFirst("a").text();
     }
 
-    private String getLatestMatchResult(Document playerDetails) {
-        // only call if playing is playing (our or in)- makes error otherwise
-        // might want to change format of match result
-        Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
+    private String getLatestMatchResult(Document playerDocument) {
+        // only call if is playing (our or in)- makes error otherwise
+        Element latestTournamentDiv = playerDocument.selectFirst("#my-players-table");
         Element latestTournamentTable = latestTournamentDiv.select("table").get(1);
         Elements rows = latestTournamentTable.select("tr");
         int numOfRows = rows.size();
@@ -179,10 +180,10 @@ public class PlayerDetailsGetter {
         return round + "- " + opponent + " " + score;
     }
 
-    private String getUpcomingMatch(Document playerDetails) {
+    private String getUpcomingMatch(Document playerDocument) {
         // only call if advanced
-        String playerName = playerDetails.selectFirst("h1").text();
-        Element latestTournamentDiv = playerDetails.selectFirst("#my-players-table");
+        String playerName = playerDocument.selectFirst("h1").text();
+        Element latestTournamentDiv = playerDocument.selectFirst("#my-players-table");
         Element latestTournamentTable = latestTournamentDiv.select("table").get(1);
         Elements rows = latestTournamentTable.select("tr");
         int numOfRows = rows.size();
@@ -204,10 +205,9 @@ public class PlayerDetailsGetter {
         return playerName + " is playing today at " + upcomingMatchTime;
     }
 
-    private String getAllMatchResultsURL(Document playerDetails) {
-        String resultsURL = playerDetails.selectFirst("a:contains(Results)")
+    private String getResultsURL(Document playerDocument) {
+        return playerDocument.selectFirst("a:contains(Results)")
                 .attr("abs:href");
-        return resultsURL;
     }
 
 }
