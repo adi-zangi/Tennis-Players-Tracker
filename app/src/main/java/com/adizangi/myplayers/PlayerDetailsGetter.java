@@ -11,6 +11,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -84,7 +85,8 @@ public class PlayerDetailsGetter {
     }
 
     /*
-       Returns
+       Returns a PlayerDetails object for the player whose information is in
+       the given document
      */
     private PlayerDetails getPlayerDetails(Document playerDocument) {
         String name = getName(playerDocument);
@@ -113,10 +115,18 @@ public class PlayerDetailsGetter {
                 resultsURL);
     }
 
+    /*
+       Returns the name of the player whose information is in the given
+       document
+     */
     private String getName(Document playerDocument) {
         return playerDocument.selectFirst("h1").text();
     }
 
+    /*
+       Returns the ranking of the player whose information is in the given
+       document
+     */
     private String getRanking(Document playerDocument) {
         Element detailsList = playerDocument.select("ul").get(1);
         Elements listItems = detailsList.select("li");
@@ -124,6 +134,10 @@ public class PlayerDetailsGetter {
         return rankingFullText.substring(rankingFullText.indexOf("#") + 1);
     }
 
+    /*
+       Returns the number of singles titles of the player whose information is
+       in the given document
+     */
     private String getTitles(Document playerDocument) {
         Element playerStatsDiv = playerDocument.selectFirst("div.player-stats");
         if (playerStatsDiv.select("p").isEmpty()) { // check needed due to bug in website
@@ -137,6 +151,10 @@ public class PlayerDetailsGetter {
         return year + " singles titles: " + singlesTitles;
     }
 
+    /*
+       Returns the tournament standing of the player whose information is
+       in the given document
+     */
     private String getTournamentStanding(Document playerDocument) {
         Element latestTournamentDiv =
                 playerDocument.selectFirst("#my-players-table");
@@ -173,15 +191,23 @@ public class PlayerDetailsGetter {
         return "winner";
     }
 
+    /*
+       Returns the name of the tournament that the player whose information is
+       in the given document is playing in
+       Only safe to call if the player is currently playing
+     */
     private String getCurrentTournament(Document playerDocument) {
-        // only call if playing is playing (our or in)- makes error otherwise
         Element latestTournamentDiv =
                 playerDocument.selectFirst("#my-players-table");
         return latestTournamentDiv.selectFirst("a").text();
     }
 
+    /*
+       Returns the latest match result of the player whose information is
+       in the given document
+       Only safe to call if the player is currently playing
+     */
     private String getLatestMatchResult(Document playerDocument) {
-        // only call if is playing (our or in)- makes error otherwise
         Element latestTournamentDiv =
                 playerDocument.selectFirst("#my-players-table");
         Element latestTournamentTable =
@@ -209,9 +235,13 @@ public class PlayerDetailsGetter {
         return round + "- " + opponent + " " + score;
     }
 
+    /*
+       Returns the upcoming match of the player whose information is
+       in the given document, or an empty string if the player is not
+       playing today
+       Only safe to call if the player advanced to the next round
+     */
     private String getUpcomingMatch(Document playerDocument) {
-        // only call if advanced
-        String playerName = playerDocument.selectFirst("h1").text();
         Element latestTournamentDiv =
                 playerDocument.selectFirst("#my-players-table");
         Element latestTournamentTable =
@@ -230,39 +260,30 @@ public class PlayerDetailsGetter {
         Element upcomingMatchRow = rows.get(row);
         Elements columns = upcomingMatchRow.select("td");
         String upcomingMatchDetails = columns.get(3).text();
-        if (matchWithin24Hours(upcomingMatchDetails)) {
-
-        }
         if (upcomingMatchDetails.contains("ET")) {
             int secondSpaceIndex = upcomingMatchDetails
                     .indexOf(" ", upcomingMatchDetails.indexOf(" ") + 1);
             String upcomingMatchDate =
                     upcomingMatchDetails.substring(0, secondSpaceIndex);
-            TimeZone timeZone = TimeZone.getTimeZone("US/Eastern");
-            Calendar calendar = Calendar.getInstance(timeZone);
-
             String pattern = "MMMMM d";
-            SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.US);
-            String date = dateFormat.format(new Date());
+            String date = new SimpleDateFormat(pattern, Locale.US).format(new Date());
             if (date.equals(upcomingMatchDate)) {
                 String upcomingMatchTime =
                         upcomingMatchDetails.substring(secondSpaceIndex + 1);
-                System.out.println(getName(playerDocument));
-                System.out.println(upcomingMatchDetails);
-                System.out.println(date);
-                return playerName + " is playing today at " + upcomingMatchTime;
+                String playerName = playerDocument.selectFirst("h1").text();
+                return playerName + " " + upcomingMatchTime;
             }
         }
         return "";
     }
 
+    /*
+       Returns the results URL of the player whose information is in the
+       given document
+     */
     private String getResultsURL(Document playerDocument) {
         return playerDocument.selectFirst("a:contains(Results)")
                 .attr("abs:href");
-    }
-
-    private boolean matchWithin24Hours(String matchDetails) {
-
     }
 
 }

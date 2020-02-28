@@ -92,7 +92,7 @@ public class PlayerDetails {
 
     /*
        Returns the player's upcoming match
-       The format is '[player] is playing today at [time]'
+       The format is '[player]  [time]'
      */
     public String getUpcomingMatch() {
         return upcomingMatch;
