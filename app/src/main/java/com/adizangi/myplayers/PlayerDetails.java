@@ -5,8 +5,6 @@
 
 package com.adizangi.myplayers;
 
-import androidx.annotation.NonNull;
-
 public class PlayerDetails {
 
     private String name;
@@ -74,7 +72,7 @@ public class PlayerDetails {
     }
 
     /*
-       Returns the name of the tournament that player is currently in
+       Returns the name of the tournament the player is currently in
        Returns an empty string if the player isn't in a tournament
      */
     public String getCurrentTournament() {
@@ -93,13 +91,15 @@ public class PlayerDetails {
     /*
        Returns the player's upcoming match
        The format is '[player]  [time]'
+       Returns an empty string if the player is not playing a match today
      */
     public String getUpcomingMatch() {
         return upcomingMatch;
     }
 
     /*
-
+       Returns the URL of an ESPN page that has all the match results of the
+       player
      */
     public String getResultsURL() {
         return resultsURL;

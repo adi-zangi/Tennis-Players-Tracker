@@ -36,7 +36,7 @@ public class TestPlayerDetailsGetter {
                 System.out.println("Size: " + map.size());
                 System.out.println();
                 System.out.println("Map:");
-                //printMap(map);
+                printMap(map);
             } catch (Exception e) {
                 System.out.println("Failed- error in PlayerChoicesGetter class");
                 e.printStackTrace();
