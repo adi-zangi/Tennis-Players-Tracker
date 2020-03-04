@@ -25,28 +25,23 @@ public class TestPlayerChoicesGetter {
             System.out.println("Time to get documents: " +
                     (estimatedTime / 1000000000.0) + " seconds");
             System.out.println();
-            try {
-                startTime = System.nanoTime();
-                PlayerChoicesGetter playersGetter =
-                        new PlayerChoicesGetter(mRankings, wRankings);
-                List<String> playerChoices = playersGetter.getPlayerChoicesList();
-                estimatedTime = System.nanoTime() - startTime;
-                System.out.println("Success");
-                System.out.println();
-                System.out.println("Time to get list: " +
-                        (estimatedTime / 1000000000.0) + " seconds");
-                System.out.println("List size: " + playerChoices.size());
-                System.out.println();
-                System.out.println("List:");
-                for (String player : playerChoices) {
-                    System.out.println(player);
-                }
-            } catch (Exception e) {
-                System.out.println("Failed- error in PlayerChoicesGetter class");
-                e.printStackTrace();
+            startTime = System.nanoTime();
+            PlayerChoicesGetter playersGetter =
+                    new PlayerChoicesGetter(mRankings, wRankings);
+            List<String> playerChoices = playersGetter.getPlayerChoicesList();
+            estimatedTime = System.nanoTime() - startTime;
+            System.out.println("Success");
+            System.out.println();
+            System.out.println("Time to get list: " +
+                    (estimatedTime / 1000000000.0) + " seconds");
+            System.out.println("List size: " + playerChoices.size());
+            System.out.println();
+            System.out.println("List:");
+            for (String player : playerChoices) {
+                System.out.println(player);
             }
         } catch (Exception e) {
-            System.out.println("Failed- error when getting documents");
+            System.out.println("Failed");
             e.printStackTrace();
         }
     }
