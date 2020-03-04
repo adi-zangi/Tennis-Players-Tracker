@@ -1,3 +1,8 @@
+/*
+   Test for PlayerDetailsGetter
+   Prints the player details map so it can be compared to the ESPN website
+ */
+
 package com.adizangi.myplayers;
 
 import org.jsoup.Jsoup;
@@ -23,32 +28,32 @@ public class TestPlayerDetailsGetter {
             System.out.println("Time to get documents: " +
                     (estimatedTime / 1000000000.0) + " seconds");
             System.out.println();
-            try {
-                startTime = System.nanoTime();
-                PlayerDetailsGetter detailsGetter =
-                        new PlayerDetailsGetter(mRankings, wRankings);
-                Map<String, PlayerDetails> map = detailsGetter.getPlayerDetailsMap();
-                estimatedTime = System.nanoTime() - startTime;
-                System.out.println("Success");
-                System.out.println();
-                System.out.println("Time to get map: " +
-                        (estimatedTime / 1000000000.0) + " seconds");
-                System.out.println("Size: " + map.size());
-                System.out.println();
-                System.out.println("Map:");
-                printMap(map);
-            } catch (Exception e) {
-                System.out.println("Failed- error in PlayerChoicesGetter class");
-                e.printStackTrace();
-            }
+            startTime = System.nanoTime();
+            PlayerDetailsGetter detailsGetter =
+                    new PlayerDetailsGetter(mRankings, wRankings);
+            Map<String, PlayerDetails> map = detailsGetter.getPlayerDetailsMap();
+            estimatedTime = System.nanoTime() - startTime;
+            System.out.println("Success");
+            System.out.println();
+            System.out.println("Time to get map: " +
+                    (estimatedTime / 1000000000.0) + " seconds");
+            System.out.println("Size: " + map.size());
+            System.out.println();
+            System.out.println("Some items from map:");
+            printMap(map);
         } catch (Exception e) {
-            System.out.println("Failed- error when getting documents");
+            System.out.println("Failed");
             e.printStackTrace();
         }
     }
 
     private static void printMap(Map<String, PlayerDetails> map) {
+        int i = 0;
         for (String player : map.keySet()) {
+            if (i == 4) {
+                break;
+            }
+            System.out.println();
             System.out.println(player);
             PlayerDetails details = map.get(player);
             System.out.println("Name: " + details.getName());
@@ -59,6 +64,7 @@ public class TestPlayerDetailsGetter {
             System.out.println("Result: " + details.getLatestMatchResult());
             System.out.println("Upcoming match: " + details.getUpcomingMatch());
             System.out.println("Results URL: " + details.getResultsURL());
+            i++;
         }
     }
 
