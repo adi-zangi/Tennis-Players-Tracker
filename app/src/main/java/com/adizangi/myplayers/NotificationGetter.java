@@ -127,7 +127,7 @@ public class NotificationGetter {
                             matchTitle.indexOf(":") + 2,
                             matchTitle.lastIndexOf("-") - 1);
                     String report = tournamentName + " final- " + firstOpponent +
-                            " vs. " + secondOpponent + " at " + time;
+                            " vs. " + secondOpponent + " at " + time + "\n";
                     dailyFinals.append(report);
                 } else {
                     String report = tournamentName + "- " + tournamentRound + "\n";
