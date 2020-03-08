@@ -34,6 +34,9 @@ public class PlayerDetailsGetter {
     /*
        Returns a map from player to a PlayerDetails object
        The keys are each player's name followed by ranking in parenthesis
+       The ESPN website doesn't have player information when a new year
+       starts and there have not been any tennis tournaments in the new year
+       In this case, returns an empty map
        May throw IOException
      */
     public Map<String, PlayerDetails> getPlayerDetailsMap()
