@@ -32,62 +32,77 @@ public class NotificationGetter {
         List<String> notificationList = new ArrayList<>();
         String reportForYesterday = getReportForYesterday(ySchedule);
         String reportForToday = getReportForToday(tSchedule);
-        String notificationText = reportForYesterday + "\n" + reportForToday;
+        String notificationText = reportForYesterday + reportForToday;
         notificationList.add(notificationText);
         notificationList.addAll(getTournaments(tSchedule));
         return notificationList;
     }
 
+    /*
+       May throw IOException
+     */
     private String getReportForYesterday(Document ySchedule) throws IOException {
-        String reportForYesterday = "";
+        StringBuilder report = new StringBuilder();
         Elements tournaments = ySchedule.select("div.scoreHeadline");
         for (Element tournament : tournaments) {
             Element tournamentLink = tournament.selectFirst("a");
             String tournamentURL = tournamentLink.attr("abs:href");
             Document tournamentDocument = Jsoup.connect(tournamentURL).get();
+            String documentTitle = tournamentDocument.title();
+            String tournamentName = documentTitle.substring
+                    (0, documentTitle.indexOf("Daily Match Schedule - ESPN") - 1);
             String tournamentRound = tournamentDocument
                     .selectFirst("div.matchCourt").text();
             if (tournamentRound.contains("Final")) {
                 Elements matchTables = tournamentDocument.select("table");
                 for (Element table : matchTables) {
                     Elements rows = table.select("td");
+                    Element firstRow = rows.get(0);
+                    Element secondRow = rows.get(1);
+                    if (firstRow.select("div.arrowWrapper").size() > 0) {
+                        String player = firstRow.text();
+                        report.append(player);
+                    } else {
+                        String player = secondRow.text();
+                        report.append(player);
+                    }
+                    report.append(" won ");
+                    report.append(tournamentName);
+                    report.append("\n");
                 }
             }
         }
-
-
-
-        /*
-        Elements tournamentHeadlines =
-                resultsFromYesterday.select("div.scoreHeadline");
-        int numOfTournaments = tournamentHeadlines.size();
-        for (int index = 0; index < numOfTournaments; index++) { // Goes over yesterday's tournaments
-            Element tournamentHeadline = tournamentHeadlines.get(index);
-            Element tournamentLink = tournamentHeadline.selectFirst("a");
-            String tournamentURL = tournamentLink.attr("abs:href");
-            Document tournamentResults = Jsoup.connect(tournamentURL).get(); // Page with yesterday's results
-            // for the tournament
-            Elements completedMatches =
-                    tournamentResults.select("div.matchCourt");
-            String firstMatchDescription = completedMatches.first().text();
-            boolean wasFinal = firstMatchDescription.contains("Finals");
-            if (wasFinal) {
-                recentWinners.add(
-                        getRecentWinnerDescription(tournamentResults, 0));
-                int numOfMatches = completedMatches.size();
-                for (int matchIndex = 1; matchIndex < numOfMatches; matchIndex++) { // Goes over other matches
-                    recentWinners.add(
-                            getRecentWinnerDescription(
-                                    tournamentResults, matchIndex));
-                }
-            }
+        if (report.length() > 0) {
+            report.insert(0, "Yesterday-\n");
         }
-
-         */
-        return null;
+        return report.toString();
     }
 
-    private String getReportForToday(Document tSchedule) {
+    /*
+       May throw IOException
+     */
+    private String getReportForToday(Document tSchedule) throws IOException {
+        StringBuilder dailyTournaments = new StringBuilder();
+        StringBuilder dailyFinals = new StringBuilder();
+        Elements tournaments = ySchedule.select("div.scoreHeadline");
+        for (Element tournament : tournaments) {
+            Element tournamentLink = tournament.selectFirst("a");
+            String tournamentURL = tournamentLink.attr("abs:href");
+            Document tournamentDocument = Jsoup.connect(tournamentURL).get();
+            String documentTitle = tournamentDocument.title();
+            String tournamentName = documentTitle.substring
+                    (0, documentTitle.indexOf("Daily Match Schedule - ESPN") - 1);
+            String tournamentRound = tournamentDocument
+                    .selectFirst("div.matchCourt").text();
+            if (tournamentRound.contains("Final")) {
+
+            } else {
+                dailyTournaments.append(tournamentName);
+                dailyTournaments.append("- ");
+                dailyTournaments.append(tournamentRound);
+                dailyTournaments.append("\n");
+            }
+        }
         return null;
     }
 
