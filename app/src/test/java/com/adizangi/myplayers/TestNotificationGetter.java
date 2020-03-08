@@ -13,7 +13,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class TestNotificationGetter {
+class TestNotificationGetter {
 
     public static void main(String[] args) {
         System.out.println("------------ Notification Getter ------------");

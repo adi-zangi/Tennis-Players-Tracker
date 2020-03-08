@@ -5,7 +5,7 @@
 
 package com.adizangi.myplayers;
 
-public class PlayerDetails {
+class PlayerDetails {
 
     private String name;
     private String ranking;
@@ -19,7 +19,7 @@ public class PlayerDetails {
     /*
        Constructs a PlayerDetails object
      */
-    public PlayerDetails(String name,
+    PlayerDetails(String name,
                          String ranking,
                          String titles,
                          String tournamentStanding,
@@ -40,7 +40,7 @@ public class PlayerDetails {
     /*
        Returns the player's name
      */
-    public String getName() {
+    String getName() {
         return name;
     }
 
@@ -48,7 +48,7 @@ public class PlayerDetails {
        Returns the player's ranking in the format
        'Ranking: [ranking]'
      */
-    public String getRanking() {
+    String getRanking() {
         return ranking;
     }
 
@@ -57,7 +57,7 @@ public class PlayerDetails {
        The format is
        '[year number] singles titles: [number of titles]'
      */
-    public String getTitles() {
+    String getTitles() {
         return titles;
     }
 
@@ -67,7 +67,7 @@ public class PlayerDetails {
        'out', or
        'not playing'
      */
-    public String getTournamentStanding() {
+    String getTournamentStanding() {
         return tournamentStanding;
     }
 
@@ -75,7 +75,7 @@ public class PlayerDetails {
        Returns the name of the tournament the player is currently in
        Returns an empty string if the player isn't in a tournament
      */
-    public String getCurrentTournament() {
+    String getCurrentTournament() {
         return currentTournament;
     }
 
@@ -84,7 +84,7 @@ public class PlayerDetails {
        The format is '[tournament round]- [opponent's name] [score]'
        Returns an empty string if the player isn't in a tournament
      */
-    public String getLatestMatchResult() {
+    String getLatestMatchResult() {
         return latestMatchResult;
     }
 
@@ -93,7 +93,7 @@ public class PlayerDetails {
        The format is '[player's name]  [time]'
        Returns an empty string if the player is not playing a match today
      */
-    public String getUpcomingMatch() {
+    String getUpcomingMatch() {
         return upcomingMatch;
     }
 
@@ -101,7 +101,7 @@ public class PlayerDetails {
        Returns the URL of an ESPN web page that has all the match results of
        the player
      */
-    public String getResultsURL() {
+    String getResultsURL() {
         return resultsURL;
     }
 }

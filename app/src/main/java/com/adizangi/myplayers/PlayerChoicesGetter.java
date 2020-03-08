@@ -13,7 +13,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerChoicesGetter {
+class PlayerChoicesGetter {
 
     private Document mRankings;
     private Document wRankings;
@@ -22,7 +22,7 @@ public class PlayerChoicesGetter {
        Constructs a PlayerChoicesGetter with the given HTML documents of the
        men's tennis rankings and women's tennis rankings from ESPN
      */
-    public PlayerChoicesGetter(Document mRankings, Document wRankings) {
+    PlayerChoicesGetter(Document mRankings, Document wRankings) {
         this.mRankings = mRankings;
         this.wRankings = wRankings;
     }
@@ -35,7 +35,7 @@ public class PlayerChoicesGetter {
        and there have not been any tennis tournaments in the new year
        In this case, returns an empty list
      */
-    public List<String> getPlayerChoicesList() {
+    List<String> getPlayerChoicesList() {
         List<String> playerChoices = new ArrayList<>();
         Element mRankingsTable = mRankings.selectFirst("table");
         if (mRankingsTable == null) {

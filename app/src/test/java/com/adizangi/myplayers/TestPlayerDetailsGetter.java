@@ -13,7 +13,7 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 
-public class TestPlayerDetailsGetter {
+class TestPlayerDetailsGetter {
 
     public static void main(String[] args) {
         System.out.println("------------ Player Details Getter ------------");
@@ -47,6 +47,7 @@ public class TestPlayerDetailsGetter {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private static void printMap(Map<String, PlayerDetails> map) {
         int i = 0;
         for (String player : map.keySet()) {

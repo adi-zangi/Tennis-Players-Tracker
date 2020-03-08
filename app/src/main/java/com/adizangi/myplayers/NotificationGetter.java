@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotificationGetter {
+class NotificationGetter {
 
     private Document tSchedule;
     private Document ySchedule;
@@ -23,7 +23,7 @@ public class NotificationGetter {
        Constructs a NotificationGetter with the given HTML documents of
        today's match schedule and yesterday's match schedule from ESPN
      */
-    public NotificationGetter(Document tSchedule, Document ySchedule) {
+    NotificationGetter(Document tSchedule, Document ySchedule) {
         this.tSchedule = tSchedule;
         this.ySchedule = ySchedule;
     }
@@ -37,7 +37,7 @@ public class NotificationGetter {
        and the list will not have tournament names
        May throw IOException
      */
-    public List<String> getNotificationList() throws IOException {
+    List<String> getNotificationList() throws IOException {
         List<String> notificationList = new ArrayList<>();
         String reportForYesterday = getReportForYesterday();
         String reportForToday = getReportForToday();

@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class PlayerDetailsGetter {
+class PlayerDetailsGetter {
 
     private Document mRankings;
     private Document wRankings;
@@ -27,7 +27,7 @@ public class PlayerDetailsGetter {
        Constructs a PlayerDetailsGetter with the given HTML documents of the
        men's tennis rankings and women's tennis rankings from ESPN
      */
-    public PlayerDetailsGetter(Document mRankings, Document wRankings) {
+    PlayerDetailsGetter(Document mRankings, Document wRankings) {
         this.mRankings = mRankings;
         this.wRankings = wRankings;
     }
@@ -40,7 +40,7 @@ public class PlayerDetailsGetter {
        In this case, returns an empty map
        May throw IOException
      */
-    public Map<String, PlayerDetails> getPlayerDetailsMap()
+    Map<String, PlayerDetails> getPlayerDetailsMap()
             throws IOException {
         Map<String, PlayerDetails> playerDetailsMap = new HashMap<>();
         Element mRankingsTable = mRankings.selectFirst("table");
