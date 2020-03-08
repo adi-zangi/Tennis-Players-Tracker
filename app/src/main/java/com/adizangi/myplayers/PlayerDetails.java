@@ -55,7 +55,7 @@ public class PlayerDetails {
     /*
        Returns the number of singles titles the player won in the current year
        The format is
-       '[year number] singles titles: [titles]'
+       '[year number] singles titles: [number of titles]'
      */
     public String getTitles() {
         return titles;
@@ -63,7 +63,7 @@ public class PlayerDetails {
 
     /*
        Returns the player's tournament standing which may be
-       'advanced to [round]',
+       'advanced to [tournament round]',
        'out', or
        'not playing'
      */
@@ -81,7 +81,7 @@ public class PlayerDetails {
 
     /*
        Returns the player's latest match result
-       The format is '[round]- [opponent] [score]'
+       The format is '[tournament round]- [opponent's name] [score]'
        Returns an empty string if the player isn't in a tournament
      */
     public String getLatestMatchResult() {
@@ -90,7 +90,7 @@ public class PlayerDetails {
 
     /*
        Returns the player's upcoming match
-       The format is '[player]  [time]'
+       The format is '[player's name]  [time]'
        Returns an empty string if the player is not playing a match today
      */
     public String getUpcomingMatch() {
@@ -98,8 +98,8 @@ public class PlayerDetails {
     }
 
     /*
-       Returns the URL of an ESPN page that has all the match results of the
-       player
+       Returns the URL of an ESPN web page that has all the match results of
+       the player
      */
     public String getResultsURL() {
         return resultsURL;

@@ -1,6 +1,7 @@
 /*
-   Gets information from the ESPN website about each player from the player
-   choices
+   Gets a map that contains details about each player from the players the
+   user can add
+   Information is taken from the ESPN website
  */
 
 package com.adizangi.myplayers;

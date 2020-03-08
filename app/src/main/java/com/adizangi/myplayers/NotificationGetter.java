@@ -1,5 +1,6 @@
 /*
-   Gets information for the daily notification and information for the notification button
+   Gets information for the daily notification that will be sent to the user
+   Information is taken from the ESPN website
  */
 
 package com.adizangi.myplayers;
