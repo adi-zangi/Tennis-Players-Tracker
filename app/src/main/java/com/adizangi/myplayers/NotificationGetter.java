@@ -1,5 +1,5 @@
 /*
-   Gets information that will be put in the daily notification sent to the user
+   Gets information that will be put in the notification sent to the user
    Information is taken from the ESPN website
  */
 
@@ -28,6 +28,15 @@ public class NotificationGetter {
         this.ySchedule = ySchedule;
     }
 
+    /*
+       Returns a list of strings that contain information for the notification
+       The first item in the list is the text of the notification
+       The rest of the items are the names of current tournaments, which will
+       be used for the 'View Live Scores' button of the notification
+       If there are no current tournaments, the text will be an empty string
+       and the list will not have tournament names
+       May throw IOException
+     */
     public List<String> getNotificationList() throws IOException {
         List<String> notificationList = new ArrayList<>();
         String reportForYesterday = getReportForYesterday();
@@ -39,6 +48,9 @@ public class NotificationGetter {
     }
 
     /*
+       Returns a string that contains the names of players that won a
+       tournament yesterday and the name of the tournament
+       If there were no tournament finals yesterday, returns an empty string
        May throw IOException
      */
     private String getReportForYesterday() throws IOException {
@@ -74,18 +86,24 @@ public class NotificationGetter {
                 }
             }
         }
-        reportForYesterday.insert(0, "Yesterday-\n");
+        if (reportForYesterday.length() > 0) {
+            reportForYesterday.insert(0, "Yesterday-\n");
+        }
         return reportForYesterday.toString();
     }
 
     /*
+       Returns a string that contains the names of tournaments that are
+       happening today, the current round for each tournament, and the time
+       of any tournament finals that are happening today
+       If there are no tournaments today, returns an empty string
        May throw IOException
      */
     private String getReportForToday() throws IOException {
         if (tSchedule.select("h3.noMatch").size() > 0) {
             return "";
         }
-        StringBuilder dailyTournaments = new StringBuilder();
+        StringBuilder dailyTournaments = new StringBuilder("Today-\n");
         StringBuilder dailyFinals = new StringBuilder();
         Elements tournaments = tSchedule.select("div.scoreHeadline");
         for (Element tournament : tournaments) {
@@ -97,28 +115,33 @@ public class NotificationGetter {
                     (0, documentTitle.indexOf("Daily Match Schedule - ESPN") - 1);
             String tournamentRound = tournamentDocument
                     .selectFirst("div.matchCourt").text();
-            if (tournamentRound.contains("Singles") &&
-                    tournamentRound.contains("Final")) {
-                Element matchTable = tournamentDocument.selectFirst("table");
-                Elements rows = matchTable.select("tr");
-                String firstOpponent = rows.get(1).text();
-                String secondOpponent = rows.get(2).text();
-                String matchTitle = tournamentDocument
-                        .selectFirst("div.matchTitle").text();
-                String time = matchTitle.substring(
-                        matchTitle.indexOf(":") + 2,
-                        matchTitle.lastIndexOf("-") - 1);
-                String report = tournamentName + " final- " + firstOpponent +
-                        " vs. " + secondOpponent + " at " + time;
-                dailyFinals.append(report);
-            } else {
-                String report = tournamentName + "- " + tournamentRound + "\n";
-                dailyTournaments.append(report);
+            if (tournamentRound.contains("Singles")) {
+                if (tournamentRound.contains("Final")) {
+                    Element matchTable = tournamentDocument.selectFirst("table");
+                    Elements rows = matchTable.select("tr");
+                    String firstOpponent = rows.get(1).text();
+                    String secondOpponent = rows.get(2).text();
+                    String matchTitle = tournamentDocument
+                            .selectFirst("div.matchTitle").text();
+                    String time = matchTitle.substring(
+                            matchTitle.indexOf(":") + 2,
+                            matchTitle.lastIndexOf("-") - 1);
+                    String report = tournamentName + " final- " + firstOpponent +
+                            " vs. " + secondOpponent + " at " + time;
+                    dailyFinals.append(report);
+                } else {
+                    String report = tournamentName + "- " + tournamentRound + "\n";
+                    dailyTournaments.append(report);
+                }
             }
         }
         return dailyTournaments.toString() + dailyFinals.toString();
     }
 
+    /*
+       Returns a list of the tournaments that are happening today
+       If there are no tournaments today, the list will be empty
+     */
     private List<String> getTournaments() {
         List<String> list = new ArrayList<>();
         if (tSchedule.select("h3.noMatch").size() > 0) {
