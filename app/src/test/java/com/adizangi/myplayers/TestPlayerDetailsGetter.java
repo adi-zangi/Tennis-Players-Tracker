@@ -8,10 +8,7 @@ package com.adizangi.myplayers;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.util.List;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
 
 class TestPlayerDetailsGetter {
 
