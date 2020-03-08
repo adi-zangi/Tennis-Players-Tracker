@@ -40,6 +40,8 @@ public class NotificationGetter {
 
     /*
        May throw IOException
+       is check for singles good?
+       add check for matches- this will cause error
      */
     private String getReportForYesterday(Document ySchedule) throws IOException {
         StringBuilder report = new StringBuilder();
@@ -53,12 +55,13 @@ public class NotificationGetter {
                     (0, documentTitle.indexOf("Daily Match Schedule - ESPN") - 1);
             String tournamentRound = tournamentDocument
                     .selectFirst("div.matchCourt").text();
-            if (tournamentRound.contains("Final")) {
+            if (tournamentRound.contains("Singles") &&
+                    tournamentRound.contains("Final")) {
                 Elements matchTables = tournamentDocument.select("table");
                 for (Element table : matchTables) {
                     Elements rows = table.select("td");
-                    Element firstRow = rows.get(0);
-                    Element secondRow = rows.get(1);
+                    Element firstRow = rows.get(1);
+                    Element secondRow = rows.get(2);
                     if (firstRow.select("div.arrowWrapper").size() > 0) {
                         String player = firstRow.text();
                         report.append(player);
@@ -95,6 +98,10 @@ public class NotificationGetter {
             String tournamentRound = tournamentDocument
                     .selectFirst("div.matchCourt").text();
             if (tournamentRound.contains("Final")) {
+                Element matchTable = tournamentDocument.selectFirst("table");
+                Elements rows = matchTable.select("tr");
+                String firstOpponent = rows.get(1).text();
+                String secondOpponent = rows.get(2).text();
 
             } else {
                 dailyTournaments.append(tournamentName);
