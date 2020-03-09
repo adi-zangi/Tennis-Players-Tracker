@@ -10,7 +10,7 @@ import org.jsoup.nodes.Document;
 
 import java.util.List;
 
-class TestPlayerChoicesGetter {
+class PlayerChoicesGetterTest {
 
     public static void main(String[] args) {
         System.out.println("------------ Player Choices Getter ------------");

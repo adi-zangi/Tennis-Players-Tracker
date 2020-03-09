@@ -10,7 +10,7 @@ import org.jsoup.nodes.Document;
 
 import java.util.Map;
 
-class TestPlayerDetailsGetter {
+class PlayerDetailsGetterTest {
 
     public static void main(String[] args) {
         System.out.println("------------ Player Details Getter ------------");
