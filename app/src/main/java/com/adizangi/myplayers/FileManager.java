@@ -19,7 +19,7 @@ class FileManager {
 
     private static final String MY_PLAYERS_FILENAME = "my_players";
     private static final String TOTAL_PLAYERS_FILENAME = "total_players";
-    private static final String DETAILS_FILENAME = "player_details";
+    private static final String STATS_FILENAME = "player_stats";
     private static final String NOTIF_FILENAME = "notification_list";
 
     private Context context;
@@ -76,21 +76,21 @@ class FileManager {
     }
 
     /*
-       Reads the player details map from the file and returns it
+       Reads the player stats map from the file and returns it
        Returns an empty map if there is an error
      */
     @SuppressWarnings("unchecked")
-    Map<String, PlayerStats> readPlayerDetails() {
+    Map<String, PlayerStats> readPlayerStats() {
         try {
             FileInputStream inputStream =
-                    context.openFileInput(DETAILS_FILENAME);
+                    context.openFileInput(STATS_FILENAME);
             ObjectInputStream objectInputStream =
                     new ObjectInputStream(inputStream);
-            Map<String, PlayerStats> playerDetails =
+            Map<String, PlayerStats> stats =
                     (Map<String, PlayerStats>) objectInputStream.readObject();
             objectInputStream.close();
             inputStream.close();
-            return playerDetails;
+            return stats;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -139,13 +139,13 @@ class FileManager {
     /*
        Stores the given total players list in a file
      */
-    void storeTotalPlayers(List<String> playerChoices) {
+    void storeTotalPlayers(List<String> totalPlayers) {
         try {
             FileOutputStream outputStream = context.openFileOutput
                     (TOTAL_PLAYERS_FILENAME, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream =
                     new ObjectOutputStream(outputStream);
-            objectOutputStream.writeObject(playerChoices);
+            objectOutputStream.writeObject(totalPlayers);
             objectOutputStream.close();
             outputStream.close();
         } catch (Exception e) {
@@ -154,15 +154,15 @@ class FileManager {
     }
 
     /*
-       Stores the given player details map in a file
+       Stores the given player stats map in a file
      */
-    void storePlayerDetails(Map<String, PlayerStats> playerDetails) {
+    void storePlayerStats(Map<String, PlayerStats> playerStats) {
         try {
             FileOutputStream outputStream = context.openFileOutput
-                    (DETAILS_FILENAME, Context.MODE_PRIVATE);
+                    (STATS_FILENAME, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream =
                     new ObjectOutputStream(outputStream);
-            objectOutputStream.writeObject(playerDetails);
+            objectOutputStream.writeObject(playerStats);
             objectOutputStream.close();
             outputStream.close();
         } catch (Exception e) {
