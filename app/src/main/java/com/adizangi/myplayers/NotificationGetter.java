@@ -71,8 +71,9 @@ class NotificationGetter {
             if (tournamentRound.contains("Singles") &&
                     tournamentRound.contains("Final")) {
                 Elements matchTables = tournamentDoc.select("table");
-                for (Element table : matchTables) {
-                    Elements rows = table.select("td");
+                int numOfTables = matchTables.size();
+                for (int table = 0; table < numOfTables; table += 2) {
+                    Elements rows = matchTables.get(table).select("td");
                     Element firstRow = rows.get(1);
                     Element secondRow = rows.get(2);
                     String player;

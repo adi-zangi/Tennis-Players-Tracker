@@ -17,6 +17,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -72,7 +74,7 @@ public class GettingStoringDataTest {
         playerChoices = choicesGetter.getPlayerChoicesList();
         System.out.println("List (size = " + playerChoices.size() + "):");
         for (String player : playerChoices) {
-            System.out.println(playerChoices);
+            System.out.println(player);
         }
         System.out.println();
     }
