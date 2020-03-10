@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+// Change to unit test with Mockito- can mock context and much faster
+
 @RunWith(AndroidJUnit4.class)
 public class FileManagerTest {
 
@@ -30,6 +32,8 @@ public class FileManagerTest {
 
     @Before
     public void setUp() {
+        System.out.println("------------ File Manager ------------");
+        System.out.println();
         myPlayers = new ArrayList<>(Arrays.asList("player1", "player2"));
         playerChoices = new ArrayList<>(Arrays.asList("player1", "player2", "player3"));
         playerDetails = new HashMap<>();
