@@ -5,7 +5,9 @@
 
 package com.adizangi.myplayers;
 
-class PlayerStats {
+import java.io.Serializable;
+
+class PlayerStats implements Serializable {
 
     private String name;
     private String ranking;
