@@ -6,7 +6,6 @@ package com.adizangi.myplayers;
 
 import android.content.Context;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -19,7 +18,7 @@ import java.util.Map;
 class FileManager {
 
     private static final String MY_PLAYERS_FILENAME = "my_players";
-    private static final String CHOICES_FILENAME = "player_choices";
+    private static final String TOTAL_PLAYERS_FILENAME = "total_players";
     private static final String DETAILS_FILENAME = "player_details";
     private static final String NOTIF_FILENAME = "notification_list";
 
@@ -55,21 +54,21 @@ class FileManager {
     }
 
     /*
-       Reads the list of the player choices from the file and returns it
+       Reads the total players list from the file and returns it
        Returns an empty list if there is an error
      */
     @SuppressWarnings("unchecked")
-    List<String> readPlayerChoices() {
+    List<String> readTotalPlayers() {
         try {
             FileInputStream inputStream =
-                    context.openFileInput(CHOICES_FILENAME);
+                    context.openFileInput(TOTAL_PLAYERS_FILENAME);
             ObjectInputStream objectInputStream =
                     new ObjectInputStream(inputStream);
-            List<String> playerChoices =
+            List<String> totalPlayers =
                     (List<String>) objectInputStream.readObject();
             objectInputStream.close();
             inputStream.close();
-            return playerChoices;
+            return totalPlayers;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,14 +80,14 @@ class FileManager {
        Returns an empty map if there is an error
      */
     @SuppressWarnings("unchecked")
-    Map<String, PlayerDetails> readPlayerDetails() {
+    Map<String, PlayerStats> readPlayerDetails() {
         try {
             FileInputStream inputStream =
                     context.openFileInput(DETAILS_FILENAME);
             ObjectInputStream objectInputStream =
                     new ObjectInputStream(inputStream);
-            Map<String, PlayerDetails> playerDetails =
-                    (Map<String, PlayerDetails>) objectInputStream.readObject();
+            Map<String, PlayerStats> playerDetails =
+                    (Map<String, PlayerStats>) objectInputStream.readObject();
             objectInputStream.close();
             inputStream.close();
             return playerDetails;
@@ -138,19 +137,15 @@ class FileManager {
     }
 
     /*
-       Stores the given player choices list in a file
+       Stores the given total players list in a file
      */
-    void storePlayerChoices(List<String> playerChoices) {
+    void storeTotalPlayers(List<String> playerChoices) {
         try {
             FileOutputStream outputStream = context.openFileOutput
-                    (CHOICES_FILENAME, Context.MODE_PRIVATE);
-            System.out.println("got output stream");
-            System.out.println("output stream: " + outputStream);
-            System.out.println("context: " + context);
+                    (TOTAL_PLAYERS_FILENAME, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream =
                     new ObjectOutputStream(outputStream);
             objectOutputStream.writeObject(playerChoices);
-            System.out.println("wrote to file");
             objectOutputStream.close();
             outputStream.close();
         } catch (Exception e) {
@@ -161,7 +156,7 @@ class FileManager {
     /*
        Stores the given player details map in a file
      */
-    void storePlayerDetails(Map<String, PlayerDetails> playerDetails) {
+    void storePlayerDetails(Map<String, PlayerStats> playerDetails) {
         try {
             FileOutputStream outputStream = context.openFileOutput
                     (DETAILS_FILENAME, Context.MODE_PRIVATE);

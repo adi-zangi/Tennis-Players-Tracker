@@ -38,7 +38,7 @@ public class GettingStoringDataTest {
     private Document tSchedule;
     private Document ySchedule;
     private List<String> playerChoices;
-    private Map<String, PlayerDetails> playerDetails;
+    private Map<String, PlayerStats> playerDetails;
     private List<String> notificationList;
 
     @Before
@@ -88,8 +88,8 @@ public class GettingStoringDataTest {
     private void getPlayerChoices() {
         System.out.println("---------- Player Choices Getter ----------");
         System.out.println();
-        PlayerChoicesGetter choicesGetter = new PlayerChoicesGetter(mRankings, wRankings);
-        playerChoices = choicesGetter.getPlayerChoicesList();
+        TotalPlayersFetcher choicesGetter = new TotalPlayersFetcher(mRankings, wRankings);
+        playerChoices = choicesGetter.getTotalPlayersList();
         System.out.println("List (size = " + playerChoices.size() + "):");
         for (String player : playerChoices) {
             System.out.println(player);
@@ -100,7 +100,7 @@ public class GettingStoringDataTest {
     private void getPlayerDetails() throws IOException {
         System.out.println("---------- Player Details Getter ----------");
         System.out.println();
-        PlayerDetailsGetter detailsGetter = new PlayerDetailsGetter(mRankings, wRankings);
+        PlayerStatsFetcher detailsGetter = new PlayerStatsFetcher(mRankings, wRankings);
         playerDetails = detailsGetter.getPlayerDetailsMap();
         System.out.println("Some items from map (size = " + playerDetails.size() + "):");
         int i = 0;
@@ -110,7 +110,7 @@ public class GettingStoringDataTest {
             }
             System.out.println();
             System.out.println(player);
-            PlayerDetails details = playerDetails.get(player);
+            PlayerStats details = playerDetails.get(player);
             System.out.println("Name: " + details.getName());
             System.out.println("Ranking: " + details.getRanking());
             System.out.println("Titles: " + details.getTitles());
@@ -127,7 +127,7 @@ public class GettingStoringDataTest {
     private void getNotification() throws IOException {
         System.out.println("---------- Notification Getter ----------");
         System.out.println();
-        NotificationGetter notificationGetter = new NotificationGetter(tSchedule, ySchedule);
+        NotificationFetcher notificationGetter = new NotificationFetcher(tSchedule, ySchedule);
         notificationList = notificationGetter.getNotificationList();
         System.out.println("List (size = " + notificationList.size() + "):");
         for (String item : notificationList) {
@@ -138,15 +138,15 @@ public class GettingStoringDataTest {
 
     private void storeData() {
         FileManager fileManager = new FileManager(mockContext);
-        fileManager.storePlayerChoices(playerChoices);
+        fileManager.storeTotalPlayers(playerChoices);
         fileManager.storePlayerDetails(playerDetails);
         fileManager.storeNotificationList(notificationList);
     }
 
     private void readData() {
         FileManager fileManager = new FileManager(mockContext);
-        List<String> playerChoicesFile = fileManager.readPlayerChoices();
-        Map<String, PlayerDetails> playerDetailsFile = fileManager.readPlayerDetails();
+        List<String> playerChoicesFile = fileManager.readTotalPlayers();
+        Map<String, PlayerStats> playerDetailsFile = fileManager.readPlayerDetails();
         List<String> notifListFile = fileManager.readNotificationList();
         assertEquals(playerChoices, playerChoicesFile);
         assertEquals(playerDetails, playerDetailsFile);

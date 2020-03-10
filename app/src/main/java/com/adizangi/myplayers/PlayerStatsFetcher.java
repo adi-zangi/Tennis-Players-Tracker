@@ -1,5 +1,5 @@
 /*
-   Gets a map that contains details about each player from the players the
+   Gets a map that contains statistics about each player from the players the
    user can add
    Information is taken from the ESPN website
  */
@@ -18,34 +18,34 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-class PlayerDetailsGetter {
+class PlayerStatsFetcher {
 
     private Document mRankings;
     private Document wRankings;
 
     /*
-       Constructs a PlayerDetailsGetter with the given HTML documents of the
+       Constructs a PlayerStatsFetcher with the given HTML documents of the
        men's tennis rankings and women's tennis rankings from ESPN
      */
-    PlayerDetailsGetter(Document mRankings, Document wRankings) {
+    PlayerStatsFetcher(Document mRankings, Document wRankings) {
         this.mRankings = mRankings;
         this.wRankings = wRankings;
     }
 
     /*
-       Returns a map from player to a PlayerDetails object
+       Returns a map from player to a PlayerStats object
        The keys are each player's name followed by ranking in parenthesis
        The ESPN website doesn't have player information when a new year
        starts and there have not been any tennis tournaments in the new year
        In this case, returns an empty map
        May throw IOException
      */
-    Map<String, PlayerDetails> getPlayerDetailsMap()
+    Map<String, PlayerStats> getPlayerDetailsMap()
             throws IOException {
-        Map<String, PlayerDetails> playerDetailsMap = new HashMap<>();
+        Map<String, PlayerStats> stats = new HashMap<>();
         Element mRankingsTable = mRankings.selectFirst("table");
         if (mRankingsTable == null) {
-            return playerDetailsMap;
+            return stats;
         }
         Elements mRows = mRankingsTable.select("tr");
         Element wRankingsTable = wRankings.selectFirst("table");
@@ -59,8 +59,8 @@ class PlayerDetailsGetter {
                 String playerURL = playerNameLink.attr("abs:href");
                 Document playerDocument = Jsoup.connect(playerURL).get();
                 String playerKey = getPlayerKey(playerDocument);
-                PlayerDetails playerDetails = getPlayerDetails(playerDocument);
-                playerDetailsMap.put(playerKey, playerDetails);
+                PlayerStats playerStats = getPlayerStats(playerDocument);
+                stats.put(playerKey, playerStats);
             }
             if (rowIndex < wNumOfRows) {
                 Elements wColumns = wRows.get(rowIndex).select("td");
@@ -68,11 +68,11 @@ class PlayerDetailsGetter {
                 String playerURL = playerNameLink.attr("abs:href");
                 Document playerDocument = Jsoup.connect(playerURL).get();
                 String playerKey = getPlayerKey(playerDocument);
-                PlayerDetails playerDetails = getPlayerDetails(playerDocument);
-                playerDetailsMap.put(playerKey, playerDetails);
+                PlayerStats playerStats = getPlayerStats(playerDocument);
+                stats.put(playerKey, playerStats);
             }
         }
-        return playerDetailsMap;
+        return stats;
     }
 
     /*
@@ -86,10 +86,10 @@ class PlayerDetailsGetter {
     }
 
     /*
-       Returns a PlayerDetails object for the player whose information is in
+       Returns a PlayerStats object for the player whose information is in
        the given document
      */
-    private PlayerDetails getPlayerDetails(Document playerDocument) {
+    private PlayerStats getPlayerStats(Document playerDocument) {
         String name = getName(playerDocument);
         String ranking = "Current ranking: " + getRanking(playerDocument);
         String titles = getTitles(playerDocument);
@@ -109,7 +109,7 @@ class PlayerDetailsGetter {
                     (playerDocument, latestResultIndex);
         }
         String resultsURL = getResultsURL(playerDocument);
-        return new PlayerDetails(
+        return new PlayerStats(
                 name,
                 ranking,
                 titles,

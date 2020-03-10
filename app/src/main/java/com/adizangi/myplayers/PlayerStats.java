@@ -1,11 +1,11 @@
 /*
-   Contains details about a tennis player, including statistics and tournament
-   results in singles tennis
+   Contains statistics about a tennis player, including tournament results
+   in singles tennis
  */
 
 package com.adizangi.myplayers;
 
-class PlayerDetails {
+class PlayerStats {
 
     private String name;
     private String ranking;
@@ -17,16 +17,16 @@ class PlayerDetails {
     private String resultsURL;
 
     /*
-       Constructs a PlayerDetails object
+       Constructs a PlayerStats object
      */
-    PlayerDetails(String name,
-                         String ranking,
-                         String titles,
-                         String tournamentStanding,
-                         String currentTournament,
-                         String latestMatchResult,
-                         String upcomingMatch,
-                         String resultsURL) {
+    PlayerStats(String name,
+                String ranking,
+                String titles,
+                String tournamentStanding,
+                String currentTournament,
+                String latestMatchResult,
+                String upcomingMatch,
+                String resultsURL) {
         this.name = name;
         this.ranking = ranking;
         this.titles = titles;

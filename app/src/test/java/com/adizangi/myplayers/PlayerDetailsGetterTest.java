@@ -1,5 +1,5 @@
 /*
-   Test for PlayerDetailsGetter
+   Test for PlayerStatsFetcher
    Prints the player details map so it can be compared to the ESPN website
  */
 
@@ -26,9 +26,9 @@ class PlayerDetailsGetterTest {
                     (estimatedTime / 1000000000.0) + " seconds");
             System.out.println();
             startTime = System.nanoTime();
-            PlayerDetailsGetter detailsGetter =
-                    new PlayerDetailsGetter(mRankings, wRankings);
-            Map<String, PlayerDetails> map = detailsGetter.getPlayerDetailsMap();
+            PlayerStatsFetcher detailsGetter =
+                    new PlayerStatsFetcher(mRankings, wRankings);
+            Map<String, PlayerStats> map = detailsGetter.getPlayerDetailsMap();
             estimatedTime = System.nanoTime() - startTime;
             System.out.println("Success");
             System.out.println();
@@ -45,7 +45,7 @@ class PlayerDetailsGetterTest {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private static void printMap(Map<String, PlayerDetails> map) {
+    private static void printMap(Map<String, PlayerStats> map) {
         int i = 0;
         for (String player : map.keySet()) {
             if (i == 4) {
@@ -53,7 +53,7 @@ class PlayerDetailsGetterTest {
             }
             System.out.println();
             System.out.println(player);
-            PlayerDetails details = map.get(player);
+            PlayerStats details = map.get(player);
             System.out.println("Name: " + details.getName());
             System.out.println("Ranking: " + details.getRanking());
             System.out.println("Titles: " + details.getTitles());

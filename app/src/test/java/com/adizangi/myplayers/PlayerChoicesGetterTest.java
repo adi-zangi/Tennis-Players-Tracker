@@ -1,5 +1,5 @@
 /*
-   Test for PlayerChoicesGetter
+   Test for TotalPlayersFetcher
    Prints the player choices list so it can be compared to the ESPN website
  */
 
@@ -26,9 +26,9 @@ class PlayerChoicesGetterTest {
                     (estimatedTime / 1000000000.0) + " seconds");
             System.out.println();
             startTime = System.nanoTime();
-            PlayerChoicesGetter playersGetter =
-                    new PlayerChoicesGetter(mRankings, wRankings);
-            List<String> playerChoices = playersGetter.getPlayerChoicesList();
+            TotalPlayersFetcher playersGetter =
+                    new TotalPlayersFetcher(mRankings, wRankings);
+            List<String> playerChoices = playersGetter.getTotalPlayersList();
             estimatedTime = System.nanoTime() - startTime;
             System.out.println("Success");
             System.out.println();

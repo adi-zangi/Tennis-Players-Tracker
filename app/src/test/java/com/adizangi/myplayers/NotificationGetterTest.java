@@ -1,5 +1,5 @@
 /*
-   Test for NotificationGetter
+   Test for NotificationFetcher
    Prints the notification list so it can be compared to the ESPN website
  */
 
@@ -35,8 +35,8 @@ class NotificationGetterTest {
                     (estimatedTime / 1000000000.0) + " seconds");
             System.out.println();
             startTime = System.nanoTime();
-            NotificationGetter notificationGetter =
-                    new NotificationGetter(tSchedule, ySchedule);
+            NotificationFetcher notificationGetter =
+                    new NotificationFetcher(tSchedule, ySchedule);
             List<String> list = notificationGetter.getNotificationList();
             estimatedTime = System.nanoTime() - startTime;
             System.out.println("Success");

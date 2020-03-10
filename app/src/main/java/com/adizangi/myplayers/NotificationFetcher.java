@@ -1,5 +1,5 @@
 /*
-   Gets information that will be put in the notification sent to the user
+   Fetches information that will be put in the notification sent to the user
    Information is taken from the ESPN website
  */
 
@@ -14,16 +14,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-class NotificationGetter {
+class NotificationFetcher {
 
     private Document tSchedule;
     private Document ySchedule;
 
     /*
-       Constructs a NotificationGetter with the given HTML documents of
+       Constructs a NotificationFetcher with the given HTML documents of
        today's match schedule and yesterday's match schedule from ESPN
      */
-    NotificationGetter(Document tSchedule, Document ySchedule) {
+    NotificationFetcher(Document tSchedule, Document ySchedule) {
         this.tSchedule = tSchedule;
         this.ySchedule = ySchedule;
     }

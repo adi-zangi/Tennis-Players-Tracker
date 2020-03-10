@@ -1,5 +1,5 @@
 /*
-   Gets a list of all the players the user can add
+   Fetches a list of all the players the user can add
    The players in the list are based on professional tennis player rankings in
    the ESPN website
  */
@@ -13,33 +13,33 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-class PlayerChoicesGetter {
+class TotalPlayersFetcher {
 
     private Document mRankings;
     private Document wRankings;
 
     /*
-       Constructs a PlayerChoicesGetter with the given HTML documents of the
+       Constructs a TotalPlayersFetcher with the given HTML documents of the
        men's tennis rankings and women's tennis rankings from ESPN
      */
-    PlayerChoicesGetter(Document mRankings, Document wRankings) {
+    TotalPlayersFetcher(Document mRankings, Document wRankings) {
         this.mRankings = mRankings;
         this.wRankings = wRankings;
     }
 
     /*
-       Returns the player choices list
+       Returns the total players list
        The list contains the top 100 men players and the top 100 women players
        Each player is represented by name followed by ranking in parenthesis
        The ESPN website doesn't have tennis rankings when a new year starts
        and there have not been any tennis tournaments in the new year
        In this case, returns an empty list
      */
-    List<String> getPlayerChoicesList() {
-        List<String> playerChoices = new ArrayList<>();
+    List<String> getTotalPlayersList() {
+        List<String> players = new ArrayList<>();
         Element mRankingsTable = mRankings.selectFirst("table");
         if (mRankingsTable == null) {
-            return playerChoices;
+            return players;
         }
         Elements mRows = mRankingsTable.select("tr");
         Element wRankingsTable = wRankings.selectFirst("table");
@@ -51,16 +51,16 @@ class PlayerChoicesGetter {
                 Elements mColumns = mRows.get(rowIndex).select("td");
                 String playerName = mColumns.get(2).text();
                 String playerRanking = mColumns.get(0).text();
-                playerChoices.add(playerName + " (" + playerRanking + ")");
+                players.add(playerName + " (" + playerRanking + ")");
             }
             if (rowIndex < wNumOfRows) {
                 Elements wColumns = wRows.get(rowIndex).select("td");
                 String playerName = wColumns.get(2).text();
                 String playerRanking = wColumns.get(0).text();
-                playerChoices.add(playerName + " (" + playerRanking + ")");
+                players.add(playerName + " (" + playerRanking + ")");
             }
         }
-        return playerChoices;
+        return players;
     }
 
 }
