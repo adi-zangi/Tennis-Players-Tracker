@@ -6,6 +6,7 @@ package com.adizangi.myplayers;
 
 import android.content.Context;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -143,9 +144,13 @@ class FileManager {
         try {
             FileOutputStream outputStream = context.openFileOutput
                     (CHOICES_FILENAME, Context.MODE_PRIVATE);
+            System.out.println("got output stream");
+            System.out.println("output stream: " + outputStream);
+            System.out.println("context: " + context);
             ObjectOutputStream objectOutputStream =
                     new ObjectOutputStream(outputStream);
             objectOutputStream.writeObject(playerChoices);
+            System.out.println("wrote to file");
             objectOutputStream.close();
             outputStream.close();
         } catch (Exception e) {

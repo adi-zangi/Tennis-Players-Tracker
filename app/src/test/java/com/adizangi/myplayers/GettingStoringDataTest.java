@@ -4,11 +4,15 @@ import android.content.Context;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -17,15 +21,17 @@ import java.util.Locale;
 import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GettingStoringDataTest {
 
-    @Mock
-    Context mockContext;
+    @Mock Context mockContext;
+    @Mock FileOutputStream fileOutputStream;
+    @Mock FileInputStream fileInputStream;
 
     private Document mRankings;
     private Document wRankings;
@@ -35,6 +41,18 @@ public class GettingStoringDataTest {
     private Map<String, PlayerDetails> playerDetails;
     private List<String> notificationList;
 
+    @Before
+    public void setup(){
+        try {
+            MockitoAnnotations.initMocks(this);
+            when(mockContext.openFileOutput(anyString(), anyInt())).thenReturn(fileOutputStream);
+            when(mockContext.openFileInput(anyString())).thenReturn(fileInputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
     @Test
     public void testGettingStoringData() {
         try {
@@ -43,7 +61,7 @@ public class GettingStoringDataTest {
             long startTime = System.nanoTime();
             getHTMLDocuments();
             getPlayerChoices();
-            getPlayerDetails();
+            //getPlayerDetails(); // remove
             getNotification();
             storeData();
             readData();
@@ -121,17 +139,17 @@ public class GettingStoringDataTest {
     private void storeData() {
         FileManager fileManager = new FileManager(mockContext);
         fileManager.storePlayerChoices(playerChoices);
-        fileManager.storePlayerDetails(playerDetails);
+        //fileManager.storePlayerDetails(playerDetails); // remove
         fileManager.storeNotificationList(notificationList);
     }
 
     private void readData() {
         FileManager fileManager = new FileManager(mockContext);
         List<String> playerChoicesFile = fileManager.readPlayerChoices();
-        Map<String, PlayerDetails> playerDetailsFile = fileManager.readPlayerDetails();
+        //Map<String, PlayerDetails> playerDetailsFile = fileManager.readPlayerDetails(); // remove
         List<String> notifListFile = fileManager.readNotificationList();
         assertEquals(playerChoices, playerChoicesFile);
-        assertEquals(playerDetails, playerDetailsFile);
+        //assertEquals(playerDetails, playerDetailsFile); // remove
         assertEquals(notificationList, notifListFile);
     }
 
