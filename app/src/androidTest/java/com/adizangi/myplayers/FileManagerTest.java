@@ -2,26 +2,16 @@ package com.adizangi.myplayers;
 
 import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
-// Change to unit test with Mockito- can mock context and much faster
-
-@RunWith(AndroidJUnit4.class)
 public class FileManagerTest {
 
     private FileManager fileManager;
