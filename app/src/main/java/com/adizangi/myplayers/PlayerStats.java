@@ -7,7 +7,7 @@ package com.adizangi.myplayers;
 
 import java.io.Serializable;
 
-class PlayerStats implements Serializable {
+class PlayerStats implements Comparable<PlayerStats>, Serializable {
 
     private String name;
     private String ranking;
@@ -105,5 +105,10 @@ class PlayerStats implements Serializable {
      */
     String getResultsURL() {
         return resultsURL;
+    }
+
+    @Override
+    public int compareTo(PlayerStats o) {
+        return 0;
     }
 }
