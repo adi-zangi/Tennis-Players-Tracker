@@ -16,10 +16,12 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class FileManagerTest {
 
+    private FileManager fileManager;
     private List<String> myPlayers;
     private List<String> totalPlayers;
     private Map<String, PlayerStats> stats;
@@ -57,31 +59,25 @@ public class FileManagerTest {
 
     @Test
     public void testFileManager() {
+        System.out.println("---------------- Test for FileManager ----------------");
         Context context = ApplicationProvider.getApplicationContext();
-        FileManager fileManager = new FileManager(context);
+        fileManager = new FileManager(context);
+        storeFiles();
+        readFiles();
+    }
+
+    private void storeFiles() {
         fileManager.storeMyPlayers(myPlayers);
         fileManager.storeTotalPlayers(totalPlayers);
         fileManager.storePlayerStats(stats);
         fileManager.storeNotificationList(notifList);
+    }
 
+    private void readFiles() {
         assertEquals(myPlayers, fileManager.readMyPlayers());
         assertEquals(totalPlayers, fileManager.readTotalPlayers());
+        assertEquals(stats.size(), fileManager.readPlayerStats().size());
         assertEquals(notifList, fileManager.readNotificationList());
-        Map<String, PlayerStats> actual = fileManager.readPlayerStats();
-        assertEquals(stats.keySet(), actual.keySet());
-        for (String key : stats.keySet()) {
-            PlayerStats expectedStats = stats.get(key);
-            PlayerStats actualStats = actual.get(key);
-            assertEquals(expectedStats.getName(), actualStats.getName());
-            assertEquals(expectedStats.getRanking(), actualStats.getRanking());
-            assertEquals(expectedStats.getTitles(), actualStats.getTitles());
-            assertEquals(expectedStats.getTournamentStanding(),
-                    actualStats.getTournamentStanding());
-            assertEquals(expectedStats.getCurrentTournament(), actualStats.getCurrentTournament());
-            assertEquals(expectedStats.getLatestMatchResult(), actualStats.getLatestMatchResult());
-            assertEquals(expectedStats.getUpcomingMatch(), actualStats.getUpcomingMatch());
-            assertEquals(expectedStats.getResultsURL(), actualStats.getResultsURL());
-        }
     }
 
 }
