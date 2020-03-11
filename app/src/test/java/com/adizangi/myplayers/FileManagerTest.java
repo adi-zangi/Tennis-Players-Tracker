@@ -1,3 +1,9 @@
+/*
+   Test for FileManager class
+   Tests storing and reading files with the FileManager class
+   Runs with Robolectric to use app resources without running the app
+ */
+
 package com.adizangi.myplayers;
 
 import android.content.Context;

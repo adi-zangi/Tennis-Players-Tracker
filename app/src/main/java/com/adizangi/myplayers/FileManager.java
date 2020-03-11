@@ -1,13 +1,14 @@
 /*
-   Manages reading and saving files in internal storage
+   Manages reading and saving files
+   Files are saved in internal storage
+   They are only accessible to this app and are persistent as long as the app
+   is installed, but are removed when the app is uninstalled
  */
 
 package com.adizangi.myplayers;
 
 import android.content.Context;
-import android.util.Log;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
