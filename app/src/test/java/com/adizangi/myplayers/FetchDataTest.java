@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import static org.junit.Assert.fail;
 
 public class FetchDataTest {

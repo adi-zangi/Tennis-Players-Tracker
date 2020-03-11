@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class FileManagerTest {
@@ -59,7 +57,6 @@ public class FileManagerTest {
 
     @Test
     public void testFileManager() {
-        System.out.println("---------------- Test for FileManager ----------------");
         Context context = ApplicationProvider.getApplicationContext();
         fileManager = new FileManager(context);
         storeFiles();
