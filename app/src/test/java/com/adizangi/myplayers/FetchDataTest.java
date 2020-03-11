@@ -1,3 +1,9 @@
+/*
+   Test for TotalPlayersFetcher, PlayerStatsFetcher, and NotificationFetcher
+   Prints the data fetched by the classes so it can be compared to the ESPN website
+   Prints the total time taken to fetch the data
+ */
+
 package com.adizangi.myplayers;
 
 import org.jsoup.Jsoup;

@@ -63,10 +63,25 @@ public class FileManagerTest {
         fileManager.storeTotalPlayers(totalPlayers);
         fileManager.storePlayerStats(stats);
         fileManager.storeNotificationList(notifList);
+
         assertEquals(myPlayers, fileManager.readMyPlayers());
         assertEquals(totalPlayers, fileManager.readTotalPlayers());
-        assertEquals(stats, fileManager.readPlayerStats());
         assertEquals(notifList, fileManager.readNotificationList());
+        Map<String, PlayerStats> actual = fileManager.readPlayerStats();
+        assertEquals(stats.keySet(), actual.keySet());
+        for (String key : stats.keySet()) {
+            PlayerStats expectedStats = stats.get(key);
+            PlayerStats actualStats = actual.get(key);
+            assertEquals(expectedStats.getName(), actualStats.getName());
+            assertEquals(expectedStats.getRanking(), actualStats.getRanking());
+            assertEquals(expectedStats.getTitles(), actualStats.getTitles());
+            assertEquals(expectedStats.getTournamentStanding(),
+                    actualStats.getTournamentStanding());
+            assertEquals(expectedStats.getCurrentTournament(), actualStats.getCurrentTournament());
+            assertEquals(expectedStats.getLatestMatchResult(), actualStats.getLatestMatchResult());
+            assertEquals(expectedStats.getUpcomingMatch(), actualStats.getUpcomingMatch());
+            assertEquals(expectedStats.getResultsURL(), actualStats.getResultsURL());
+        }
     }
 
 }
