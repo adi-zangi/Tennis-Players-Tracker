@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import androidx.test.core.app.ApplicationProvider;
 
@@ -47,7 +48,8 @@ public class FetchDataTest {
     }
 
     private void fetchHTMLDocuments() throws IOException {
-        Calendar calendar = Calendar.getInstance();
+        TimeZone timeZone = TimeZone.getTimeZone("US/Eastern");
+        Calendar calendar = Calendar.getInstance(timeZone, Locale.US);
         calendar.add(Calendar.DATE, -1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd", Locale.US);
         String dateOfYesterday = dateFormat.format(calendar.getTime());
