@@ -59,8 +59,7 @@ public class FetchDataWorker extends Worker {
     }
 
     private void getHTMLDocuments() throws IOException {
-        TimeZone timeZone = TimeZone.getTimeZone("US/Eastern");
-        Calendar calendar = Calendar.getInstance(timeZone, Locale.US);
+        Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, -1);
         SimpleDateFormat dateFormat =
                 new SimpleDateFormat("yyyyMMdd", Locale.US);

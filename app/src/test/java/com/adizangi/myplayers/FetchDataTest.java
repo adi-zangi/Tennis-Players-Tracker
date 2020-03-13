@@ -48,8 +48,7 @@ public class FetchDataTest {
     }
 
     private void fetchHTMLDocuments() throws IOException {
-        TimeZone timeZone = TimeZone.getTimeZone("US/Eastern");
-        Calendar calendar = Calendar.getInstance(timeZone, Locale.US);
+        Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, -1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd", Locale.US);
         String dateOfYesterday = dateFormat.format(calendar.getTime());

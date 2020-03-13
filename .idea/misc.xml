@@ -39,14 +39,6 @@
       </value>
     </option>
   </component>
-  <component name="ProjectPlainTextFileTypeManager">
-    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/cl_error_screen.xml" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/cl_spinner_add_player_view.xml" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/cl_spinner_my_player_view.xml" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/fl_loading_screen.xml" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/toolbar.xml" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/tv_spinner_hint.xml" />
-  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
