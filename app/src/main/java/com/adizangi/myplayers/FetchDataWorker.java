@@ -1,3 +1,8 @@
+/*
+   A background task that fetches data that will be displayed in the app and
+   sent to the user in notifications
+ */
+
 package com.adizangi.myplayers;
 
 import android.content.Context;
@@ -24,6 +29,9 @@ public class FetchDataWorker extends Worker {
     private Document tSchedule;
     private Document ySchedule;
 
+    /*
+       Constructs a FetchDataWorker
+     */
     public FetchDataWorker(@NonNull Context context,
                            @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -31,6 +39,12 @@ public class FetchDataWorker extends Worker {
 
     @NonNull
     @Override
+    /*
+       Fetches the data in the background, which includes information about
+       tennis players and tournaments
+       Saves the data to files
+       Returns a Result that indicates whether the task was successful
+     */
     public Result doWork() {
         try {
             getHTMLDocuments();
@@ -54,6 +68,12 @@ public class FetchDataWorker extends Worker {
         }
     }
 
+    /*
+       Gets HTML Documents that the data will be taken from
+       The Documents include men's tennis rankings, women's tennis rankings,
+       today's match schedule, and yesterday's match schedule from the ESPN
+       website
+     */
     private void getHTMLDocuments() throws IOException {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, -1);
