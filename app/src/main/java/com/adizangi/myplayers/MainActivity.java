@@ -15,6 +15,7 @@ import androidx.work.WorkManager;
 import android.os.Bundle;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,18 +26,22 @@ public class MainActivity extends AppCompatActivity {
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
-        /*
         Calendar calendar = Calendar.getInstance();
-        if (calendar.get(Calendar.HOUR_OF_DAY) > 5) {
-
+        if (calendar.get(Calendar.HOUR_OF_DAY) > 5 |
+                (calendar.get(Calendar.HOUR_OF_DAY) == 4 &&
+                        calendar.get(Calendar.MINUTE) == 59)) {
+            calendar.add(Calendar.DATE, 1);
         }
-        PeriodicWorkRequest fetchDataRequest = new PeriodicWorkRequest.Builder(FetchDataWorker.class, )
-
-         */
-        OneTimeWorkRequest fetchDataRequest =
-                new OneTimeWorkRequest.Builder(FetchDataWorker.class)
-                        .setConstraints(constraints)
-                        .build();
+        calendar.set(Calendar.HOUR_OF_DAY, 5);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        long initialDelay = calendar.getTimeInMillis() -
+                System.currentTimeMillis();
+        PeriodicWorkRequest fetchDataRequest = new PeriodicWorkRequest.Builder
+                (FetchDataWorker.class, 1, TimeUnit.DAYS)
+                .setConstraints(constraints)
+                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+                .build();
         WorkManager.getInstance(this).enqueue(fetchDataRequest);
     }
 
