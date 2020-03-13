@@ -27,7 +27,6 @@ public class FetchDataWorker extends Worker {
     public FetchDataWorker(@NonNull Context context,
                            @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
-        Log.i(getClass().getSimpleName(), "Began work");
     }
 
     @NonNull
@@ -48,11 +47,9 @@ public class FetchDataWorker extends Worker {
             fileManager.storeTotalPlayers(totalPlayers);
             fileManager.storePlayerStats(stats);
             fileManager.storeNotificationList(notificationList);
-            Log.i(getClass().getSimpleName(), "Finished work successfully");
             return Result.success();
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e(getClass().getSimpleName(), "Work failed");
             return Result.failure();
         }
     }
