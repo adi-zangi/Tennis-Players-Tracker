@@ -40,9 +40,7 @@ public class FetchDataWorker extends Worker {
     @NonNull
     @Override
     /*
-       Fetches the data in the background, which includes information about
-       tennis players and tournaments
-       Saves the data to files
+       Fetches the data in the background and saves it to files
        Returns a Result that indicates whether the task was successful
      */
     public Result doWork() {
