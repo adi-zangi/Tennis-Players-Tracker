@@ -38,10 +38,6 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.SECOND, 0);
         long initialDelay = calendar.getTimeInMillis() -
                 System.currentTimeMillis();
-        int hours = (int) (initialDelay / 3600000);
-        int minutes = (int) ((initialDelay - (hours * 3600000))  / 60000);
-        Log.i(getClass().getSimpleName(), "Time until 5a.m. is " + initialDelay
-                + " milliseconds, or " + hours + " hours and " + minutes + " minutes");
         PeriodicWorkRequest fetchDataRequest = new PeriodicWorkRequest.Builder
                 (FetchDataWorker.class, 1, TimeUnit.DAYS)
                 .setConstraints(constraints)
