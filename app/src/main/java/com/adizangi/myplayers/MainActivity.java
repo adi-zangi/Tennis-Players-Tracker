@@ -12,6 +12,8 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -20,10 +22,32 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String VERSION_CODE_KEY = "version_code";
+
     @Override
+    /*
+       If the app is running for the first time after installation, schedules a
+       daily task that fetched data
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        int currentVersionCode = BuildConfig.VERSION_CODE;
+        SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
+        int savedVersionCode = sharedPrefs.getInt(VERSION_CODE_KEY, -1);
+        if (savedVersionCode == -1) {
+            scheduleDailyDataFetch();
+        }
+        sharedPrefs.edit().putInt(VERSION_CODE_KEY, currentVersionCode).apply();
+    }
+
+    /*
+       Schedules a background task that fetches data roughly at 5:00a.m.
+       every day, with a constraint that there is network connection
+       If there isn't network connection at the scheduled time, the task will
+       be delayed until there is
+     */
+    private void scheduleDailyDataFetch() {
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
