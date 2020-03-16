@@ -1,7 +1,7 @@
 /*
    Allows switching between fragments
    Used to create tabs in the MainActivity window, that can be switched between
-   by either tapping or swiping
+   by swiping
  */
 
 package com.adizangi.myplayers.adapters;

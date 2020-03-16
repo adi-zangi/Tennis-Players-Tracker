@@ -1,3 +1,8 @@
+/*
+   The Players tab, which displays the user's selected players and lets the
+   user modify them
+ */
+
 package com.adizangi.myplayers.fragments;
 
 import android.os.Bundle;
@@ -15,6 +20,11 @@ public class PlayersTabFragment extends Fragment {
 
     @Nullable
     @Override
+    /*
+       Called when the Fragment should instantiate its UI
+       Inflates the fragment's layout by using the given LayoutInflater, and
+       returns the root View of the fragment's layout
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {

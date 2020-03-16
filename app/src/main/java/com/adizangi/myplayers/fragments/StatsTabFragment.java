@@ -1,3 +1,8 @@
+/*
+   The Stats tab, which displays statistics and tournament results for each of
+   the user's players
+ */
+
 package com.adizangi.myplayers.fragments;
 
 import android.os.Bundle;
@@ -15,6 +20,11 @@ public class StatsTabFragment extends Fragment {
 
     @Nullable
     @Override
+    /*
+       Called when the Fragment should instantiate its UI
+       Inflates the fragment's layout by using the given LayoutInflater, and
+       returns the root View of the fragment's layout
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
