@@ -1,5 +1,8 @@
 package com.adizangi.myplayers.adapters;
 
+import com.adizangi.myplayers.fragments.PlayersTabFragment;
+import com.adizangi.myplayers.fragments.StatsTabFragment;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -16,8 +19,11 @@ public class TabAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        // Put when have Fragment classes
-        return null;
+        if (position == 0) {
+            return new StatsTabFragment();
+        } else {
+            return new PlayersTabFragment();
+        }
     }
 
     @Override
