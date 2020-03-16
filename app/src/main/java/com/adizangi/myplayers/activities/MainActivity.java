@@ -14,7 +14,6 @@ import androidx.work.WorkManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Spinner;
 
 import com.adizangi.myplayers.adapters.SpinnerAdapter;
@@ -57,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
         }
         sharedPrefs.edit().putInt(VERSION_CODE_KEY, currentVersionCode).apply();
         editPlayersSpinner = findViewById(R.id.editPlayersSpinner);
-        Log.i(getClass().getSimpleName(), "Spinner: " + editPlayersSpinner.getId());
         List<String> totalPlayers = fileManager.readTotalPlayers();
         spinnerAdapter = new SpinnerAdapter(this, myPlayers, totalPlayers);
         editPlayersSpinner.setAdapter(spinnerAdapter);
