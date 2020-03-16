@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">MyPlayers</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="button_add">Add</string>
+    <string name="button_remove">Remove</string>
+    <string name="player_search_hint">Search player</string>
+    <string name="spinner_hint">Edit my players</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
