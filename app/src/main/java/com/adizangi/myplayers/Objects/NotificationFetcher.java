@@ -3,7 +3,7 @@
    Information is taken from the ESPN website
  */
 
-package com.adizangi.myplayers;
+package com.adizangi.myplayers.Objects;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-class NotificationFetcher {
+public class NotificationFetcher {
 
     private Document tSchedule;
     private Document ySchedule;
@@ -23,7 +23,7 @@ class NotificationFetcher {
        Constructs a NotificationFetcher with the given HTML documents of
        today's match schedule and yesterday's match schedule from ESPN
      */
-    NotificationFetcher(Document tSchedule, Document ySchedule) {
+    public NotificationFetcher(Document tSchedule, Document ySchedule) {
         this.tSchedule = tSchedule;
         this.ySchedule = ySchedule;
     }
@@ -37,7 +37,7 @@ class NotificationFetcher {
        and the list will not have tournament names
        May throw IOException
      */
-    List<String> getNotificationList() throws IOException {
+    public List<String> getNotificationList() throws IOException {
         List<String> notificationList = new ArrayList<>();
         String reportForYesterday = getReportForYesterday();
         String reportForToday = getReportForToday();

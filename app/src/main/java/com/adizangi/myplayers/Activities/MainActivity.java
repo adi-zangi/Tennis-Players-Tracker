@@ -3,19 +3,21 @@
    2019-2020
  */
 
-package com.adizangi.myplayers;
+package com.adizangi.myplayers.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+
+import com.adizangi.myplayers.BuildConfig;
+import com.adizangi.myplayers.Workers.FetchDataWorker;
+import com.adizangi.myplayers.R;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;

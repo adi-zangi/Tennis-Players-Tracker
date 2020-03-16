@@ -7,6 +7,10 @@
 package com.adizangi.myplayers;
 
 import android.content.Context;
+
+import com.adizangi.myplayers.Objects.FileManager;
+import com.adizangi.myplayers.Objects.PlayerStats;
+
 import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.Before;

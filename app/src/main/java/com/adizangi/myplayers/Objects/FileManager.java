@@ -5,7 +5,7 @@
    is installed, but are removed when the app is uninstalled
  */
 
-package com.adizangi.myplayers;
+package com.adizangi.myplayers.Objects;
 
 import android.content.Context;
 
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class FileManager {
+public class FileManager {
 
     private static final String MY_PLAYERS_FILENAME = "my_players";
     private static final String TOTAL_PLAYERS_FILENAME = "total_players";
@@ -30,7 +30,7 @@ class FileManager {
     /*
        Constructs a FileManager with the given application context
      */
-    FileManager(Context context) {
+    public FileManager(Context context) {
         this.context = context;
     }
 
@@ -39,7 +39,7 @@ class FileManager {
        Returns an empty list if there is an error
      */
     @SuppressWarnings("unchecked")
-    List<String> readMyPlayers() {
+    public List<String> readMyPlayers() {
         try {
             FileInputStream inputStream =
                     context.openFileInput(MY_PLAYERS_FILENAME);
@@ -61,7 +61,7 @@ class FileManager {
        Returns an empty list if there is an error
      */
     @SuppressWarnings("unchecked")
-    List<String> readTotalPlayers() {
+    public List<String> readTotalPlayers() {
         try {
             FileInputStream inputStream =
                     context.openFileInput(TOTAL_PLAYERS_FILENAME);
@@ -83,7 +83,7 @@ class FileManager {
        Returns an empty map if there is an error
      */
     @SuppressWarnings("unchecked")
-    Map<String, PlayerStats> readPlayerStats() {
+    public Map<String, PlayerStats> readPlayerStats() {
         try {
             FileInputStream inputStream =
                     context.openFileInput(STATS_FILENAME);
@@ -105,7 +105,7 @@ class FileManager {
        Returns an empty list if there is an error
      */
     @SuppressWarnings("unchecked")
-    List<String> readNotificationList() {
+    public List<String> readNotificationList() {
         try {
             FileInputStream inputStream =
                     context.openFileInput(NOTIF_FILENAME);
@@ -125,7 +125,7 @@ class FileManager {
     /*
        Stores the given list of the user's players in a file
      */
-    void storeMyPlayers(List<String> myPlayers) {
+    public void storeMyPlayers(List<String> myPlayers) {
         try {
             FileOutputStream outputStream = context.openFileOutput
                     (MY_PLAYERS_FILENAME, Context.MODE_PRIVATE);
@@ -142,7 +142,7 @@ class FileManager {
     /*
        Stores the given total players list in a file
      */
-    void storeTotalPlayers(List<String> totalPlayers) {
+    public void storeTotalPlayers(List<String> totalPlayers) {
         try {
             FileOutputStream outputStream = context.openFileOutput
                     (TOTAL_PLAYERS_FILENAME, Context.MODE_PRIVATE);
@@ -159,7 +159,7 @@ class FileManager {
     /*
        Stores the given player stats map in a file
      */
-    void storePlayerStats(Map<String, PlayerStats> playerStats) {
+    public void storePlayerStats(Map<String, PlayerStats> playerStats) {
         try {
             FileOutputStream outputStream = context.openFileOutput
                     (STATS_FILENAME, Context.MODE_PRIVATE);
@@ -176,7 +176,7 @@ class FileManager {
     /*
        Stores the given notification list in a file
      */
-    void storeNotificationList(List<String> notifList) {
+    public void storeNotificationList(List<String> notifList) {
         try {
             FileOutputStream outputStream = context.openFileOutput
                     (NOTIF_FILENAME, Context.MODE_PRIVATE);

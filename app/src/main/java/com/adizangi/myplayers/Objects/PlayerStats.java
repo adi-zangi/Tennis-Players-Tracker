@@ -3,11 +3,11 @@
    in singles tennis
  */
 
-package com.adizangi.myplayers;
+package com.adizangi.myplayers.Objects;
 
 import java.io.Serializable;
 
-class PlayerStats implements Serializable {
+public class PlayerStats implements Serializable {
 
     private String name;
     private String ranking;
@@ -21,7 +21,7 @@ class PlayerStats implements Serializable {
     /*
        Constructs a PlayerStats object
      */
-    PlayerStats(String name,
+    public PlayerStats(String name,
                 String ranking,
                 String titles,
                 String tournamentStanding,
@@ -42,7 +42,7 @@ class PlayerStats implements Serializable {
     /*
        Returns the player's name
      */
-    String getName() {
+    public String getName() {
         return name;
     }
 
@@ -50,7 +50,7 @@ class PlayerStats implements Serializable {
        Returns the player's ranking in the format
        'Ranking: [ranking]'
      */
-    String getRanking() {
+    public String getRanking() {
         return ranking;
     }
 
@@ -59,7 +59,7 @@ class PlayerStats implements Serializable {
        The format is
        '[year number] singles titles: [number of titles]'
      */
-    String getTitles() {
+    public String getTitles() {
         return titles;
     }
 
@@ -69,7 +69,7 @@ class PlayerStats implements Serializable {
        'out', or
        'not playing'
      */
-    String getTournamentStanding() {
+    public String getTournamentStanding() {
         return tournamentStanding;
     }
 
@@ -77,7 +77,7 @@ class PlayerStats implements Serializable {
        Returns the name of the tournament the player is currently in
        Returns an empty string if the player isn't in a tournament
      */
-    String getCurrentTournament() {
+    public String getCurrentTournament() {
         return currentTournament;
     }
 
@@ -86,7 +86,7 @@ class PlayerStats implements Serializable {
        The format is '[tournament round]- [opponent's name] [score]'
        Returns an empty string if the player isn't in a tournament
      */
-    String getLatestMatchResult() {
+    public String getLatestMatchResult() {
         return latestMatchResult;
     }
 
@@ -95,7 +95,7 @@ class PlayerStats implements Serializable {
        The format is '[player's name]  [time]'
        Returns an empty string if the player is not playing a match today
      */
-    String getUpcomingMatch() {
+    public String getUpcomingMatch() {
         return upcomingMatch;
     }
 
@@ -103,7 +103,7 @@ class PlayerStats implements Serializable {
        Returns the URL of an ESPN web page that has all the match results of
        the player
      */
-    String getResultsURL() {
+    public String getResultsURL() {
         return resultsURL;
     }
 

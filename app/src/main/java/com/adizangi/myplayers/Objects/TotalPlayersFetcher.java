@@ -4,7 +4,7 @@
    the ESPN website
  */
 
-package com.adizangi.myplayers;
+package com.adizangi.myplayers.Objects;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,7 +13,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-class TotalPlayersFetcher {
+public class TotalPlayersFetcher {
 
     private Document mRankings;
     private Document wRankings;
@@ -22,7 +22,7 @@ class TotalPlayersFetcher {
        Constructs a TotalPlayersFetcher with the given HTML documents of the
        men's tennis rankings and women's tennis rankings from ESPN
      */
-    TotalPlayersFetcher(Document mRankings, Document wRankings) {
+    public TotalPlayersFetcher(Document mRankings, Document wRankings) {
         this.mRankings = mRankings;
         this.wRankings = wRankings;
     }
@@ -35,7 +35,7 @@ class TotalPlayersFetcher {
        and there have not been any tennis tournaments in the new year
        In this case, returns an empty list
      */
-    List<String> getTotalPlayersList() {
+    public List<String> getTotalPlayersList() {
         List<String> players = new ArrayList<>();
         Element mRankingsTable = mRankings.selectFirst("table");
         if (mRankingsTable == null) {

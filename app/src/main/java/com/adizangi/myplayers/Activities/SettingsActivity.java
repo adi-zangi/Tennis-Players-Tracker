@@ -1,12 +1,14 @@
-package com.adizangi.myplayers;
+package com.adizangi.myplayers.Activities;
 
 import android.os.Bundle;
+
+import com.adizangi.myplayers.R;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 
-class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

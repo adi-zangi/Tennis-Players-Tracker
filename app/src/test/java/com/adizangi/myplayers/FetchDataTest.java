@@ -6,6 +6,11 @@
 
 package com.adizangi.myplayers;
 
+import com.adizangi.myplayers.Objects.NotificationFetcher;
+import com.adizangi.myplayers.Objects.PlayerStats;
+import com.adizangi.myplayers.Objects.PlayerStatsFetcher;
+import com.adizangi.myplayers.Objects.TotalPlayersFetcher;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Test;

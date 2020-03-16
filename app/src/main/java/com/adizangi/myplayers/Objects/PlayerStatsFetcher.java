@@ -4,7 +4,9 @@
    Information is taken from the ESPN website
  */
 
-package com.adizangi.myplayers;
+package com.adizangi.myplayers.Objects;
+
+import com.adizangi.myplayers.Objects.PlayerStats;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,7 +20,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-class PlayerStatsFetcher {
+public class PlayerStatsFetcher {
 
     private Document mRankings;
     private Document wRankings;
@@ -27,7 +29,7 @@ class PlayerStatsFetcher {
        Constructs a PlayerStatsFetcher with the given HTML documents of the
        men's tennis rankings and women's tennis rankings from ESPN
      */
-    PlayerStatsFetcher(Document mRankings, Document wRankings) {
+    public PlayerStatsFetcher(Document mRankings, Document wRankings) {
         this.mRankings = mRankings;
         this.wRankings = wRankings;
     }
@@ -40,7 +42,7 @@ class PlayerStatsFetcher {
        In this case, returns an empty map
        May throw IOException
      */
-    Map<String, PlayerStats> getPlayerDetailsMap()
+    public Map<String, PlayerStats> getPlayerDetailsMap()
             throws IOException {
         Map<String, PlayerStats> stats = new HashMap<>();
         Element mRankingsTable = mRankings.selectFirst("table");
