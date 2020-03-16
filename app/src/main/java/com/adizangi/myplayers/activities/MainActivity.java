@@ -14,10 +14,7 @@ import androidx.work.WorkManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
-import com.adizangi.myplayers.adapters.SpinnerAdapter;
 import com.adizangi.myplayers.BuildConfig;
 import com.adizangi.myplayers.objects.FileManager;
 import com.adizangi.myplayers.workers.FetchDataWorker;
@@ -33,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String VERSION_CODE_KEY = "version_code";
 
     private List<String> myPlayers;
-    private Spinner editPlayersSpinner;
-    private SpinnerAdapter spinnerAdapter;
     private FileManager fileManager;
 
     @Override
@@ -56,10 +51,7 @@ public class MainActivity extends AppCompatActivity {
             myPlayers = fileManager.readMyPlayers();
         }
         sharedPrefs.edit().putInt(VERSION_CODE_KEY, currentVersionCode).apply();
-        editPlayersSpinner = findViewById(R.id.editPlayersSpinner);
         List<String> totalPlayers = fileManager.readTotalPlayers();
-        spinnerAdapter = new SpinnerAdapter(this, myPlayers, totalPlayers);
-        editPlayersSpinner.setAdapter(spinnerAdapter);
     }
 
     /*
