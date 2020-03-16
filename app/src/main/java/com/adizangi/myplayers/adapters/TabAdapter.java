@@ -16,7 +16,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class TabAdapter extends FragmentStateAdapter {
 
-    private static final String[] TAB_TITLES = {"Stats", "Players"};
+    public static final String[] TAB_TITLES = {"Stats", "Players"};
 
     /*
        Constructs a TabAdapter with the given FragmentActivity
