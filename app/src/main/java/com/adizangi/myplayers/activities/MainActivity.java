@@ -3,7 +3,7 @@
    2019-2020
  */
 
-package com.adizangi.myplayers.Activities;
+package com.adizangi.myplayers.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.work.Constraints;
@@ -16,10 +16,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Spinner;
 
-import com.adizangi.myplayers.Adapters.SpinnerAdapter;
+import com.adizangi.myplayers.adapters.SpinnerAdapter;
 import com.adizangi.myplayers.BuildConfig;
-import com.adizangi.myplayers.Objects.FileManager;
-import com.adizangi.myplayers.Workers.FetchDataWorker;
+import com.adizangi.myplayers.objects.FileManager;
+import com.adizangi.myplayers.workers.FetchDataWorker;
 import com.adizangi.myplayers.R;
 
 import java.util.ArrayList;
@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        editPlayersSpinner = findViewById(R.id.editPlayersSpinner);
         fileManager = new FileManager(this);
         int currentVersionCode = BuildConfig.VERSION_CODE;
         SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
@@ -56,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
             myPlayers = fileManager.readMyPlayers();
         }
         sharedPrefs.edit().putInt(VERSION_CODE_KEY, currentVersionCode).apply();
+        editPlayersSpinner = findViewById(R.id.editPlayersSpinner);
         List<String> totalPlayers = fileManager.readTotalPlayers();
         spinnerAdapter = new SpinnerAdapter(this, myPlayers, totalPlayers);
         editPlayersSpinner.setAdapter(spinnerAdapter);

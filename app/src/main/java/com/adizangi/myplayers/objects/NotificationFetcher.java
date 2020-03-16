@@ -3,7 +3,7 @@
    Information is taken from the ESPN website
  */
 
-package com.adizangi.myplayers.Objects;
+package com.adizangi.myplayers.objects;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

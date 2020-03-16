@@ -3,15 +3,15 @@
    sent to the user in notifications
  */
 
-package com.adizangi.myplayers.Workers;
+package com.adizangi.myplayers.workers;
 
 import android.content.Context;
 
-import com.adizangi.myplayers.Objects.FileManager;
-import com.adizangi.myplayers.Objects.NotificationFetcher;
-import com.adizangi.myplayers.Objects.PlayerStats;
-import com.adizangi.myplayers.Objects.PlayerStatsFetcher;
-import com.adizangi.myplayers.Objects.TotalPlayersFetcher;
+import com.adizangi.myplayers.objects.FileManager;
+import com.adizangi.myplayers.objects.NotificationFetcher;
+import com.adizangi.myplayers.objects.PlayerStats;
+import com.adizangi.myplayers.objects.PlayerStatsFetcher;
+import com.adizangi.myplayers.objects.TotalPlayersFetcher;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

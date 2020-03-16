@@ -3,7 +3,7 @@
    in singles tennis
  */
 
-package com.adizangi.myplayers.Objects;
+package com.adizangi.myplayers.objects;
 
 import java.io.Serializable;
 

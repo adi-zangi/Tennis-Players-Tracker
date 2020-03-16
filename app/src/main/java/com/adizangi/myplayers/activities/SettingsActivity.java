@@ -1,4 +1,4 @@
-package com.adizangi.myplayers.Activities;
+package com.adizangi.myplayers.activities;
 
 import android.os.Bundle;
 

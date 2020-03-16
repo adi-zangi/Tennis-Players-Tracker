@@ -8,8 +8,8 @@ package com.adizangi.myplayers;
 
 import android.content.Context;
 
-import com.adizangi.myplayers.Objects.FileManager;
-import com.adizangi.myplayers.Objects.PlayerStats;
+import com.adizangi.myplayers.objects.FileManager;
+import com.adizangi.myplayers.objects.PlayerStats;
 
 import androidx.test.core.app.ApplicationProvider;
 

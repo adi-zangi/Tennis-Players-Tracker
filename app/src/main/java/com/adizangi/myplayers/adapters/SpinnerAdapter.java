@@ -1,4 +1,4 @@
-package com.adizangi.myplayers.Adapters;
+package com.adizangi.myplayers.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
-
-import com.adizangi.myplayers.R;
 
 import java.util.List;
 
