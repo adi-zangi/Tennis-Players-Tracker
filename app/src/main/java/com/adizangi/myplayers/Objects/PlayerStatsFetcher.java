@@ -6,8 +6,6 @@
 
 package com.adizangi.myplayers.Objects;
 
-import com.adizangi.myplayers.Objects.PlayerStats;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
