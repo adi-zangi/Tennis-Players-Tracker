@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
+import com.adizangi.myplayers.R;
+
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -39,7 +41,7 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
             view = inflater.inflate(R.layout.spinner_search_player_item,
                     parent, false);
             AutoCompleteTextView autoComplete =
-                    view.findViewById(R.id.addPlayerAutoComplete);
+                    view.findViewById(R.id.searchPlayerAutoComplete);
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                     android.R.layout.simple_dropdown_item_1line, totalPlayers);
             autoComplete.setAdapter(adapter);
