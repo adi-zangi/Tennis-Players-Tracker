@@ -1,6 +1,7 @@
 package com.adizangi.myplayers.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
         this.totalPlayers = totalPlayers;
         insert("", 0);
         insert("", 0);
+        Log.i(getClass().getSimpleName(), "Adapter created");
     }
 
     @NonNull
@@ -34,6 +36,7 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
                         @Nullable View convertView,
                         @NonNull ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
+        Log.i(getClass().getSimpleName(), "LayoutInflater: " + inflater);
         View view;
         if (position == 0) {
             view = inflater.inflate(R.layout.spinner_hint, parent, false);
@@ -52,6 +55,7 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
             String currentItem = getItem(position);
             playerName.setText(currentItem);
         }
+        Log.i(getClass().getSimpleName(), "View (" + position + "): " + view.getId());
         return view;
     }
 }
