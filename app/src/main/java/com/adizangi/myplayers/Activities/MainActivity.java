@@ -44,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FileManager fileManager = new FileManager(this);
+        editPlayersSpinner = findViewById(R.id.editPlayersSpinner);
+        fileManager = new FileManager(this);
         int currentVersionCode = BuildConfig.VERSION_CODE;
         SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
         int savedVersionCode = sharedPrefs.getInt(VERSION_CODE_KEY, -1);
@@ -52,9 +53,12 @@ public class MainActivity extends AppCompatActivity {
             scheduleDailyDataFetch();
             myPlayers = new ArrayList<>();
         } else {
-
+            myPlayers = fileManager.readMyPlayers();
         }
         sharedPrefs.edit().putInt(VERSION_CODE_KEY, currentVersionCode).apply();
+        List<String> totalPlayers = fileManager.readTotalPlayers();
+        spinnerAdapter = new SpinnerAdapter(this, myPlayers, totalPlayers);
+        editPlayersSpinner.setAdapter(spinnerAdapter);
     }
 
     /*
