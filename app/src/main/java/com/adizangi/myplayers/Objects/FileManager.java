@@ -8,6 +8,7 @@
 package com.adizangi.myplayers.Objects;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -18,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FileManager {
+public class FileManager extends ContextWrapper {
 
     private static final String MY_PLAYERS_FILENAME = "my_players";
     private static final String TOTAL_PLAYERS_FILENAME = "total_players";
@@ -30,8 +31,8 @@ public class FileManager {
     /*
        Constructs a FileManager with the given application context
      */
-    public FileManager(Context context) {
-        this.context = context;
+    public FileManager(Context base) {
+        super(base);
     }
 
     /*
@@ -41,8 +42,7 @@ public class FileManager {
     @SuppressWarnings("unchecked")
     public List<String> readMyPlayers() {
         try {
-            FileInputStream inputStream =
-                    context.openFileInput(MY_PLAYERS_FILENAME);
+            FileInputStream inputStream = openFileInput(MY_PLAYERS_FILENAME);
             ObjectInputStream objectInputStream =
                     new ObjectInputStream(inputStream);
             List<String> myPlayers =
@@ -64,7 +64,7 @@ public class FileManager {
     public List<String> readTotalPlayers() {
         try {
             FileInputStream inputStream =
-                    context.openFileInput(TOTAL_PLAYERS_FILENAME);
+                    openFileInput(TOTAL_PLAYERS_FILENAME);
             ObjectInputStream objectInputStream =
                     new ObjectInputStream(inputStream);
             List<String> totalPlayers =
@@ -85,8 +85,7 @@ public class FileManager {
     @SuppressWarnings("unchecked")
     public Map<String, PlayerStats> readPlayerStats() {
         try {
-            FileInputStream inputStream =
-                    context.openFileInput(STATS_FILENAME);
+            FileInputStream inputStream = openFileInput(STATS_FILENAME);
             ObjectInputStream objectInputStream =
                     new ObjectInputStream(inputStream);
             Map<String, PlayerStats> stats =
@@ -107,8 +106,7 @@ public class FileManager {
     @SuppressWarnings("unchecked")
     public List<String> readNotificationList() {
         try {
-            FileInputStream inputStream =
-                    context.openFileInput(NOTIF_FILENAME);
+            FileInputStream inputStream = openFileInput(NOTIF_FILENAME);
             ObjectInputStream objectInputStream =
                     new ObjectInputStream(inputStream);
             List<String> notifList =
@@ -127,7 +125,7 @@ public class FileManager {
      */
     public void storeMyPlayers(List<String> myPlayers) {
         try {
-            FileOutputStream outputStream = context.openFileOutput
+            FileOutputStream outputStream = openFileOutput
                     (MY_PLAYERS_FILENAME, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream =
                     new ObjectOutputStream(outputStream);
@@ -144,7 +142,7 @@ public class FileManager {
      */
     public void storeTotalPlayers(List<String> totalPlayers) {
         try {
-            FileOutputStream outputStream = context.openFileOutput
+            FileOutputStream outputStream = openFileOutput
                     (TOTAL_PLAYERS_FILENAME, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream =
                     new ObjectOutputStream(outputStream);
@@ -161,7 +159,7 @@ public class FileManager {
      */
     public void storePlayerStats(Map<String, PlayerStats> playerStats) {
         try {
-            FileOutputStream outputStream = context.openFileOutput
+            FileOutputStream outputStream = openFileOutput
                     (STATS_FILENAME, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream =
                     new ObjectOutputStream(outputStream);
@@ -178,7 +176,7 @@ public class FileManager {
      */
     public void storeNotificationList(List<String> notifList) {
         try {
-            FileOutputStream outputStream = context.openFileOutput
+            FileOutputStream outputStream = openFileOutput
                     (NOTIF_FILENAME, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream =
                     new ObjectOutputStream(outputStream);

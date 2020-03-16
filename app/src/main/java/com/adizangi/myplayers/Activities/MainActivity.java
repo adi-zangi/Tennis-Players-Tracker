@@ -14,17 +14,27 @@ import androidx.work.WorkManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Spinner;
 
+import com.adizangi.myplayers.Adapters.SpinnerAdapter;
 import com.adizangi.myplayers.BuildConfig;
+import com.adizangi.myplayers.Objects.FileManager;
 import com.adizangi.myplayers.Workers.FetchDataWorker;
 import com.adizangi.myplayers.R;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String VERSION_CODE_KEY = "version_code";
+
+    private List<String> myPlayers;
+    private Spinner editPlayersSpinner;
+    private SpinnerAdapter spinnerAdapter;
+    private FileManager fileManager;
 
     @Override
     /*
@@ -34,11 +44,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FileManager fileManager = new FileManager(this);
         int currentVersionCode = BuildConfig.VERSION_CODE;
         SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
         int savedVersionCode = sharedPrefs.getInt(VERSION_CODE_KEY, -1);
         if (savedVersionCode == -1) {
             scheduleDailyDataFetch();
+            myPlayers = new ArrayList<>();
+        } else {
+
         }
         sharedPrefs.edit().putInt(VERSION_CODE_KEY, currentVersionCode).apply();
     }
