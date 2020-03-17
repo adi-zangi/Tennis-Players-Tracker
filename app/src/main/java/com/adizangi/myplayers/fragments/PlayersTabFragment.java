@@ -42,6 +42,13 @@ public class PlayersTabFragment extends Fragment {
     }
 
     @Override
+    /*
+       Initializes the sub-views of the view returned by onCreateView()
+       Fills the AutoCompleteTextView with a list of the total players the
+       user can select
+       Fills the RecyclerView with the saved list of the user's selected
+       players
+     */
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
         AutoCompleteTextView autoCompleteSearch =
