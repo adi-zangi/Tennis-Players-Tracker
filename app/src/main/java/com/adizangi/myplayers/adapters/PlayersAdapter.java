@@ -1,5 +1,5 @@
 /*
-   Adapter for the list of the user's selected players
+   Adapter for the list of the user's selected players in the Players tab
  */
 
 package com.adizangi.myplayers.adapters;
@@ -44,7 +44,7 @@ public class PlayersAdapter extends RecyclerView.Adapter
     @NonNull
     @Override
     /*
-
+       Creates a new ViewHolder and returns it
      */
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                          int viewType) {
@@ -55,12 +55,19 @@ public class PlayersAdapter extends RecyclerView.Adapter
     }
 
     @Override
+    /*
+       Sets the text of the given ViewHolder to the player's name that
+       corresponds to the given position
+     */
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String playerName = myPlayers.get(position);
         holder.textView.setText(playerName);
     }
 
     @Override
+    /*
+       Returns the number of items held by this adapter
+     */
     public int getItemCount() {
         return myPlayers.size();
     }
