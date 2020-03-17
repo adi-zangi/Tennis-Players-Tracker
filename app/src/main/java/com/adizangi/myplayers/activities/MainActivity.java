@@ -71,6 +71,12 @@ public class MainActivity extends AppCompatActivity {
         TabLayoutMediator mediator = new TabLayoutMediator(tabLayout, viewPager2,
                 new TabLayoutMediator.TabConfigurationStrategy() {
                     @Override
+                    /*
+                       Configures the given tab that is at the given position such that it
+                       matches the Fragment at this position in the ViewPager2
+                       Sets the tab's title, which is Stats for position 0 and Players for
+                       position 1
+                     */
                     public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                         String tabTitle = TabAdapter.TAB_TITLES[position];
                         tab.setText(tabTitle);
