@@ -37,9 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     /*
-       Called when the MainActivity is created
-       This activity controls the app's home screen and will be created
-       whenever the app is launched
+       Called when the app is launched
        Displays the MainActivity layout and fills it with data
        If the app is running for the first time after installation, schedules a
        daily task that fetched data
@@ -61,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
     /*
        Initializes the TabLayout with a Stats tab and a Players tab
+       The tabs can be switched between by either tapping or swiping
      */
     private void setUpTabs() {
         TabLayout tabLayout = findViewById(R.id.tab_layout);
@@ -70,10 +69,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayoutMediator mediator = new TabLayoutMediator(tabLayout, viewPager2,
                 new TabLayoutMediator.TabConfigurationStrategy() {
                     /*
-                       Configures the given tab that is at the given position such that it
-                       matches the Fragment at this position in the ViewPager2
-                       Sets the tab's title, which is Stats for position 0 and Players for
-                       position 1
+                       Sets the given tab's title such that it matches the given position
                      */
                     @Override
                     public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {

@@ -1,5 +1,5 @@
 /*
-   Fills the
+   Adapter for the list of the user's selected players
  */
 
 package com.adizangi.myplayers.adapters;
@@ -21,6 +21,9 @@ public class PlayersAdapter extends RecyclerView.Adapter
 
     private List<String> myPlayers;
 
+    /*
+       Holds a reference to the text view of an item in the list
+     */
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView textView;
@@ -31,12 +34,18 @@ public class PlayersAdapter extends RecyclerView.Adapter
         }
     }
 
+    /*
+       Constructs a PlayersAdapter with the given list of players
+     */
     public PlayersAdapter(List<String> myPlayers) {
         this.myPlayers = myPlayers;
     }
 
     @NonNull
     @Override
+    /*
+
+     */
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                          int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
