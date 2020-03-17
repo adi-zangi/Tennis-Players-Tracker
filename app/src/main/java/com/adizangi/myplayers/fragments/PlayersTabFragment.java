@@ -6,11 +6,14 @@
 package com.adizangi.myplayers.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.adizangi.myplayers.R;
 import com.adizangi.myplayers.adapters.PlayersAdapter;
@@ -27,6 +30,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class PlayersTabFragment extends Fragment {
+
+    private AutoCompleteTextView autoCompleteSearch;
+    private PlayersAdapter playersAdapter;
+    private List<String> totalPlayers;
+    private List<String> myPlayers;
+    private FileManager fileManager;
 
     @Nullable
     @Override
@@ -51,20 +60,46 @@ public class PlayersTabFragment extends Fragment {
      */
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
-        AutoCompleteTextView autoCompleteSearch =
+        fileManager = new FileManager(getContext());
+        autoCompleteSearch =
                 view.findViewById(R.id.search_player_auto_complete);
-        RecyclerView myPlayersList = view.findViewById(R.id.my_players_list);
-        FileManager fileManager = new FileManager(getContext());
-        List<String> totalPlayers = fileManager.readTotalPlayers();
+        totalPlayers = fileManager.readTotalPlayers();
         ArrayAdapter<String> autoCompleteAdapter = new ArrayAdapter<>
                 (requireContext(), android.R.layout.simple_list_item_1, totalPlayers);
         autoCompleteSearch.setAdapter(autoCompleteAdapter);
-        List<String> myPlayers = fileManager.readMyPlayers();
-        RecyclerView.LayoutManager manager =
-                new LinearLayoutManager(getContext());
+        RecyclerView myPlayersList = view.findViewById(R.id.my_players_list);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
         myPlayersList.setLayoutManager(manager);
-        PlayersAdapter playersAdapter = new PlayersAdapter(myPlayers);
+        myPlayers = fileManager.readMyPlayers();
+        playersAdapter = new PlayersAdapter(myPlayers);
         myPlayersList.setAdapter(playersAdapter);
+        Button addButton = view.findViewById(R.id.add_button);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addPlayer();
+            }
+        });
+    }
+
+    /*
+       Adds the player whose name is in the AutoCompleteTextView, if the player
+       is valid
+       Saves the list of players
+     */
+    private void addPlayer() {
+        String playerName = autoCompleteSearch.getText().toString();
+        if (!totalPlayers.contains(playerName)) {
+            Toast.makeText(getContext(), "Invalid player", Toast.LENGTH_LONG).show();
+        } else if (myPlayers.contains(playerName)) {
+            Toast.makeText(getContext(), "Player already in list",
+                    Toast.LENGTH_LONG).show();
+        } else {
+            myPlayers.add(playerName);
+            playersAdapter.notifyDataSetChanged();
+            fileManager.storeMyPlayers(myPlayers);
+        }
+        autoCompleteSearch.getText().clear();
     }
 
 }

@@ -39,4 +39,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_player_auto_complete"
         app:layout_constraintVertical_bias="0.384" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
