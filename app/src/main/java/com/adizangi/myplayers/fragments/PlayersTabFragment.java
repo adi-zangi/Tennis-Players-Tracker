@@ -9,12 +9,22 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
 import com.adizangi.myplayers.R;
+import com.adizangi.myplayers.adapters.PlayersAdapter;
+import com.adizangi.myplayers.objects.FileManager;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class PlayersTabFragment extends Fragment {
 
@@ -34,8 +44,20 @@ public class PlayersTabFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
-        // Implement when add sub-views into fragment's layout
-        super.onViewCreated(view, savedInstanceState);
+        AutoCompleteTextView autoComplete =
+                view.findViewById(R.id.search_player_auto_complete);
+        RecyclerView myPlayersList = view.findViewById(R.id.my_players_list);
+        FileManager fileManager = new FileManager(getContext());
+        List<String> totalPlayers = fileManager.readTotalPlayers();
+        ArrayAdapter<String> autoCompleteAdapter = new ArrayAdapter<>
+                (requireContext(), android.R.layout.simple_list_item_1, totalPlayers);
+        autoComplete.setAdapter(autoCompleteAdapter);
+        List<String> myPlayers = new ArrayList<>(Arrays.asList("one", "two"));
+        RecyclerView.LayoutManager manager =
+                new LinearLayoutManager(getContext());
+        myPlayersList.setLayoutManager(manager);
+        PlayersAdapter playersAdapter = new PlayersAdapter(myPlayers);
+        myPlayersList.setAdapter(playersAdapter);
     }
 
 }
