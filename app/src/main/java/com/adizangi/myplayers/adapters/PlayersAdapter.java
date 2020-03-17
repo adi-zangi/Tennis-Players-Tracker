@@ -21,9 +21,9 @@ public class PlayersAdapter extends RecyclerView.Adapter
 
         TextView textView;
 
-        public ViewHolder(TextView textView) {
-            super(textView);
-            this.textView = textView;
+        public ViewHolder(ConstraintLayout layout) {
+            super(layout);
+            this.textView = layout.findViewById(R.id.player_name);
         }
     }
 
@@ -38,8 +38,7 @@ public class PlayersAdapter extends RecyclerView.Adapter
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ConstraintLayout layout = (ConstraintLayout)
                 inflater.inflate(R.layout.my_players_list_item, parent, false);
-        TextView textView = layout.findViewById(R.id.player_name);
-        return new ViewHolder(textView);
+        return new ViewHolder(layout);
     }
 
     @Override
