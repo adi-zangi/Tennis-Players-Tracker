@@ -38,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     /*
+       Called when the MainActivity is created
+       This activity controls the app's home screen and will be created
+       whenever the app is launched
+       Displays the MainActivity layout and fills it with data
        If the app is running for the first time after installation, schedules a
        daily task that fetched data
      */
@@ -46,19 +50,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
-        final ViewPager2 viewPager2 = findViewById(R.id.view_pager);
-        TabAdapter tabAdapter = new TabAdapter(this);
-        viewPager2.setAdapter(tabAdapter);
-        TabLayoutMediator mediator = new TabLayoutMediator(tabLayout, viewPager2,
-                        new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                String tabTitle = TabAdapter.TAB_TITLES[position];
-                tab.setText(tabTitle);
-            }
-        });
-        mediator.attach();
+        setUpTabs();
         int currentVersionCode = BuildConfig.VERSION_CODE;
         SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
         int savedVersionCode = sharedPrefs.getInt(VERSION_CODE_KEY, -1);
@@ -66,6 +58,25 @@ public class MainActivity extends AppCompatActivity {
             scheduleDailyDataFetch();
         }
         sharedPrefs.edit().putInt(VERSION_CODE_KEY, currentVersionCode).apply();
+    }
+
+    /*
+       Adds tabs to the TabLayout
+     */
+    private void setUpTabs() {
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        ViewPager2 viewPager2 = findViewById(R.id.view_pager);
+        TabAdapter tabAdapter = new TabAdapter(this);
+        viewPager2.setAdapter(tabAdapter);
+        TabLayoutMediator mediator = new TabLayoutMediator(tabLayout, viewPager2,
+                new TabLayoutMediator.TabConfigurationStrategy() {
+                    @Override
+                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                        String tabTitle = TabAdapter.TAB_TITLES[position];
+                        tab.setText(tabTitle);
+                    }
+                });
+        mediator.attach();
     }
 
     /*
