@@ -44,16 +44,15 @@ public class PlayersTabFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
-        AutoCompleteTextView autoComplete =
+        AutoCompleteTextView autoCompleteSearch =
                 view.findViewById(R.id.search_player_auto_complete);
         RecyclerView myPlayersList = view.findViewById(R.id.my_players_list);
         FileManager fileManager = new FileManager(getContext());
         List<String> totalPlayers = fileManager.readTotalPlayers();
         ArrayAdapter<String> autoCompleteAdapter = new ArrayAdapter<>
                 (requireContext(), android.R.layout.simple_list_item_1, totalPlayers);
-        autoComplete.setAdapter(autoCompleteAdapter);
-        List<String> myPlayers = new ArrayList<>(Arrays.asList
-                ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"));
+        autoCompleteSearch.setAdapter(autoCompleteAdapter);
+        List<String> myPlayers = fileManager.readMyPlayers();
         RecyclerView.LayoutManager manager =
                 new LinearLayoutManager(getContext());
         myPlayersList.setLayoutManager(manager);
