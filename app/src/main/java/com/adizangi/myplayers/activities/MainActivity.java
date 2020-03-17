@@ -7,6 +7,7 @@ package com.adizangi.myplayers.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         final ViewPager2 viewPager2 = findViewById(R.id.view_pager);
         TabAdapter tabAdapter = new TabAdapter(this);
