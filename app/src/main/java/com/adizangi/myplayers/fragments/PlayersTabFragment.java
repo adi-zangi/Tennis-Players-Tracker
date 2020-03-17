@@ -52,7 +52,8 @@ public class PlayersTabFragment extends Fragment {
         ArrayAdapter<String> autoCompleteAdapter = new ArrayAdapter<>
                 (requireContext(), android.R.layout.simple_list_item_1, totalPlayers);
         autoComplete.setAdapter(autoCompleteAdapter);
-        List<String> myPlayers = new ArrayList<>(Arrays.asList("one", "two"));
+        List<String> myPlayers = new ArrayList<>(Arrays.asList
+                ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"));
         RecyclerView.LayoutManager manager =
                 new LinearLayoutManager(getContext());
         myPlayersList.setLayoutManager(manager);

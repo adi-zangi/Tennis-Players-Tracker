@@ -1,5 +1,5 @@
 /*
-   Allows switching between fragments
+   Manages switching between fragments
    Used to create tabs in the MainActivity window, that can be switched between
    by either tapping or swiping
  */

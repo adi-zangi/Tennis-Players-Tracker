@@ -1,3 +1,7 @@
+/*
+   Fills the
+ */
+
 package com.adizangi.myplayers.adapters;
 
 import android.view.LayoutInflater;
@@ -21,7 +25,7 @@ public class PlayersAdapter extends RecyclerView.Adapter
 
         TextView textView;
 
-        public ViewHolder(ConstraintLayout layout) {
+        ViewHolder(ConstraintLayout layout) {
             super(layout);
             this.textView = layout.findViewById(R.id.player_name);
         }
@@ -37,7 +41,7 @@ public class PlayersAdapter extends RecyclerView.Adapter
                                          int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ConstraintLayout layout = (ConstraintLayout)
-                inflater.inflate(R.layout.my_players_list_item, parent, false);
+                inflater.inflate(R.layout.players_list_item, parent, false);
         return new ViewHolder(layout);
     }
 

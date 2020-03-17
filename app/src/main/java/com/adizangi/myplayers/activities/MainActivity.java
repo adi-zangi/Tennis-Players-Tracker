@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-       Adds tabs to the TabLayout
+       Initializes the TabLayout with a Stats tab and a Players tab
      */
     private void setUpTabs() {
         TabLayout tabLayout = findViewById(R.id.tab_layout);
