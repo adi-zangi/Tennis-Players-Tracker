@@ -55,7 +55,11 @@ public class PlayersTabFragment extends Fragment
      */
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
-        tabsViewModel = new ViewModelProvider(requireActivity()).get(TabsViewModel.class);
+        ViewModelProvider.AndroidViewModelFactory factory =
+                ViewModelProvider.AndroidViewModelFactory
+                        .getInstance(requireActivity().getApplication());
+        tabsViewModel = new ViewModelProvider(requireActivity(), factory)
+                .get(TabsViewModel.class);
         autoCompleteSearch =
                 view.findViewById(R.id.search_player_auto_complete);
         ArrayAdapter<String> autoCompleteAdapter = new ArrayAdapter<>
