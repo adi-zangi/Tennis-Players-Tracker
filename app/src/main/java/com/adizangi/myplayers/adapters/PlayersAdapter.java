@@ -5,7 +5,9 @@
 package com.adizangi.myplayers.adapters;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -27,10 +29,12 @@ public class PlayersAdapter extends RecyclerView.Adapter
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView textView;
+        Button button;
 
         ViewHolder(ConstraintLayout layout) {
             super(layout);
-            this.textView = layout.findViewById(R.id.player_name);
+            textView = layout.findViewById(R.id.player_name);
+            button = layout.findViewById(R.id.remove_button);
         }
     }
 
