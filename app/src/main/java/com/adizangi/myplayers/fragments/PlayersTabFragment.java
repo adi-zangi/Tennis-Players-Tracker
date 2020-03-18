@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.adizangi.myplayers.R;
 import com.adizangi.myplayers.adapters.PlayersAdapter;
+import com.adizangi.myplayers.models.TabsViewModel;
 import com.adizangi.myplayers.objects.FileManager;
 
 import java.util.ArrayList;
@@ -26,16 +27,15 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class PlayersTabFragment extends Fragment {
 
+    private TabsViewModel tabsViewModel;
     private AutoCompleteTextView autoCompleteSearch;
     private PlayersAdapter playersAdapter;
-    private List<String> totalPlayers;
-    private List<String> myPlayers;
-    private FileManager fileManager;
 
     @Nullable
     @Override
@@ -60,18 +60,17 @@ public class PlayersTabFragment extends Fragment {
      */
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
-        fileManager = new FileManager(getContext());
+        tabsViewModel = new ViewModelProvider(requireActivity()).get(TabsViewModel.class);
         autoCompleteSearch =
                 view.findViewById(R.id.search_player_auto_complete);
-        totalPlayers = fileManager.readTotalPlayers();
         ArrayAdapter<String> autoCompleteAdapter = new ArrayAdapter<>
-                (requireContext(), android.R.layout.simple_list_item_1, totalPlayers);
+                (requireContext(), android.R.layout.simple_list_item_1,
+                        tabsViewModel.getTotalPlayers());
         autoCompleteSearch.setAdapter(autoCompleteAdapter);
         RecyclerView myPlayersList = view.findViewById(R.id.my_players_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
         myPlayersList.setLayoutManager(manager);
-        myPlayers = fileManager.readMyPlayers();
-        playersAdapter = new PlayersAdapter(myPlayers);
+        playersAdapter = new PlayersAdapter(tabsViewModel.getMyPlayers());
         myPlayersList.setAdapter(playersAdapter);
         Button addButton = view.findViewById(R.id.add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -89,15 +88,15 @@ public class PlayersTabFragment extends Fragment {
      */
     private void addPlayer() {
         String playerName = autoCompleteSearch.getText().toString();
-        if (!totalPlayers.contains(playerName)) {
-            Toast.makeText(getContext(), "Invalid player", Toast.LENGTH_LONG).show();
-        } else if (myPlayers.contains(playerName)) {
+        if (!tabsViewModel.getTotalPlayers().contains(playerName)) {
+            Toast.makeText(getContext(), "Invalid player",
+                    Toast.LENGTH_LONG).show();
+        } else if (tabsViewModel.getMyPlayers().contains(playerName)) {
             Toast.makeText(getContext(), "Player already in list",
                     Toast.LENGTH_LONG).show();
         } else {
-            myPlayers.add(playerName);
+            tabsViewModel.addPlayer(playerName);
             playersAdapter.notifyDataSetChanged();
-            fileManager.storeMyPlayers(myPlayers);
         }
         autoCompleteSearch.getText().clear();
     }

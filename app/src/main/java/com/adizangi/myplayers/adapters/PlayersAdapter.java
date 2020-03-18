@@ -24,7 +24,7 @@ public class PlayersAdapter extends RecyclerView.Adapter
     private List<String> myPlayers;
 
     /*
-       Holds a reference to the text view of an item in the list
+       Holds a reference to the views of an item in the list
      */
     static class ViewHolder extends RecyclerView.ViewHolder {
 
