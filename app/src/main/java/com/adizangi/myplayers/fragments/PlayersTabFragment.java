@@ -6,7 +6,6 @@
 package com.adizangi.myplayers.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +17,6 @@ import android.widget.Toast;
 import com.adizangi.myplayers.R;
 import com.adizangi.myplayers.adapters.PlayersAdapter;
 import com.adizangi.myplayers.models.TabsViewModel;
-import com.adizangi.myplayers.objects.FileManager;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,7 +25,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class PlayersTabFragment extends Fragment {
+public class PlayersTabFragment extends Fragment
+        implements PlayersAdapter.OnRemovePlayerListener {
 
     private TabsViewModel tabsViewModel;
     private AutoCompleteTextView autoCompleteSearch;
@@ -72,6 +67,7 @@ public class PlayersTabFragment extends Fragment {
         myPlayersList.setLayoutManager(manager);
         playersAdapter = new PlayersAdapter(tabsViewModel.getMyPlayers());
         myPlayersList.setAdapter(playersAdapter);
+        playersAdapter.setOnRemoveClickListener(this);
         Button addButton = view.findViewById(R.id.add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +95,11 @@ public class PlayersTabFragment extends Fragment {
             playersAdapter.notifyDataSetChanged();
         }
         autoCompleteSearch.getText().clear();
+    }
+
+    public void onRemovePlayer(int position) {
+        tabsViewModel.removePlayerInPosition(position);
+        playersAdapter.notifyDataSetChanged();
     }
 
 }

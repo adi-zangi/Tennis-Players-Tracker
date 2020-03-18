@@ -22,6 +22,7 @@ public class PlayersAdapter extends RecyclerView.Adapter
         <PlayersAdapter.ViewHolder> {
 
     private List<String> myPlayers;
+    private OnRemovePlayerListener callback;
 
     /*
        Holds a reference to the views of an item in the list
@@ -55,7 +56,14 @@ public class PlayersAdapter extends RecyclerView.Adapter
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ConstraintLayout layout = (ConstraintLayout)
                 inflater.inflate(R.layout.players_list_item, parent, false);
-        return new ViewHolder(layout);
+        final ViewHolder viewHolder = new ViewHolder(layout);
+        viewHolder.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onRemovePlayer(viewHolder.getAdapterPosition());
+            }
+        });
+        return viewHolder;
     }
 
     @Override
@@ -74,6 +82,14 @@ public class PlayersAdapter extends RecyclerView.Adapter
      */
     public int getItemCount() {
         return myPlayers.size();
+    }
+
+    public void setOnRemoveClickListener(OnRemovePlayerListener callback) {
+        this.callback = callback;
+    }
+
+    public interface OnRemovePlayerListener {
+        void onRemovePlayer(int position);
     }
 
 }
