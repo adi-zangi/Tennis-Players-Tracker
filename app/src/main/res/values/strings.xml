@@ -4,6 +4,7 @@
     <string name="button_add">Add</string>
     <string name="button_remove">Remove</string>
     <string name="player_search_hint">Search player</string>
+    <string name="button_see_results">See more match results</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
