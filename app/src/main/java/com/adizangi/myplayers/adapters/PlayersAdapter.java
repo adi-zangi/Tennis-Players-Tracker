@@ -29,6 +29,9 @@ public class PlayersAdapter extends RecyclerView.Adapter
         TextView playerName;
         Button removeButton;
 
+        /*
+           Constructs a ViewHolder with the given layout of an item in the list
+         */
         ViewHolder(ConstraintLayout layout) {
             super(layout);
             playerName = layout.findViewById(R.id.player_name);

@@ -66,8 +66,8 @@ public class TabsViewModel extends AndroidViewModel {
     /*
        Removes the player that is in the given position in the list of the
        user's players
-       Sets the value of removedPlayerPosition to the player so the change will
-       be observed
+       Sets the value of removedPlayerPosition to the player's position so the
+       change will be observed
      */
     public void removePlayerInPosition(int position) {
         removedPlayerPosition.setValue(position);
