@@ -52,6 +52,7 @@ public class PlayersTabFragment extends Fragment
        user can select
        Fills the RecyclerView with the saved list of the user's selected
        players
+       Sets responses to button clicks
      */
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
@@ -84,7 +85,6 @@ public class PlayersTabFragment extends Fragment
     /*
        Adds the player whose name is in the AutoCompleteTextView, if the player
        is valid
-       Saves the list of players
      */
     private void addPlayer() {
         String playerName = autoCompleteSearch.getText().toString();
@@ -101,6 +101,11 @@ public class PlayersTabFragment extends Fragment
         autoCompleteSearch.getText().clear();
     }
 
+    /*
+       Called from PlayersAdapter to communicate that the remove button next
+       to the player in the given position was clicked
+       Removes the player in the given position from the list
+     */
     public void onRemovePlayer(int position) {
         tabsViewModel.removePlayerInPosition(position);
         playersAdapter.notifyDataSetChanged();
