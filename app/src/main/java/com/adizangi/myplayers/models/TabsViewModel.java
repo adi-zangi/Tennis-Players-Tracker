@@ -1,3 +1,7 @@
+/*
+   ViewModel for the views in MainActivity's tabs
+ */
+
 package com.adizangi.myplayers.models;
 
 import android.app.Application;
@@ -13,11 +17,17 @@ import androidx.lifecycle.MutableLiveData;
 public class TabsViewModel extends AndroidViewModel {
 
     private List<String> myPlayers;
-    private List<String> totalPlayers;
+    private final List<String> totalPlayers;
     private MutableLiveData<String> addedPlayer;
     private MutableLiveData<Integer> removedPlayerPosition;
     private FileManager fileManager;
 
+    /*
+       Constructs a TabsViewModel with the given Application reference
+       Initializes the list of the user's selected players and the list of
+       total players with the saved lists, and initializes the observable data
+       to empty values
+     */
     public TabsViewModel(@NonNull Application application) {
         super(application);
         fileManager = new FileManager(application);
@@ -27,20 +37,38 @@ public class TabsViewModel extends AndroidViewModel {
         removedPlayerPosition = new MutableLiveData<>();
     }
 
+    /*
+       Returns a list of the user's selected players
+     */
     public List<String> getMyPlayers() {
         return myPlayers;
     }
 
+    /*
+       Returns a list of all the players the user can add
+     */
     public List<String> getTotalPlayers() {
         return totalPlayers;
     }
 
+    /*
+       Adds the given player to the list of the user's players and saves the
+       list
+       Sets the value of addedPlayer to the player so the change will be
+       observed
+     */
     public void addPlayer(String player) {
         addedPlayer.setValue(player);
         myPlayers.add(player);
         fileManager.storeMyPlayers(myPlayers);
     }
 
+    /*
+       Removes the player that is in the given position in the list of the
+       user's players
+       Sets the value of removedPlayerPosition to the player so the change will
+       be observed
+     */
     public void removePlayerInPosition(int position) {
         removedPlayerPosition.setValue(position);
         myPlayers.remove(position);
