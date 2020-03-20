@@ -5,6 +5,7 @@
 package com.adizangi.myplayers.models;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.adizangi.myplayers.objects.FileManager;
 import com.adizangi.myplayers.objects.PlayerStats;
