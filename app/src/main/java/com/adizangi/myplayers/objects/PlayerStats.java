@@ -10,6 +10,7 @@ import java.io.Serializable;
 public class PlayerStats implements Comparable<PlayerStats>, Serializable {
 
     private static final long serialVersionUID = 5178394270442919234L;
+
     private String name;
     private String ranking;
     private String titles;
