@@ -21,7 +21,7 @@ import androidx.lifecycle.MutableLiveData;
 public class TabsViewModel extends AndroidViewModel {
 
     private final List<String> totalPlayers;
-    private final Map<String, PlayerStats> totalStats;
+    private final Map<String, PlayerStats> statsMap;
     private List<String> myPlayers;
     private List<PlayerStats> myPlayersStats;
     private MutableLiveData<String> addedPlayer;
@@ -30,22 +30,21 @@ public class TabsViewModel extends AndroidViewModel {
 
     /*
        Constructs a TabsViewModel with the given Application reference
-       Initializes the list of the user's selected players and the list of
-       total players with the saved lists, and initializes the observable data
-       to empty values
+       Retrieves saved data
+       Initializes the observable data to empty values
      */
     public TabsViewModel(@NonNull Application application) {
         super(application);
         fileManager = new FileManager(application);
         totalPlayers = fileManager.readTotalPlayers();
-        totalStats = fileManager.readPlayerStats();
+        statsMap = fileManager.readPlayerStats();
         myPlayers = fileManager.readMyPlayers();
         myPlayersStats = new ArrayList<>();
         for (String player : myPlayers) {
-            PlayerStats playerStats = totalStats.get(player);
+            PlayerStats playerStats = statsMap.get(player);
             myPlayersStats.add(playerStats);
         }
-        Collections.sort(myPlayersStats);
+        Collections.sort(myPlayersStats, Collections.reverseOrder());
         addedPlayer = new MutableLiveData<>();
         removedPlayerPosition = new MutableLiveData<>();
     }
@@ -65,6 +64,15 @@ public class TabsViewModel extends AndroidViewModel {
     }
 
     /*
+       Returns a list of PlayerStats objects corresponding to each of the
+       user's selected players
+       The list is sorted in reverse order
+     */
+    public List<PlayerStats> getMyPlayersStats() {
+        return myPlayersStats;
+    }
+
+    /*
        Adds the given player to the list of the user's players and saves the
        list
        Sets the value of addedPlayer to the player so the change will be
@@ -74,6 +82,17 @@ public class TabsViewModel extends AndroidViewModel {
         addedPlayer.setValue(player);
         myPlayers.add(player);
         fileManager.storeMyPlayers(myPlayers);
+    }
+
+    /*
+       Adds a PlayerStats object that corresponds to the given player into the
+       PlayerStats list
+       The list remains sorted
+     */
+    public void addPlayerStats(String player) {
+        PlayerStats playerStats = statsMap.get(player);
+        myPlayersStats.add(playerStats);
+        Collections.sort(myPlayersStats, Collections.reverseOrder());
     }
 
     /*
