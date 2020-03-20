@@ -7,8 +7,12 @@ package com.adizangi.myplayers.models;
 import android.app.Application;
 
 import com.adizangi.myplayers.objects.FileManager;
+import com.adizangi.myplayers.objects.PlayerStats;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -16,8 +20,10 @@ import androidx.lifecycle.MutableLiveData;
 
 public class TabsViewModel extends AndroidViewModel {
 
-    private List<String> myPlayers;
     private final List<String> totalPlayers;
+    private final Map<String, PlayerStats> totalStats;
+    private List<String> myPlayers;
+    private List<PlayerStats> myPlayersStats;
     private MutableLiveData<String> addedPlayer;
     private MutableLiveData<Integer> removedPlayerPosition;
     private FileManager fileManager;
@@ -31,8 +37,15 @@ public class TabsViewModel extends AndroidViewModel {
     public TabsViewModel(@NonNull Application application) {
         super(application);
         fileManager = new FileManager(application);
-        myPlayers = fileManager.readMyPlayers();
         totalPlayers = fileManager.readTotalPlayers();
+        totalStats = fileManager.readPlayerStats();
+        myPlayers = fileManager.readMyPlayers();
+        myPlayersStats = new ArrayList<>();
+        for (String player : myPlayers) {
+            PlayerStats playerStats = totalStats.get(player);
+            myPlayersStats.add(playerStats);
+        }
+        Collections.sort(myPlayersStats);
         addedPlayer = new MutableLiveData<>();
         removedPlayerPosition = new MutableLiveData<>();
     }
