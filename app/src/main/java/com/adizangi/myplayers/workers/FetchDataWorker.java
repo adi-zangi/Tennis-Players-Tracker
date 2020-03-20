@@ -42,12 +42,12 @@ public class FetchDataWorker extends Worker {
         super(context, workerParams);
     }
 
-    @NonNull
-    @Override
     /*
        Fetches the data in the background and saves it to files
        Returns a Result that indicates whether the task was successful
      */
+    @NonNull
+    @Override
     public Result doWork() {
         try {
             getHTMLDocuments();

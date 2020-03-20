@@ -35,13 +35,13 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String VERSION_CODE_KEY = "version_code";
 
-    @Override
     /*
        Called when the app is launched
        Displays the MainActivity layout and fills it with data
        If the app is running for the first time after installation, schedules a
        daily task that fetched data
      */
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

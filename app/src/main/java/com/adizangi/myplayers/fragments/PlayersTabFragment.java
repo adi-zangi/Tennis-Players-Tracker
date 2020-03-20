@@ -32,20 +32,19 @@ public class PlayersTabFragment extends Fragment
     private AutoCompleteTextView autoCompleteSearch;
     private PlayersAdapter playersAdapter;
 
-    @Nullable
-    @Override
     /*
        Called when the Fragment should instantiate its UI
        Inflates the fragment's layout by using the given LayoutInflater, and
        returns the root View of the fragment's layout
      */
+    @Nullable
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_players_tab, container, false);
     }
 
-    @Override
     /*
        Initializes the sub-views of the view returned by onCreateView()
        Fills the AutoCompleteTextView with a list of the total players the
@@ -54,6 +53,7 @@ public class PlayersTabFragment extends Fragment
        players
        Sets responses to button clicks
      */
+    @Override
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
         ViewModelProvider.AndroidViewModelFactory factory =

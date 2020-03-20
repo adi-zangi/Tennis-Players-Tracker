@@ -59,11 +59,11 @@ public class StatsAdapter extends RecyclerView.Adapter
         this.stats = stats;
     }
 
-    @NonNull
-    @Override
     /*
        Creates a new ViewHolder and returns it
      */
+    @NonNull
+    @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ConstraintLayout layout = (ConstraintLayout)
@@ -71,11 +71,11 @@ public class StatsAdapter extends RecyclerView.Adapter
         return new ViewHolder(layout);
     }
 
-    @Override
     /*
        Fills the views in the given ViewHolder with information from the
        PlayerStats object that corresponds to the given position
      */
+    @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PlayerStats playerStats = stats.get(position);
         holder.name.setText(playerStats.getName());
@@ -94,10 +94,10 @@ public class StatsAdapter extends RecyclerView.Adapter
         }
     }
 
-    @Override
     /*
        Returns the number of items held by this adapter
      */
+    @Override
     public int getItemCount() {
         return stats.size();
     }

@@ -63,13 +63,13 @@ public class PlayersAdapter extends RecyclerView.Adapter
         this.callback = callback;
     }
 
-    @NonNull
-    @Override
     /*
        Creates a new ViewHolder and returns it
        Adds a listener to remove button clicks in the ViewHolder, that
        communicates the click to PlayersTabFragment
      */
+    @NonNull
+    @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                          int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -85,20 +85,20 @@ public class PlayersAdapter extends RecyclerView.Adapter
         return viewHolder;
     }
 
-    @Override
     /*
        Sets the text of the given ViewHolder to the player's name that
        corresponds to the given position
      */
+    @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String playerName = myPlayers.get(position);
         holder.playerName.setText(playerName);
     }
 
-    @Override
     /*
        Returns the number of items held by this adapter
      */
+    @Override
     public int getItemCount() {
         return myPlayers.size();
     }

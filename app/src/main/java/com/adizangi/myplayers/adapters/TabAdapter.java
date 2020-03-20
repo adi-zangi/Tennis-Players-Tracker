@@ -23,13 +23,13 @@ public class TabAdapter extends FragmentStateAdapter {
         super(fragmentActivity);
     }
 
-    @NonNull
-    @Override
     /*
        Creates a Fragment for the given position and returns it
        The StatsTabFragment is in position 0 and the PlayersTabFragment
        is in position 1
      */
+    @NonNull
+    @Override
     public Fragment createFragment(int position) {
         if (position == 0) {
             return new StatsTabFragment();
@@ -38,10 +38,10 @@ public class TabAdapter extends FragmentStateAdapter {
         }
     }
 
-    @Override
     /*
        Returns the number of tabs held by this adapter
      */
+    @Override
     public int getItemCount() {
         return TAB_TITLES.length;
     }
