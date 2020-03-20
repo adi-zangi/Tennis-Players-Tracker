@@ -92,7 +92,7 @@ public class PlayerStats implements Comparable<PlayerStats>, Serializable {
 
     /*
        Returns the player's upcoming match
-       The format is '[player's name]  [time]'
+       The format is '[player's name] [time of match]'
        Returns an empty string if the player is not playing a match today
      */
     public String getUpcomingMatch() {
@@ -107,8 +107,32 @@ public class PlayerStats implements Comparable<PlayerStats>, Serializable {
         return resultsURL;
     }
 
+    /*
+        Returns -1, 0, or 1 if this PlayerStats is less than, equal to, or
+        greater than the given other PlayerStats, respectively
+        PlayerStats objects are compared by tournament standing, such that a
+        player who advanced to the next round is greater than a player who is
+        out, and a player who is out is greater than a player who is not playing
+        If the tournament standings are the same, the objects are compared by
+        current tournament alphabetically
+     */
     @Override
     public int compareTo(PlayerStats o) {
-
+        boolean thisAdvanced = tournamentStanding.contains("advanced");
+        boolean otherAdvanced = o.tournamentStanding.contains("advanced");
+        if (thisAdvanced && !otherAdvanced) {
+            return 1;
+        } else if (!thisAdvanced && otherAdvanced) {
+            return -1;
+        }
+        boolean thisOut = tournamentStanding.equals("out");
+        boolean otherOut = o.tournamentStanding.equals("out");
+        if (thisOut && !otherOut) {
+            return 1;
+        } else if (!thisOut && otherOut) {
+            return -1;
+        }
+        return currentTournament.compareTo(o.currentTournament);
     }
+
 }
