@@ -130,7 +130,11 @@ public class TabsViewModel extends AndroidViewModel {
         int size = myPlayersStats.size();
         for (int i = 0; i < size; i++) {
             PlayerStats playerStats = myPlayersStats.get(i);
-            if (playerStats.getName().equals(player)) {
+            String name = playerStats.getName();
+            String fullRanking = playerStats.getRanking();
+            String ranking = fullRanking.substring(fullRanking.indexOf(":") + 2);
+            String playerAtIndex = name + " (" + ranking + ")";
+            if (playerAtIndex.equals(player)) {
                 myPlayersStats.remove(i);
                 break;
             }
