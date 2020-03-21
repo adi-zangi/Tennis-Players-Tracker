@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,6 +45,7 @@ public class StatsTabFragment extends Fragment {
        Initializes the sub-views of the view returned by onCreateView()
        Fills the RecyclerView such that each entry contains statistics and
        tournament results of one of the user's selected players
+       Sets responses to change in the user's selected players
      */
     @Override
     public void onViewCreated(@NonNull View view,
@@ -53,10 +56,26 @@ public class StatsTabFragment extends Fragment {
         tabsViewModel = new ViewModelProvider(requireActivity(), factory)
                 .get(TabsViewModel.class);
         RecyclerView statsList = view.findViewById(R.id.stats_list);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(requireContext());
         statsList.setLayoutManager(manager);
         statsAdapter = new StatsAdapter(tabsViewModel.getMyPlayersStats());
         statsList.setAdapter(statsAdapter);
+        MutableLiveData<String> addedPlayer = tabsViewModel.getAddedPlayer();
+        addedPlayer.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String addedPlayer) {
+                tabsViewModel.addPlayerStats(addedPlayer);
+                statsAdapter.notifyDataSetChanged();
+            }
+        });
+        MutableLiveData<String> removedPlayer = tabsViewModel.getRemovedPlayer();
+        removedPlayer.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String removedPlayer) {
+                tabsViewModel.removePlayerStats(removedPlayer);
+                statsAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
 }

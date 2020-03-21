@@ -43,7 +43,7 @@ public class PlayersAdapter extends RecyclerView.Adapter
        Interface used to communicate remove button clicks to PlayersTabFragment
      */
     public interface OnRemovePlayerListener {
-        void onRemovePlayer(int position);
+        void onRemovePlayer(String player);
     }
 
     private List<String> myPlayers;
@@ -79,7 +79,8 @@ public class PlayersAdapter extends RecyclerView.Adapter
         viewHolder.removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View removeButton) {
-                callback.onRemovePlayer(viewHolder.getAdapterPosition());
+                String removedPlayer = viewHolder.playerName.getText().toString();
+                callback.onRemovePlayer(removedPlayer);
             }
         });
         return viewHolder;

@@ -68,7 +68,7 @@ public class PlayersTabFragment extends Fragment
                         tabsViewModel.getTotalPlayers());
         autoCompleteSearch.setAdapter(autoCompleteAdapter);
         RecyclerView myPlayersList = view.findViewById(R.id.my_players_list);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(requireContext());
         myPlayersList.setLayoutManager(manager);
         playersAdapter = new PlayersAdapter(tabsViewModel.getMyPlayers());
         myPlayersList.setAdapter(playersAdapter);
@@ -103,11 +103,11 @@ public class PlayersTabFragment extends Fragment
 
     /*
        Called from PlayersAdapter to communicate that the remove button next
-       to the player in the given position was clicked
-       Removes the player in the given position from the list
+       to the given player was clicked
+       Removes the given player from the list
      */
-    public void onRemovePlayer(int position) {
-        tabsViewModel.removePlayerInPosition(position);
+    public void onRemovePlayer(String player) {
+        tabsViewModel.removePlayer(player);
         playersAdapter.notifyDataSetChanged();
     }
 

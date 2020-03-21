@@ -26,12 +26,12 @@ public class TabsViewModel extends AndroidViewModel {
     private List<String> myPlayers;
     private List<PlayerStats> myPlayersStats;
     private MutableLiveData<String> addedPlayer;
-    private MutableLiveData<Integer> removedPlayerPosition;
+    private MutableLiveData<String> removedPlayer;
     private FileManager fileManager;
 
     /*
        Constructs a TabsViewModel with the given Application reference
-       Retrieves saved data
+       Retrieves saved data and initialized the data for the views
        Initializes the observable data to empty values
      */
     public TabsViewModel(@NonNull Application application) {
@@ -47,7 +47,7 @@ public class TabsViewModel extends AndroidViewModel {
         }
         Collections.sort(myPlayersStats, Collections.reverseOrder());
         addedPlayer = new MutableLiveData<>();
-        removedPlayerPosition = new MutableLiveData<>();
+        removedPlayer = new MutableLiveData<>();
     }
 
     /*
@@ -67,10 +67,24 @@ public class TabsViewModel extends AndroidViewModel {
     /*
        Returns a list of PlayerStats objects corresponding to each of the
        user's selected players
-       The list is sorted in reverse order
+       The list is sorted in descending order
      */
     public List<PlayerStats> getMyPlayersStats() {
         return myPlayersStats;
+    }
+
+    /*
+       Returns a MutableLiveData containing the player that was added
+     */
+    public MutableLiveData<String> getAddedPlayer() {
+        return addedPlayer;
+    }
+
+    /*
+       Returns a MutableLiveData containing the player that was removed
+     */
+    public MutableLiveData<String> getRemovedPlayer() {
+        return removedPlayer;
     }
 
     /*
@@ -97,15 +111,30 @@ public class TabsViewModel extends AndroidViewModel {
     }
 
     /*
-       Removes the player that is in the given position in the list of the
-       user's players
-       Sets the value of removedPlayerPosition to the player's position so the
-       change will be observed
+       Removes the given player from the list of the user's players
+       Sets the value of removedPlayer to the player so the change will be
+       observed
      */
-    public void removePlayerInPosition(int position) {
-        removedPlayerPosition.setValue(position);
-        myPlayers.remove(position);
+    public void removePlayer(String player) {
+        removedPlayer.setValue(player);
+        myPlayers.remove(player);
         fileManager.storeMyPlayers(myPlayers);
+    }
+
+    /*
+       Removes the PlayerStats object that corresponds to the given player from
+       the PlayerStats list
+       The list remains sorted
+     */
+    public void removePlayerStats(String player) {
+        int size = myPlayersStats.size();
+        for (int i = 0; i < size; i++) {
+            PlayerStats playerStats = myPlayersStats.get(i);
+            if (playerStats.getName().equals(player)) {
+                myPlayersStats.remove(i);
+                break;
+            }
+        }
     }
 
 }
