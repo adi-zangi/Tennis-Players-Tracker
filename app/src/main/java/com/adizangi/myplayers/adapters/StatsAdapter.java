@@ -4,8 +4,12 @@
 
 package com.adizangi.myplayers.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
@@ -61,14 +65,30 @@ public class StatsAdapter extends RecyclerView.Adapter
 
     /*
        Creates a new ViewHolder and returns it
+       Adds a listener to the See More Results button in the ViewHolder,
+       that opens an ESPN web page that has all the match results of the player
      */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        final Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
         ConstraintLayout layout = (ConstraintLayout)
                 inflater.inflate(R.layout.stats_list_item, parent, false);
-        return new ViewHolder(layout);
+        final ViewHolder viewHolder = new ViewHolder(layout);
+        viewHolder.seeResultsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View seeResultsButton) {
+                int position = viewHolder.getAdapterPosition();
+                PlayerStats playerStats = stats.get(position);
+                Uri webpage = Uri.parse(playerStats.getResultsURL());
+                Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+                if (intent.resolveActivity(context.getPackageManager()) != null) {
+                    context.startActivity(intent);
+                }
+            }
+        });
+        return viewHolder;
     }
 
     /*
