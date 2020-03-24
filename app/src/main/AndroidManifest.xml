@@ -25,6 +25,8 @@
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings">
         </activity>
+        <receiver android:name=".receivers.NotificationAlarmReceiver" />
+        <receiver android:name=".receivers.NotificationAlarmReceiver$ShowScheduleReceiver" />
 
     </application>
 
