@@ -29,8 +29,10 @@ import androidx.core.app.NotificationManagerCompat;
 
 public class NotifAlarmReceiver extends BroadcastReceiver {
 
-    private static final String CHANNEL_ID = "MyPlayers Notification Channel";
+    private static final String CHANNEL_ID = "MyPlayers Notifications";
+    private static final int notificationId = 1;
 
+    private Context context;
     private FileManager fileManager;
     private List<String> notificationList;
 
@@ -38,17 +40,20 @@ public class NotifAlarmReceiver extends BroadcastReceiver {
     /*
        Gets the saved notification content, and if it's not empty, sends a
        notification
-       If there are current tournaments, adds a button to the notification that
-       opens the result of a Google search for each tournament, which will
-       display the live scores for each tournament
-       Reschedules the alarm for the following day
+       If there are current tournaments, the notification will contain a button
+       that displays the live scores for the tournaments
+       Reschedules the notification alarm for the following day
      */
     public void onReceive(Context context, Intent intent) {
-        rescheduleAlarm(context);
-        createNotificationChannel(context);
+        this.context = context;
+        rescheduleAlarm();
+        createNotificationChannel();
         fileManager = new FileManager(context);
         notificationList = fileManager.readNotificationList();
         String notificationContent = getNotificationContent();
+        if (notificationContent.isEmpty()) {
+            return;
+        }
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentText(notificationContent)
@@ -61,15 +66,19 @@ public class NotifAlarmReceiver extends BroadcastReceiver {
             PendingIntent pendingIntent = PendingIntent.getBroadcast
                     (context, 0, buttonIntent, 0);
             builder.setContentIntent(pendingIntent);
-            builder.addAction(android.R.color.white, "See Live Scores", pendingIntent);
+            builder.addAction(android.R.color.white,
+                    context.getString(R.string.button_live_scores), pendingIntent);
         }
         Notification notification = builder.build();
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(context);
-        notificationManager.notify(1, notification);
+        notificationManager.notify(notificationId, notification);
     }
 
-    private void rescheduleAlarm(Context context) {
+    /*
+       Reschedules the notification alarm to the same time on the following day
+     */
+    private void rescheduleAlarm() {
         AlarmManager alarmManager =
                 (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, NotifAlarmReceiver.class);
@@ -85,10 +94,10 @@ public class NotifAlarmReceiver extends BroadcastReceiver {
 
     /*
        Creates a notification channel for this app and registers it with the
-       system, if the phone's version requires it
+       system, if the android version of the device requires it
        If the notification channel already exists, performs no operations
      */
-    private void createNotificationChannel(Context context) {
+    private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String name = context.getString(R.string.notification_channel_name);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
@@ -102,7 +111,7 @@ public class NotifAlarmReceiver extends BroadcastReceiver {
 
     /*
        Gets the saved notification content and adds the upcoming matches for
-       each of the user's players at the end of it
+       each of the user's selected players at the end of it
        Returns the modified notification content
        Returns an empty string if the notification content is empty
      */
