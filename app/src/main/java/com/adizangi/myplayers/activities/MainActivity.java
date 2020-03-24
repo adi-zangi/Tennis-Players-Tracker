@@ -14,21 +14,22 @@ import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.adizangi.myplayers.BuildConfig;
 import com.adizangi.myplayers.adapters.TabAdapter;
-import com.adizangi.myplayers.objects.FileManager;
+import com.adizangi.myplayers.receivers.NotifAlarmReceiver;
 import com.adizangi.myplayers.workers.FetchDataWorker;
 import com.adizangi.myplayers.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         int savedVersionCode = sharedPrefs.getInt(VERSION_CODE_KEY, -1);
         if (savedVersionCode == -1) {
             scheduleDailyDataFetch();
+            scheduleDailyNotif();
         }
         sharedPrefs.edit().putInt(VERSION_CODE_KEY, currentVersionCode).apply();
     }
@@ -107,6 +109,25 @@ public class MainActivity extends AppCompatActivity {
                 .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
                 .build();
         WorkManager.getInstance(this).enqueue(fetchDataRequest);
+    }
+
+    /*
+       Schedules a notification for the user at 9:30 a.m. daily
+       If there is no information to send to the user on a specific day, no
+       notification will be sent
+     */
+    private void scheduleDailyNotif() {
+        AlarmManager alarmManager =
+                (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, NotifAlarmReceiver.class);
+        PendingIntent pendingIntent =
+                PendingIntent.getBroadcast(this, 0, intent, 0);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 9);
+        calendar.set(Calendar.MINUTE, 30);
+        calendar.set(Calendar.SECOND, 0);
+        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),
+                pendingIntent);
     }
 
 }

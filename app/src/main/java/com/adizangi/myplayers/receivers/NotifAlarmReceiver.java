@@ -5,6 +5,7 @@
 
 package com.adizangi.myplayers.receivers;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -19,13 +20,14 @@ import com.adizangi.myplayers.R;
 import com.adizangi.myplayers.objects.FileManager;
 import com.adizangi.myplayers.objects.PlayerStats;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-public class NotificationAlarmReceiver extends BroadcastReceiver {
+public class NotifAlarmReceiver extends BroadcastReceiver {
 
     private static final String CHANNEL_ID = "MyPlayers Notification Channel";
 
@@ -39,8 +41,10 @@ public class NotificationAlarmReceiver extends BroadcastReceiver {
        If there are current tournaments, adds a button to the notification that
        opens the result of a Google search for each tournament, which will
        display the live scores for each tournament
+       Reschedules the alarm for the following day
      */
     public void onReceive(Context context, Intent intent) {
+        rescheduleAlarm(context);
         createNotificationChannel(context);
         fileManager = new FileManager(context);
         notificationList = fileManager.readNotificationList();
@@ -53,9 +57,9 @@ public class NotificationAlarmReceiver extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         int size = notificationList.size();
         if (size > 1) {
-            Intent showScheduleIntent = new Intent(context, ShowScheduleReceiver.class);
+            Intent buttonIntent = new Intent(context, ButtonReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast
-                    (context, 0, showScheduleIntent, 0);
+                    (context, 0, buttonIntent, 0);
             builder.setContentIntent(pendingIntent);
             builder.addAction(android.R.color.white, "See Live Scores", pendingIntent);
         }
@@ -63,6 +67,20 @@ public class NotificationAlarmReceiver extends BroadcastReceiver {
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(context);
         notificationManager.notify(1, notification);
+    }
+
+    private void rescheduleAlarm(Context context) {
+        AlarmManager alarmManager =
+                (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, NotifAlarmReceiver.class);
+        PendingIntent pendingIntent =
+                PendingIntent.getBroadcast(context, 0, intent, 0);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 9);
+        calendar.set(Calendar.MINUTE, 30);
+        calendar.set(Calendar.SECOND, 0);
+        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),
+                pendingIntent);
     }
 
     /*
@@ -112,7 +130,7 @@ public class NotificationAlarmReceiver extends BroadcastReceiver {
        Receives a broadcast when the See Live Scores button in the notification
        is clicked
      */
-    public class ShowScheduleReceiver extends BroadcastReceiver {
+    public class ButtonReceiver extends BroadcastReceiver {
 
         @Override
         /*
