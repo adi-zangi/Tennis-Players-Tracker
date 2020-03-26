@@ -170,7 +170,9 @@ public class NotifAlarmReceiver extends BroadcastReceiver {
            Reschedules the notification alarm
          */
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+            String intentAction = intent.getAction();
+            if (intentAction != null &&
+                    intentAction.equals("android.intent.action.BOOT_COMPLETED")) {
                 AlarmManager alarmManager =
                         (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                 Intent alarmIntent = new Intent(context, NotifAlarmReceiver.class);
