@@ -1,6 +1,15 @@
 /*
    The Stats tab, which displays statistics and tournament results for each of
    the user's selected players
+
+   The screen has a list and each section in the list shows the information
+   about one of the players
+   The top of each section either has green text that says the player advanced
+   to the next round, red text that says the player is out of the tournament,
+   or gray text that says the player is not playing
+   The sections are sorted so green sections are first and gray sections are last
+   Each section has a 'See More Match Results' button that opens an ESPN web
+   page that has all the match results of the player
  */
 
 package com.adizangi.myplayers.fragments;

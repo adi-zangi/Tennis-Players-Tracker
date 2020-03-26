@@ -9,8 +9,10 @@
    tournaments that are going on for the day and the times at which the
    selected players are playing.
 
-   MainActivity is the home screen of the app. It shows the information about
-   each selected player.
+   MainActivity is the home screen of the app
+   The screen is separated into two tabs
+   The first tab shows the information about each selected player, and
+   the second tab shows the currently selected players
  */
 
 package com.adizangi.myplayers.activities;

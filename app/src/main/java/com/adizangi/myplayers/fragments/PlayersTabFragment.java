@@ -1,6 +1,13 @@
 /*
    The Players tab, which displays the user's selected players and lets the
    user modify them
+
+   The screen has a search box (AutoCompleteTextView) that lets the user search
+   for a player and filters from the list of all players as the user types
+   The user can add a player by selecting one of the suggestions from the
+   AutoCompleteTextView and clicking the 'Add' button
+   A list of the selected players is displayed under the search box, and there
+   is a 'Remove' button next to each player
  */
 
 package com.adizangi.myplayers.fragments;
