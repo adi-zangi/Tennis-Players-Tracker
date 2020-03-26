@@ -2,13 +2,15 @@
    Adi Zangi
    2019-2020
 
-   The app MyPlayers lets the user select tennis players to keep track of. The
-   user can view statistics and tournament results for each of those players,
-   as well as receive notifications about  tournaments that are happening and
-   upcoming matches of the selected players.
+   The purpose of the app MyPlayers is to help the user keep track of tennis
+   players that they select. The user can select players and view statistics
+   and tournament results for each of those players, which are updated daily.
+   The user can also receive notifications that give a summary of the
+   tournaments that are going on for the day and the times at which the
+   selected players are playing.
 
    MainActivity is the home screen of the app. It shows the information about
-   the players.
+   each selected player.
  */
 
 package com.adizangi.myplayers.activities;

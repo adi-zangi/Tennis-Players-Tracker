@@ -1,6 +1,6 @@
 /*
    The Stats tab, which displays statistics and tournament results for each of
-   the user's players
+   the user's selected players
  */
 
 package com.adizangi.myplayers.fragments;

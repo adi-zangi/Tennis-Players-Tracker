@@ -40,6 +40,8 @@ public class NotifAlarmReceiver extends BroadcastReceiver {
     /*
        Gets the saved notification content, and if it's not empty, sends a
        notification
+       The notification gives the user a summary of tournaments that are going
+       on and the times at which the selected players are playing
        If there are current tournaments, the notification will contain a button
        that displays the live scores for the tournaments
        Reschedules the notification alarm for the following day
