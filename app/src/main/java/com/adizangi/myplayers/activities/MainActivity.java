@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
        Called when the app is launched
        Displays the MainActivity layout and fills it with data
        If the app is running for the first time after installation, schedules a
-       daily task that fetched data
+       daily task that fetches data and a daily notification
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {

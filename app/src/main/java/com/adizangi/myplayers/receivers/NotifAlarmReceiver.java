@@ -30,7 +30,7 @@ import androidx.core.app.NotificationManagerCompat;
 public class NotifAlarmReceiver extends BroadcastReceiver {
 
     private static final String CHANNEL_ID = "MyPlayers Notifications";
-    private static final int notificationId = 1;
+    private static final int NOTIFICATION_ID = 1;
 
     private Context context;
     private FileManager fileManager;
@@ -60,8 +60,7 @@ public class NotifAlarmReceiver extends BroadcastReceiver {
                 .setStyle(new NotificationCompat.BigTextStyle()
                     .bigText(notificationContent))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        int size = notificationList.size();
-        if (size > 1) {
+        if (notificationList.size() > 1) {
             Intent buttonIntent = new Intent(context, ButtonReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast
                     (context, 0, buttonIntent, 0);
@@ -72,7 +71,7 @@ public class NotifAlarmReceiver extends BroadcastReceiver {
         Notification notification = builder.build();
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(context);
-        notificationManager.notify(notificationId, notification);
+        notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
     /*
@@ -116,7 +115,7 @@ public class NotifAlarmReceiver extends BroadcastReceiver {
        Returns an empty string if the notification content is empty
      */
     private String getNotificationContent() {
-        if (notificationList.isEmpty()) { // required until app gets data as soon as it opens
+        if (notificationList.isEmpty()) { // list would be empty if there was error
             return "";
         }
         String notificationContent = notificationList.get(0);
