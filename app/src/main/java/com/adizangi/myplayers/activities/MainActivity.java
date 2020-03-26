@@ -1,6 +1,14 @@
 /*
    Adi Zangi
    2019-2020
+
+   The app MyPlayers lets the user select tennis players to keep track of. The
+   user can view statistics and tournament results for each of those players,
+   as well as receive notifications about  tournaments that are happening and
+   upcoming matches of the selected players.
+
+   MainActivity is the home screen of the app. It shows the information about
+   the players.
  */
 
 package com.adizangi.myplayers.activities;
