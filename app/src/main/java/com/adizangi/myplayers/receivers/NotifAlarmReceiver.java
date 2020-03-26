@@ -158,7 +158,32 @@ public class NotifAlarmReceiver extends BroadcastReceiver {
                 }
             }
         }
+    }
 
+    /*
+       Receives a broadcast when the device reboots
+     */
+    public static class BootReceiver extends BroadcastReceiver {
+
+        @Override
+        /*
+           Reschedules the notification alarm
+         */
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+                AlarmManager alarmManager =
+                        (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                Intent alarmIntent = new Intent(context, NotifAlarmReceiver.class);
+                PendingIntent pendingIntent =
+                        PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, 9);
+                calendar.set(Calendar.MINUTE, 30);
+                calendar.set(Calendar.SECOND, 0);
+                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                        calendar.getTimeInMillis(), pendingIntent);
+            }
+        }
     }
 
 }
