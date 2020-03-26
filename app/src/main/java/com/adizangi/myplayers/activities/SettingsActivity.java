@@ -1,3 +1,8 @@
+/*
+   The Settings screen
+   Currently Android's default Settings screen, will be changed later
+ */
+
 package com.adizangi.myplayers.activities;
 
 import android.os.Bundle;
