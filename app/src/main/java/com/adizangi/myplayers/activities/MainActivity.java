@@ -39,6 +39,7 @@ import android.view.MenuItem;
 import com.adizangi.myplayers.BuildConfig;
 import com.adizangi.myplayers.TimeActivity;
 import com.adizangi.myplayers.adapters.TabAdapter;
+import com.adizangi.myplayers.receivers.InitialFetchReceiver;
 import com.adizangi.myplayers.receivers.NotifAlarmReceiver;
 import com.adizangi.myplayers.workers.FetchDataWorker;
 import com.adizangi.myplayers.R;
@@ -92,9 +93,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-               Initializes the TabLayout with a Stats tab and a Players tab
-               The tabs can be switched between by either tapping or swiping
-             */
+       Initializes the TabLayout with a Stats tab and a Players tab
+       The tabs can be switched between by either tapping or swiping
+     */
     private void setUpTabs() {
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         ViewPager2 viewPager2 = findViewById(R.id.view_pager);
@@ -116,14 +117,14 @@ public class MainActivity extends AppCompatActivity {
 
     /*
        Schedules a background task that fetches data roughly at 5:00a.m.
-       every day, with a constraint that there is network connection
-       If there isn't network connection at the scheduled time, the task will
-       be delayed until there is
+       every day
      */
     private void scheduleDailyDataFetch() {
-        Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
+        AlarmManager alarmManager =
+                (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, InitialFetchReceiver.class);
+        PendingIntent pendingIntent =
+                PendingIntent.getBroadcast(this, 0, intent, 0);
         Calendar calendar = Calendar.getInstance();
         if (calendar.get(Calendar.HOUR_OF_DAY) > 5 |
                 (calendar.get(Calendar.HOUR_OF_DAY) == 4 &&
@@ -133,14 +134,8 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.HOUR_OF_DAY, 5);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
-        long initialDelay = calendar.getTimeInMillis() -
-                System.currentTimeMillis();
-        PeriodicWorkRequest fetchDataRequest = new PeriodicWorkRequest.Builder
-                (FetchDataWorker.class, 1, TimeUnit.DAYS)
-                .setConstraints(constraints)
-                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
-                .build();
-        WorkManager.getInstance(this).enqueue(fetchDataRequest);
+        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                pendingIntent);
     }
 
     /*
@@ -158,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.HOUR_OF_DAY, 9);
         calendar.set(Calendar.MINUTE, 30);
         calendar.set(Calendar.SECOND, 0);
-        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),
+        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 pendingIntent);
     }
 
