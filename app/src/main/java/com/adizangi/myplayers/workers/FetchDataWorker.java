@@ -6,6 +6,7 @@
 package com.adizangi.myplayers.workers;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.adizangi.myplayers.objects.FileManager;
 import com.adizangi.myplayers.objects.NotificationFetcher;
@@ -50,6 +51,7 @@ public class FetchDataWorker extends Worker {
     @Override
     public Result doWork() {
         try {
+            saveTime(); // method for debugging
             getHTMLDocuments();
             TotalPlayersFetcher playersFetcher =
                     new TotalPlayersFetcher(mRankings, wRankings);
@@ -92,6 +94,14 @@ public class FetchDataWorker extends Worker {
         ySchedule = Jsoup.connect
                 ("http://www.espn.com/tennis/dailyResults?date=" +
                         dateOfYesterday).get();
+    }
+
+    private void saveTime() {
+        SharedPreferences sharedPrefs = getApplicationContext()
+                .getSharedPreferences("Time file", Context.MODE_PRIVATE);
+        Calendar calendar = Calendar.getInstance();
+        sharedPrefs.edit().putInt("Hour", calendar.get(Calendar.HOUR_OF_DAY)).apply();
+        sharedPrefs.edit().putInt("Minute", calendar.get(Calendar.MINUTE)).apply();
     }
 
 }

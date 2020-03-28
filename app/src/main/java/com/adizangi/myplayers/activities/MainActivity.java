@@ -32,8 +32,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.adizangi.myplayers.BuildConfig;
+import com.adizangi.myplayers.TimeActivity;
 import com.adizangi.myplayers.adapters.TabAdapter;
 import com.adizangi.myplayers.receivers.NotifAlarmReceiver;
 import com.adizangi.myplayers.workers.FetchDataWorker;
@@ -71,10 +75,26 @@ public class MainActivity extends AppCompatActivity {
         sharedPrefs.edit().putInt(VERSION_CODE_KEY, currentVersionCode).apply();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.app_bar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.time) {
+            Intent intent = new Intent(this, TimeActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     /*
-       Initializes the TabLayout with a Stats tab and a Players tab
-       The tabs can be switched between by either tapping or swiping
-     */
+               Initializes the TabLayout with a Stats tab and a Players tab
+               The tabs can be switched between by either tapping or swiping
+             */
     private void setUpTabs() {
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         ViewPager2 viewPager2 = findViewById(R.id.view_pager);
