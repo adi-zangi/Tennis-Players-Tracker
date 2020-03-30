@@ -86,10 +86,12 @@ public class NotifAlarmReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent =
                 PendingIntent.getBroadcast(context, 0, intent, 0);
         Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 9);
         calendar.set(Calendar.MINUTE, 30);
         calendar.set(Calendar.SECOND, 0);
-        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),
+        long elapsedTime = calendar.getTimeInMillis() - System.currentTimeMillis();
+        alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTime,
                 pendingIntent);
     }
 
@@ -181,11 +183,13 @@ public class NotifAlarmReceiver extends BroadcastReceiver {
                 PendingIntent pendingIntent =
                         PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
                 Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DATE, 1);
                 calendar.set(Calendar.HOUR_OF_DAY, 9);
                 calendar.set(Calendar.MINUTE, 30);
                 calendar.set(Calendar.SECOND, 0);
-                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeInMillis(), pendingIntent);
+                long elapsedTime = calendar.getTimeInMillis() - System.currentTimeMillis();
+                alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTime,
+                        pendingIntent);
             }
         }
     }
