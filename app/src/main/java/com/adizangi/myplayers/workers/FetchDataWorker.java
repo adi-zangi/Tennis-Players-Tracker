@@ -23,12 +23,19 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 public class FetchDataWorker extends Worker {
+
+    public static final String IS_FIRST_KEY = "is_first";
 
     private Document mRankings;
     private Document wRankings;
@@ -45,6 +52,8 @@ public class FetchDataWorker extends Worker {
 
     /*
        Fetches the data in the background and saves it to files
+       If this is the first time this task runs, schedules this task for every
+       day at the current time
        Returns a Result that indicates whether the task was successful
      */
     @NonNull
@@ -52,6 +61,10 @@ public class FetchDataWorker extends Worker {
     public Result doWork() {
         try {
             saveTime(); // method for debugging
+            boolean isFirst = getInputData().getBoolean(IS_FIRST_KEY, false);
+            if (isFirst) {
+                schedulePeriodicWork();
+            }
             getHTMLDocuments();
             TotalPlayersFetcher playersFetcher =
                     new TotalPlayersFetcher(mRankings, wRankings);
@@ -102,6 +115,21 @@ public class FetchDataWorker extends Worker {
         Calendar calendar = Calendar.getInstance();
         sharedPrefs.edit().putInt("Hour", calendar.get(Calendar.HOUR_OF_DAY)).apply();
         sharedPrefs.edit().putInt("Minute", calendar.get(Calendar.MINUTE)).apply();
+    }
+
+    /*
+       Schedules this Worker to run once a day at the current time, starting
+       with 24 hours from now
+     */
+    private void schedulePeriodicWork() {
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+        PeriodicWorkRequest fetchDataRequest = new PeriodicWorkRequest.Builder
+                (FetchDataWorker.class, 1, TimeUnit.DAYS)
+                .setConstraints(constraints)
+                .build();
+        WorkManager.getInstance(getApplicationContext()).enqueue(fetchDataRequest);
     }
 
 }

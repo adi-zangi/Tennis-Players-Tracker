@@ -22,8 +22,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 import androidx.work.Constraints;
+import androidx.work.Data;
 import androidx.work.NetworkType;
-import androidx.work.PeriodicWorkRequest;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 import android.app.AlarmManager;
@@ -39,7 +40,6 @@ import android.view.MenuItem;
 import com.adizangi.myplayers.BuildConfig;
 import com.adizangi.myplayers.TimeActivity;
 import com.adizangi.myplayers.adapters.TabAdapter;
-import com.adizangi.myplayers.receivers.InitialFetchReceiver;
 import com.adizangi.myplayers.receivers.NotifAlarmReceiver;
 import com.adizangi.myplayers.workers.FetchDataWorker;
 import com.adizangi.myplayers.R;
@@ -117,14 +117,14 @@ public class MainActivity extends AppCompatActivity {
 
     /*
        Schedules a background task that fetches data roughly at 5:00a.m.
-       every day
+       every day, with a constraint that there is network connection
+       If there isn't network connection at the scheduled time, the task will
+       be delayed until there is
      */
     private void scheduleDailyDataFetch() {
-        AlarmManager alarmManager =
-                (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, InitialFetchReceiver.class);
-        PendingIntent pendingIntent =
-                PendingIntent.getBroadcast(this, 0, intent, 0);
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
         Calendar calendar = Calendar.getInstance();
         if (calendar.get(Calendar.HOUR_OF_DAY) > 5 |
                 (calendar.get(Calendar.HOUR_OF_DAY) == 4 &&
@@ -134,8 +134,17 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.HOUR_OF_DAY, 5);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
-        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                pendingIntent);
+        long initialDelay = calendar.getTimeInMillis() -System.currentTimeMillis();
+        Data data = new Data.Builder()
+                .putBoolean(FetchDataWorker.IS_FIRST_KEY, true)
+                .build();
+        OneTimeWorkRequest fetchDataRequest = new OneTimeWorkRequest.Builder
+                (FetchDataWorker.class)
+                .setConstraints(constraints)
+                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+                .setInputData(data)
+                .build();
+        WorkManager.getInstance(this).enqueue(fetchDataRequest);
     }
 
     /*
