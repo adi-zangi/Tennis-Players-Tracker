@@ -25,6 +25,7 @@ import androidx.work.Constraints;
 import androidx.work.Data;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import android.app.AlarmManager;
@@ -134,15 +135,11 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.HOUR_OF_DAY, 5);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
-        long initialDelay = calendar.getTimeInMillis() -System.currentTimeMillis();
-        Data data = new Data.Builder()
-                .putBoolean(FetchDataWorker.IS_FIRST_KEY, true)
-                .build();
-        OneTimeWorkRequest fetchDataRequest = new OneTimeWorkRequest.Builder
-                (FetchDataWorker.class)
+        long initialDelay = calendar.getTimeInMillis() - System.currentTimeMillis();
+        PeriodicWorkRequest fetchDataRequest = new PeriodicWorkRequest.Builder
+                (FetchDataWorker.class, 1, TimeUnit.DAYS)
                 .setConstraints(constraints)
                 .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
-                .setInputData(data)
                 .build();
         WorkManager.getInstance(this).enqueue(fetchDataRequest);
     }
