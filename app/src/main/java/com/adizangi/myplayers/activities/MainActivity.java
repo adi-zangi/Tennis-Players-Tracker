@@ -3,16 +3,17 @@
    2019-2020
 
    The purpose of the app MyPlayers is to help the user keep track of tennis
-   players that they select. The user can select players and view statistics
-   and tournament results for each of those players, which are updated daily.
+   players that they select
+   The user can select players and view statistics and tournament results for
+   each of those players, which are updated daily
    The user can also receive notifications that give a summary of the
    tournaments that are going on for the day and the times at which the
-   selected players are playing.
+   selected players are playing
 
    MainActivity is the home screen of the app
    The screen is separated into two tabs
    The first tab shows the information about each selected player, and
-   the second tab shows the currently selected players
+   the second tab enables to edit the currently selected players
  */
 
 package com.adizangi.myplayers.activities;
@@ -53,6 +54,18 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
 
     private static final String VERSION_CODE_KEY = "version_code";
+
+    TabLayoutMediator.TabConfigurationStrategy tabConfiguration =
+            new TabLayoutMediator.TabConfigurationStrategy() {
+        @Override
+        /*
+           Sets the given tab's title such that it matches the given position
+        */
+        public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+            String tabTitle = TabAdapter.TAB_TITLES[position];
+            tab.setText(tabTitle);
+        }
+    };
 
     /*
        Called when the app is launched
@@ -103,16 +116,7 @@ public class MainActivity extends AppCompatActivity {
         TabAdapter tabAdapter = new TabAdapter(this);
         viewPager2.setAdapter(tabAdapter);
         TabLayoutMediator mediator = new TabLayoutMediator(tabLayout, viewPager2,
-                new TabLayoutMediator.TabConfigurationStrategy() {
-                    /*
-                       Sets the given tab's title such that it matches the given position
-                     */
-                    @Override
-                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                        String tabTitle = TabAdapter.TAB_TITLES[position];
-                        tab.setText(tabTitle);
-                    }
-                });
+                tabConfiguration);
         mediator.attach();
     }
 

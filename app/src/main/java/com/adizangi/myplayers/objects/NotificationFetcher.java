@@ -1,5 +1,6 @@
 /*
-   Fetches information that will be put in the notification sent to the user
+   Fetches information that will be put in the notification that will be sent
+   to the user
    Information is taken from the ESPN website
  */
 

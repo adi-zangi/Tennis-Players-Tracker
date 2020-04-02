@@ -1,6 +1,5 @@
 /*
-   Gets a map that contains statistics about each player from the players the
-   user can add
+   Gets statistics about each player from the list that TotalPlayersFetcher returns
    Information is taken from the ESPN website
  */
 
@@ -33,14 +32,13 @@ public class PlayerStatsFetcher {
     }
 
     /*
-       Returns a map from player to a PlayerStats object
-       The keys are each player's name followed by ranking in parenthesis
+       Returns a map from each player to a PlayerStats object
        The ESPN website doesn't have player information when a new year
        starts and there have not been any tennis tournaments in the new year
        In this case, returns an empty map
        May throw IOException
      */
-    public Map<String, PlayerStats> getPlayerDetailsMap()
+    public Map<String, PlayerStats> getPlayerStatsMap()
             throws IOException {
         Map<String, PlayerStats> stats = new HashMap<>();
         Element mRankingsTable = mRankings.selectFirst("table");
@@ -76,8 +74,8 @@ public class PlayerStatsFetcher {
     }
 
     /*
-       Returns the key for the player whose information is in the given
-       document
+       Returns the key for the player whose information is in the given document
+       The key is the player's name followed by the player's ranking in parenthesis
      */
     private String getPlayerKey(Document playerDocument) {
         String playerName = getName(playerDocument);
@@ -121,16 +119,14 @@ public class PlayerStatsFetcher {
     }
 
     /*
-       Returns the name of the player whose information is in the given
-       document
+       Returns the name of the player whose information is in the given document
      */
     private String getName(Document playerDocument) {
         return playerDocument.selectFirst("h1").text();
     }
 
     /*
-       Returns the ranking of the player whose information is in the given
-       document
+       Returns the ranking of the player whose information is in the given document
      */
     private String getRanking(Document playerDocument) {
         Element detailsList = playerDocument.select("ul").get(1);
@@ -157,9 +153,9 @@ public class PlayerStatsFetcher {
     }
 
     /*
-       Returns the index of the row that contains the latest match result of
-       the player whose information is in the given document
-       Returns -1 if the player is not currently in a tournament
+       Returns the index of the row that contains the latest singles match result
+       of the player whose information is in the given document
+       Returns -1 if the player is not currently playing singles in a tournament
      */
     private int getLatestResultIndex(Document playerDocument) {
         Element latestTournamentDiv =
@@ -191,6 +187,8 @@ public class PlayerStatsFetcher {
     /*
        Returns the tournament standing of the player whose information is
        in the given document, using the given index of the latest result row
+       The tournament standing tells whether the player advanced to the next round,
+       is out of the tournament, or is not playing in a tournament
      */
     private String getTournamentStanding(Document playerDocument,
                                          int latestResultIndex) {
@@ -217,7 +215,8 @@ public class PlayerStatsFetcher {
     /*
        Returns the name of the tournament that the player whose information is
        in the given document is playing in
-       Only safe to call if the player is currently playing
+       Only safe to call if the player is currently in a tournament, which is
+       given in the return value of getTournamentStanding()
      */
     private String getCurrentTournament(Document playerDocument) {
         Element latestTournamentDiv =
@@ -228,7 +227,8 @@ public class PlayerStatsFetcher {
     /*
        Returns the latest match result of the player whose information is
        in the given document, using the given index of the latest result row
-       Only safe to call if the player is currently playing
+       Only safe to call if the player is currently in a tournament, which is
+       given in the return value of getTournamentStanding()
      */
     private String getLatestMatchResult(Document playerDocument,
                                         int latestResultIndex) {
@@ -253,8 +253,9 @@ public class PlayerStatsFetcher {
     /*
        Returns the upcoming match of the player whose information is
        in the given document, using the given index of the latest result row
-       Returns an empty string if the player is not playing today
-       Only safe to call if the player advanced to the next round
+       Returns an empty string if the player does not have an upcoming match today
+       Only safe to call if the player advanced to the next round, which is
+       given in the return value of getTournamentStanding()
      */
     private String getUpcomingMatch(Document playerDocument,
                                     int latestResultIndex) {

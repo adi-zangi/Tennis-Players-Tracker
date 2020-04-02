@@ -23,13 +23,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
-import androidx.work.Constraints;
-import androidx.work.NetworkType;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -65,7 +60,7 @@ public class FetchDataWorker extends Worker {
             NotificationFetcher notifFetcher =
                     new NotificationFetcher(tSchedule, ySchedule);
             List<String> totalPlayers = playersFetcher.getTotalPlayersList();
-            Map<String, PlayerStats> stats = statsFetcher.getPlayerDetailsMap();
+            Map<String, PlayerStats> stats = statsFetcher.getPlayerStatsMap();
             List<String> notificationList = notifFetcher.getNotificationList();
             FileManager fileManager = new FileManager(getApplicationContext());
             fileManager.storeTotalPlayers(totalPlayers);

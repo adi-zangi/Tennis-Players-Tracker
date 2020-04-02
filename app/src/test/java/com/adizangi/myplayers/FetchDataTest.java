@@ -77,7 +77,7 @@ public class FetchDataTest {
         System.out.println("---------- Player Stats Fetcher ----------");
         System.out.println();
         PlayerStatsFetcher fetcher = new PlayerStatsFetcher(mRankings, wRankings);
-        Map<String, PlayerStats> statsMap = fetcher.getPlayerDetailsMap();
+        Map<String, PlayerStats> statsMap = fetcher.getPlayerStatsMap();
         System.out.println("Some items from map (size = " + statsMap.size() + "):");
         int i = 0;
         for (String player : statsMap.keySet()) {

@@ -139,7 +139,7 @@ public class NotifAlarmReceiver extends BroadcastReceiver {
     }
 
     /*
-       Receives a broadcast when the See Live Scores button in the notification
+       Receives a broadcast when the View Live Scores button in the notification
        is clicked
      */
     public class ButtonReceiver extends BroadcastReceiver {

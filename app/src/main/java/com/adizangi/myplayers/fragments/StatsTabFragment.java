@@ -37,6 +37,22 @@ public class StatsTabFragment extends Fragment {
     private TabsViewModel tabsViewModel;
     private StatsAdapter statsAdapter;
 
+    private Observer<String> addedPlayerObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String player) {
+            tabsViewModel.addPlayerStats(player);
+            statsAdapter.notifyDataSetChanged();
+        }
+    };
+
+    private Observer<String> removedPlayerObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String player) {
+            tabsViewModel.removePlayerStats(player);
+            statsAdapter.notifyDataSetChanged();
+        }
+    };
+
     /*
        Called when the Fragment should instantiate its UI
        Inflates the fragment's layout by using the given LayoutInflater, and
@@ -70,21 +86,9 @@ public class StatsTabFragment extends Fragment {
         statsAdapter = new StatsAdapter(tabsViewModel.getMyPlayersStats());
         statsList.setAdapter(statsAdapter);
         MutableLiveData<String> addedPlayer = tabsViewModel.getAddedPlayer();
-        addedPlayer.observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String addedPlayer) {
-                tabsViewModel.addPlayerStats(addedPlayer);
-                statsAdapter.notifyDataSetChanged();
-            }
-        });
+        addedPlayer.observe(getViewLifecycleOwner(), addedPlayerObserver);
         MutableLiveData<String> removedPlayer = tabsViewModel.getRemovedPlayer();
-        removedPlayer.observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String removedPlayer) {
-                tabsViewModel.removePlayerStats(removedPlayer);
-                statsAdapter.notifyDataSetChanged();
-            }
-        });
+        removedPlayer.observe(getViewLifecycleOwner(), removedPlayerObserver);
     }
 
 }

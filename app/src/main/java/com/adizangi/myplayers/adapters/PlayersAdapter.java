@@ -1,5 +1,5 @@
 /*
-   Adapter for the list of the user's selected players in the Players tab
+   Adapter for the list of the user's selected players in PlayersTabFragment
  */
 
 package com.adizangi.myplayers.adapters;
@@ -65,8 +65,7 @@ public class PlayersAdapter extends RecyclerView.Adapter
 
     /*
        Creates a new ViewHolder and returns it
-       Adds a listener to remove button clicks in the ViewHolder, that
-       communicates the click to PlayersTabFragment
+       Sets response to remove button clicks in the ViewHolder
      */
     @NonNull
     @Override

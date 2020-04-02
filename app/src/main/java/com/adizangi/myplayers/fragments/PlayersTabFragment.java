@@ -6,8 +6,8 @@
    for a player and filters from the list of all players as the user types
    The user can add a player by selecting one of the suggestions from the
    AutoCompleteTextView and clicking the 'Add' button
-   A list of the selected players is displayed under the search box, and there
-   is a 'Remove' button next to each player
+   A list of the selected players is displayed on the screen, and there is a
+   'Remove' button next to each player
  */
 
 package com.adizangi.myplayers.fragments;
@@ -32,12 +32,30 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class PlayersTabFragment extends Fragment
-        implements PlayersAdapter.OnRemovePlayerListener {
+public class PlayersTabFragment extends Fragment {
 
     private TabsViewModel tabsViewModel;
     private AutoCompleteTextView autoCompleteSearch;
     private PlayersAdapter playersAdapter;
+
+    private View.OnClickListener addButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View addButton) {
+            addPlayer();
+        }
+    };
+
+    private PlayersAdapter.OnRemovePlayerListener removeButtonListener =
+            new PlayersAdapter.OnRemovePlayerListener() {
+        @Override
+        /*
+           Removes the given player from the list
+         */
+        public void onRemovePlayer(String player) {
+            tabsViewModel.removePlayer(player);
+            playersAdapter.notifyDataSetChanged();
+        }
+    };
 
     /*
        Called when the Fragment should instantiate its UI
@@ -79,19 +97,15 @@ public class PlayersTabFragment extends Fragment
         myPlayersList.setLayoutManager(manager);
         playersAdapter = new PlayersAdapter(tabsViewModel.getMyPlayers());
         myPlayersList.setAdapter(playersAdapter);
-        playersAdapter.setOnRemoveClickListener(this);
+        playersAdapter.setOnRemoveClickListener(removeButtonListener);
         Button addButton = view.findViewById(R.id.add_button);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addPlayer();
-            }
-        });
+        addButton.setOnClickListener(addButtonListener);
     }
 
     /*
-       Adds the player whose name is in the AutoCompleteTextView, if the player
-       is valid
+       If the player whose name is in the AutoCompleteTextView is in the total
+       players list and isn't already in the user's list, adds the player to the
+       user's list
      */
     private void addPlayer() {
         String playerName = autoCompleteSearch.getText().toString();
@@ -106,16 +120,6 @@ public class PlayersTabFragment extends Fragment
             playersAdapter.notifyDataSetChanged();
         }
         autoCompleteSearch.getText().clear();
-    }
-
-    /*
-       Called from PlayersAdapter to communicate that the remove button next
-       to the given player was clicked
-       Removes the given player from the list
-     */
-    public void onRemovePlayer(String player) {
-        tabsViewModel.removePlayer(player);
-        playersAdapter.notifyDataSetChanged();
     }
 
 }

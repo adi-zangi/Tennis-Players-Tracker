@@ -6,7 +6,7 @@
     <string name="player_search_hint">Search player</string>
     <string name="button_see_results">See more match results</string>
     <string name="notification_channel_name">Notifications</string>
-    <string name="button_live_scores">See Live Scores</string>
+    <string name="button_live_scores">View Live Scores</string>
     <string name="action_time">Time</string>
 
     <!-- Preference Titles -->

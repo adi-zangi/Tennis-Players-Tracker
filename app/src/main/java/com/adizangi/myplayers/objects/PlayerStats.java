@@ -1,6 +1,5 @@
 /*
-   Contains statistics about a tennis player, including tournament results
-   in singles tennis
+   Represents a tennis player's statistics
  */
 
 package com.adizangi.myplayers.objects;
@@ -49,8 +48,8 @@ public class PlayerStats implements Comparable<PlayerStats>, Serializable {
     }
 
     /*
-       Returns the player's ranking in the format
-       'Ranking: [ranking]'
+       Returns the player's ranking as a string that is in the format
+       'Ranking: [ranking number]'
      */
     public String getRanking() {
         return ranking;
@@ -95,7 +94,7 @@ public class PlayerStats implements Comparable<PlayerStats>, Serializable {
     /*
        Returns the player's upcoming match
        The format is '[player's name] [time of match]'
-       Returns an empty string if the player is not playing a match today
+       Returns an empty string if the player does not have an upcoming match today
      */
     public String getUpcomingMatch() {
         return upcomingMatch;

@@ -1,5 +1,5 @@
 /*
-   Adapter for the list in the Stats tab
+   Adapter for the list in StatsTabFragment
  */
 
 package com.adizangi.myplayers.adapters;

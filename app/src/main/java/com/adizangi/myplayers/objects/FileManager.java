@@ -1,5 +1,5 @@
 /*
-   Manages reading and saving files
+   Manages reading and writing to files
    Files are saved in internal storage
    They are only accessible to this app and are persistent as long as the app
    is installed, but are removed when the app is uninstalled
@@ -25,8 +25,6 @@ public class FileManager extends ContextWrapper {
     private static final String TOTAL_PLAYERS_FILENAME = "total_players";
     private static final String STATS_FILENAME = "player_stats";
     private static final String NOTIF_FILENAME = "notification_list";
-
-    private Context context;
 
     /*
        Constructs a FileManager with the given application context
