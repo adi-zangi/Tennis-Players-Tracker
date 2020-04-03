@@ -6,8 +6,8 @@
    for a player and filters from the list of all players as the user types
    The user can add a player by selecting one of the suggestions from the
    AutoCompleteTextView and clicking the 'Add' button
-   A list of the selected players is displayed on the screen, and there is a
-   'Remove' button next to each player
+   A list of the selected players is displayed below the search box, and there
+   is a 'Remove' button next to each player
  */
 
 package com.adizangi.myplayers.fragments;

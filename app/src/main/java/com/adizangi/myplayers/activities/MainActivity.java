@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String VERSION_CODE_KEY = "version_code";
 
-    TabLayoutMediator.TabConfigurationStrategy tabConfiguration =
+    private TabLayoutMediator.TabConfigurationStrategy tabConfiguration =
             new TabLayoutMediator.TabConfigurationStrategy() {
         @Override
         /*

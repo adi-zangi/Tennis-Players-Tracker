@@ -39,6 +39,9 @@ public class StatsTabFragment extends Fragment {
 
     private Observer<String> addedPlayerObserver = new Observer<String>() {
         @Override
+        /*
+           Adds the given player's statistics into the list
+         */
         public void onChanged(String player) {
             tabsViewModel.addPlayerStats(player);
             statsAdapter.notifyDataSetChanged();
@@ -47,6 +50,9 @@ public class StatsTabFragment extends Fragment {
 
     private Observer<String> removedPlayerObserver = new Observer<String>() {
         @Override
+        /*
+           Removes the given player's statistics from the list
+         */
         public void onChanged(String player) {
             tabsViewModel.removePlayerStats(player);
             statsAdapter.notifyDataSetChanged();
