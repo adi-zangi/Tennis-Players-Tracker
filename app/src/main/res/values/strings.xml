@@ -3,10 +3,11 @@
     <string name="title_activity_settings">Settings</string>
     <string name="button_add">Add</string>
     <string name="button_remove">Remove</string>
-    <string name="player_search_hint">Search player</string>
     <string name="button_see_results">See more match results</string>
-    <string name="notification_channel_name">Notifications</string>
     <string name="button_live_scores">View Live Scores</string>
+    <string name="player_search_hint">Search player</string>
+    <string name="notification_channel_name">Notifications</string>
+    <string name="progress_bar_description">loading data&#8230;</string>
     <string name="action_time">Time</string>
 
     <!-- Preference Titles -->

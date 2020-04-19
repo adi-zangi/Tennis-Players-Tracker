@@ -7,15 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="@android:color/white" />
+    <include
+        layout="@layout/app_bar"/>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
@@ -24,7 +17,7 @@
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/appBar"
         app:tabGravity="fill"
         app:tabMode="fixed"
         app:tabSelectedTextColor="@android:color/white"

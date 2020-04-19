@@ -23,9 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 import androidx.work.Constraints;
-import androidx.work.Data;
 import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -33,7 +31,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,6 +39,7 @@ import android.view.MenuItem;
 import com.adizangi.myplayers.BuildConfig;
 import com.adizangi.myplayers.TimeActivity;
 import com.adizangi.myplayers.adapters.TabAdapter;
+import com.adizangi.myplayers.objects.FileManager;
 import com.adizangi.myplayers.receivers.NotifAlarmReceiver;
 import com.adizangi.myplayers.workers.FetchDataWorker;
 import com.adizangi.myplayers.R;
@@ -77,17 +75,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.appBar);
         setSupportActionBar(toolbar);
         setUpTabs();
+        FileManager fileManager = new FileManager(this);
         int currentVersionCode = BuildConfig.VERSION_CODE;
-        SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
-        int savedVersionCode = sharedPrefs.getInt(VERSION_CODE_KEY, -1);
+        int savedVersionCode = fileManager.readVersionCode();
         if (savedVersionCode == -1) {
-            scheduleDailyDataFetch();
-            scheduleDailyNotif();
+            Intent intent = new Intent(this, ProgressBarActivity.class);
+            startActivity(intent);
+            //scheduleDailyDataFetch();
+            //scheduleDailyNotif();
         }
-        sharedPrefs.edit().putInt(VERSION_CODE_KEY, currentVersionCode).apply();
+        //sharedPrefs.edit().putInt(VERSION_CODE_KEY, currentVersionCode).apply();
     }
 
     @Override

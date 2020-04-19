@@ -9,6 +9,7 @@ package com.adizangi.myplayers.objects;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.SharedPreferences;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,6 +26,8 @@ public class FileManager extends ContextWrapper {
     private static final String TOTAL_PLAYERS_FILENAME = "total_players";
     private static final String STATS_FILENAME = "player_stats";
     private static final String NOTIF_FILENAME = "notification_list";
+    private static final String SHARED_PREFS_FILENAME = "com.adizangi.myplayers.APP_DATA";
+    private static final String VERSION_CODE_KEY = "version_code";
 
     /*
        Constructs a FileManager with the given application context
@@ -50,8 +53,8 @@ public class FileManager extends ContextWrapper {
             return myPlayers;
         } catch (Exception e) {
             e.printStackTrace();
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
     }
 
     /*
@@ -72,8 +75,8 @@ public class FileManager extends ContextWrapper {
             return totalPlayers;
         } catch (Exception e) {
             e.printStackTrace();
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
     }
 
     /*
@@ -93,8 +96,8 @@ public class FileManager extends ContextWrapper {
             return stats;
         } catch (Exception e) {
             e.printStackTrace();
+            return new HashMap<>();
         }
-        return new HashMap<>();
     }
 
     /*
@@ -114,8 +117,8 @@ public class FileManager extends ContextWrapper {
             return notifList;
         } catch (Exception e) {
             e.printStackTrace();
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
     }
 
     /*
@@ -184,6 +187,25 @@ public class FileManager extends ContextWrapper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /*
+       Reads the version code from shared preferences and returns it
+       Returns -1 if no version code was saved
+     */
+    public int readVersionCode() {
+        SharedPreferences sharedPrefs = getSharedPreferences
+                (SHARED_PREFS_FILENAME, Context.MODE_PRIVATE);
+        return sharedPrefs.getInt(VERSION_CODE_KEY, -1);
+    }
+
+    /*
+       Stores the given version code in shared preferences
+     */
+    public void storeVersionCode(int versionCode) {
+        SharedPreferences sharedPrefs = getSharedPreferences
+                (SHARED_PREFS_FILENAME, Context.MODE_PRIVATE);
+        sharedPrefs.edit().putInt(VERSION_CODE_KEY, versionCode).apply();
     }
 
 }
