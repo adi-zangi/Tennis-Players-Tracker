@@ -50,4 +50,7 @@ public class ScheduleManager extends ContextWrapper {
         return fetchDataRequest.getId();
     }
 
+    // If show overlay whenever screen updates, use alert dialog for overlay and use
+    // separate worker with observable progress when it should show
+
 }

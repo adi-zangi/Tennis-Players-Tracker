@@ -25,10 +25,13 @@ import java.util.Locale;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 public class FetchDataWorker extends Worker {
+
+    public static final String PROGRESS_KEY = "PROGRESS";
 
     private Document mRankings;
     private Document wRankings;
@@ -45,6 +48,7 @@ public class FetchDataWorker extends Worker {
 
     /*
        Fetches the data in the background and saves it to files
+       Updates the observable progress as the work is running
        Returns a Result that indicates whether the task was successful
      */
     @NonNull
@@ -53,6 +57,7 @@ public class FetchDataWorker extends Worker {
         try {
             saveTime(); // method for debugging
             getHTMLDocuments();
+            setProgress(20);
             TotalPlayersFetcher playersFetcher =
                     new TotalPlayersFetcher(mRankings, wRankings);
             PlayerStatsFetcher statsFetcher =
@@ -60,12 +65,16 @@ public class FetchDataWorker extends Worker {
             NotificationFetcher notifFetcher =
                     new NotificationFetcher(tSchedule, ySchedule);
             List<String> totalPlayers = playersFetcher.getTotalPlayersList();
+            setProgress(40);
             Map<String, PlayerStats> stats = statsFetcher.getPlayerStatsMap();
+            setProgress(60);
             List<String> notificationList = notifFetcher.getNotificationList();
+            setProgress(80);
             FileManager fileManager = new FileManager(getApplicationContext());
             fileManager.storeTotalPlayers(totalPlayers);
             fileManager.storePlayerStats(stats);
             fileManager.storeNotificationList(notificationList);
+            setProgress(100);
             return Result.success();
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,6 +103,16 @@ public class FetchDataWorker extends Worker {
         ySchedule = Jsoup.connect
                 ("http://www.espn.com/tennis/dailyResults?date=" +
                         dateOfYesterday).get();
+    }
+
+    /*
+       Sets this Work's observable progress to the given progress percentage
+     */
+    private void setProgress(int progressPercentage) {
+        Data progress = new Data.Builder()
+                .putInt(PROGRESS_KEY, progressPercentage)
+                .build();
+        setProgressAsync(progress);
     }
 
     private void saveTime() {
