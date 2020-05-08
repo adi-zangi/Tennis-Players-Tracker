@@ -2,6 +2,7 @@
    Adi Zangi
    2019-2020
 
+   This app is meant for those who like to watch professional tennis
    The purpose of the app MyPlayers is to help the user keep track of tennis
    players that they select
    The user can select players and view statistics and tournament results for
@@ -51,8 +52,6 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String VERSION_CODE_KEY = "version_code";
-
     private TabLayoutMediator.TabConfigurationStrategy tabConfiguration =
             new TabLayoutMediator.TabConfigurationStrategy() {
         @Override
@@ -79,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setUpTabs();
         FileManager fileManager = new FileManager(this);
+        // start progress bar activity if there is no version code
         int currentVersionCode = BuildConfig.VERSION_CODE;
         int savedVersionCode = fileManager.readVersionCode();
         if (savedVersionCode == -1) {
