@@ -38,7 +38,7 @@ public class ScheduleManager extends ContextWrapper {
        permitted type
        Returns the WorkRequest id
      */
-    public UUID scheduleImmediateDataFetch() {
+    public UUID fetchDataImmediately() {
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(networkType)
                 .build();

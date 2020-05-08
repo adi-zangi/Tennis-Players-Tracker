@@ -2,12 +2,24 @@ package com.adizangi.myplayers.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.work.Data;
+import androidx.work.NetworkType;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import android.os.Bundle;
+import android.widget.ProgressBar;
 
 import com.adizangi.myplayers.R;
+import com.adizangi.myplayers.objects.ScheduleManager;
+import com.adizangi.myplayers.workers.FetchDataWorker;
+
+import java.util.UUID;
 
 public class ProgressBarActivity extends AppCompatActivity {
+
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,5 +39,19 @@ public class ProgressBarActivity extends AppCompatActivity {
         // first, say app uses network and ask which network type to use- wifi only or any
         // network. which network type should this app use? use any network/use wifi only.
         // send the right network type when construct schedule manager
+
+        progressBar = findViewById(R.id.progressBar);
+        ScheduleManager scheduleManager = new ScheduleManager(this, NetworkType.CONNECTED);
+        UUID workRequestId = scheduleManager.fetchDataImmediately();
+        WorkManager.getInstance(this)
+                .getWorkInfoByIdLiveData(workRequestId)
+                .observe(this, new Observer<WorkInfo>() {
+                    @Override
+                    public void onChanged(WorkInfo workInfo) {
+                        Data progressData = workInfo.getProgress();
+                        int progress = progressData.getInt(FetchDataWorker.PROGRESS_KEY, 0);
+                        progressBar.setProgress(progress);
+                    }
+                });
     }
 }
