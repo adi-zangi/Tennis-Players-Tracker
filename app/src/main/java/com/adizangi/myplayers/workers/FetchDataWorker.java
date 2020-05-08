@@ -57,7 +57,7 @@ public class FetchDataWorker extends Worker {
         try {
             saveTime(); // method for debugging
             getHTMLDocuments();
-            setProgress(20);
+            setProgress(10);
             TotalPlayersFetcher playersFetcher =
                     new TotalPlayersFetcher(mRankings, wRankings);
             PlayerStatsFetcher statsFetcher =
@@ -67,14 +67,13 @@ public class FetchDataWorker extends Worker {
             List<String> totalPlayers = playersFetcher.getTotalPlayersList();
             setProgress(40);
             Map<String, PlayerStats> stats = statsFetcher.getPlayerStatsMap();
-            setProgress(60);
+            setProgress(70);
             List<String> notificationList = notifFetcher.getNotificationList();
-            setProgress(80);
+            setProgress(100);
             FileManager fileManager = new FileManager(getApplicationContext());
             fileManager.storeTotalPlayers(totalPlayers);
             fileManager.storePlayerStats(stats);
             fileManager.storeNotificationList(notificationList);
-            setProgress(100);
             return Result.success();
         } catch (Exception e) {
             e.printStackTrace();
