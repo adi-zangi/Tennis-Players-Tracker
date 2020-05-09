@@ -9,6 +9,12 @@
     <string name="notification_channel_name">Notifications</string>
     <string name="progress_bar_description">loading data&#8230;</string>
     <string name="action_time">Time</string>
+    <string name="dialog_network_type">
+        This app uses the network daily for a short time (less than a minute).
+        Which network type should this app use?
+    </string>
+    <string name="button_use_any_network">Use any network</string>
+    <string name="button_use_wifi_only">Use wifi only</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
