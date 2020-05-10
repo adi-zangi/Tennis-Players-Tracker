@@ -8,7 +8,6 @@ package com.adizangi.myplayers.workers;
 
 import android.content.Context;
 import android.os.Handler;
-import android.util.Log;
 
 import java.lang.reflect.Constructor;
 

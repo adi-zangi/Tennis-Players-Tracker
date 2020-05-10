@@ -15,6 +15,9 @@
     </string>
     <string name="button_use_any_network">Use any network</string>
     <string name="button_use_wifi_only">Use unmetered network only</string>
+    <string name="no_connection_message">
+        The app will not start until there is network connection
+    </string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>

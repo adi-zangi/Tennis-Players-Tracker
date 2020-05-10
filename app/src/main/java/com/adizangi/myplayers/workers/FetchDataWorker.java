@@ -7,6 +7,8 @@ package com.adizangi.myplayers.workers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.adizangi.myplayers.fragments.AlertMessageCreator;
@@ -26,7 +28,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
@@ -37,12 +38,13 @@ import androidx.work.WorkerParameters;
 public class FetchDataWorker extends Worker {
 
     public static final String PROGRESS_KEY = "PROGRESS";
+    public static final int NO_CONNECTION_CODE = 0;
 
-    private Context context;
     private Document mRankings;
     private Document wRankings;
     private Document tSchedule;
     private Document ySchedule;
+    private Handler UIHandler;
 
     /*
        Constructs a FetchDataWorker
@@ -51,8 +53,7 @@ public class FetchDataWorker extends Worker {
                            @NonNull WorkerParameters workerParams,
                            Handler UIHandler) {
         super(context, workerParams);
-        Log.i("Debug", "UI handler: " + UIHandler);
-        this.context = context;
+        this.UIHandler = UIHandler;
     }
 
     /*
@@ -64,6 +65,7 @@ public class FetchDataWorker extends Worker {
     @Override
     public Result doWork() {
         try {
+            setProgress(0);
             saveTime(); // method for debugging
             getHTMLDocuments();
             setProgress(10);
@@ -134,9 +136,8 @@ public class FetchDataWorker extends Worker {
     @Override
     public void onStopped() {
         super.onStopped();
-        Log.i("Debug", "stopped");
-        // add checking network connection here later
-        AlertMessageCreator alertMessageCreator = new AlertMessageCreator(getApplicationContext());
-        alertMessageCreator.showMessage("No Connection", "There is no connection");
+        // add checking network connection here when network type is in preferences
+        Message handlerMessage = UIHandler.obtainMessage(NO_CONNECTION_CODE);
+        handlerMessage.sendToTarget();
     }
 }

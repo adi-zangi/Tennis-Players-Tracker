@@ -29,8 +29,6 @@ public class ProgressBarActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ScheduleManager scheduleManager;
     private AlertMessageCreator alertMessageCreator;
-    // remove
-    private UUID workRequestId;
 
     private DialogInterface.OnClickListener useAnyNetworkListener =
             new DialogInterface.OnClickListener() {
@@ -63,7 +61,18 @@ public class ProgressBarActivity extends AppCompatActivity {
         }
     };
 
-
+    private Handler handler = new Handler(Looper.myLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            int what = msg.what;
+            if (what == FetchDataWorker.NO_CONNECTION_CODE) {
+                alertMessageCreator.showMessage("No Connection",
+                        getResources().getString(R.string.no_connection_message));
+            } else {
+                super.handleMessage(msg);
+            }
+        }
+    };
 
     @Override
     /*
@@ -103,14 +112,9 @@ public class ProgressBarActivity extends AppCompatActivity {
 
     private void loadData(NetworkType networkType) {
         scheduleManager = new ScheduleManager(this, networkType);
-        Handler handler = new Handler(Looper.myLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-            }
-        };
+
         scheduleManager.initializeWorkManager(handler);
-        workRequestId = scheduleManager.fetchDataImmediately();
+        UUID workRequestId = scheduleManager.fetchDataImmediately();
         WorkManager.getInstance(this)
                 .getWorkInfoByIdLiveData(workRequestId)
                 .observe(this, workStateObserver);
@@ -118,11 +122,10 @@ public class ProgressBarActivity extends AppCompatActivity {
 
     private void updateWorkProgress(WorkInfo workInfo) {
         WorkInfo.State state = workInfo.getState();
-        Log.i("Debug", "state: " + workInfo.getState());
-        Log.i("Debug", "is connected: " + scheduleManager.isConnectedToNetwork());
         if (state == WorkInfo.State.ENQUEUED &&
                 !scheduleManager.isConnectedToNetwork()) {
-            alertMessageCreator.showMessage("No Connection", "There is no connection");
+            alertMessageCreator.showMessage("No Connection",
+                    getResources().getString(R.string.no_connection_message));
         } else if (state == WorkInfo.State.RUNNING) {
             alertMessageCreator.dismissMessage();
         } else if (state == WorkInfo.State.FAILED) {
@@ -131,9 +134,6 @@ public class ProgressBarActivity extends AppCompatActivity {
         Data progressData = workInfo.getProgress();
         int progress = progressData.getInt(FetchDataWorker.PROGRESS_KEY, 0);
         progressBar.setProgress(progress);
-        if (progress == 40) { // remove
-            WorkManager.getInstance(this).cancelWorkById(workRequestId);
-        }
     }
 
 }
