@@ -42,7 +42,7 @@ public class ProgressBarActivity extends AppCompatActivity {
         }
     };
 
-    private DialogInterface.OnClickListener useWifiOnlyListener =
+    private DialogInterface.OnClickListener useUnmeteredOnlyListener =
             new DialogInterface.OnClickListener() {
         /*
            Called when the user selects the 'Use unmetered only' option
@@ -105,14 +105,13 @@ public class ProgressBarActivity extends AppCompatActivity {
                 (this, R.style.Theme_AppCompat_DayNight_Dialog_Alert)
                 .setMessage(R.string.dialog_network_type)
                 .setPositiveButton(R.string.button_use_any_network, useAnyNetworkListener)
-                .setNegativeButton(R.string.button_use_wifi_only, useWifiOnlyListener)
+                .setNegativeButton(R.string.button_use_wifi_only, useUnmeteredOnlyListener)
                 .create();
         networkTypeDialog.show();
     }
 
     private void loadData(NetworkType networkType) {
         scheduleManager = new ScheduleManager(this, networkType);
-
         scheduleManager.initializeWorkManager(handler);
         UUID workRequestId = scheduleManager.fetchDataImmediately();
         WorkManager.getInstance(this)
@@ -122,6 +121,7 @@ public class ProgressBarActivity extends AppCompatActivity {
 
     private void updateWorkProgress(WorkInfo workInfo) {
         WorkInfo.State state = workInfo.getState();
+        Log.i("Debug", "is connected: " + scheduleManager.isConnectedToNetwork());
         if (state == WorkInfo.State.ENQUEUED &&
                 !scheduleManager.isConnectedToNetwork()) {
             alertMessageCreator.showMessage("No Connection",

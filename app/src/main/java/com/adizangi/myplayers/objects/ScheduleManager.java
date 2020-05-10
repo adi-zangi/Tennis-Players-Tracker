@@ -77,7 +77,7 @@ public class ScheduleManager extends ContextWrapper {
     public boolean isConnectedToNetwork() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (networkType == NetworkType.METERED &&
+        if (networkType == NetworkType.UNMETERED &&
                 connectivityManager.isActiveNetworkMetered()) {
             return false;
         }
@@ -85,18 +85,15 @@ public class ScheduleManager extends ContextWrapper {
             NetworkCapabilities capabilities =
                     connectivityManager.getNetworkCapabilities(
                             connectivityManager.getActiveNetwork());
-            return capabilities == null |
-                    !capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) |
-                    !capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) |
-                    !capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) |
-                    !capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH);
+            return capabilities != null &&
+                    (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
         } else {
             NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
             return activeNetwork != null && activeNetwork.isConnected();
         }
     }
-
-    // If show overlay whenever screen updates, use alert dialog for overlay and use
-    // separate worker with observable progress when it should show
 
 }
