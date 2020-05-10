@@ -88,6 +88,7 @@ public class FetchDataWorker extends Worker {
             return Result.success();
         } catch (Exception e) {
             e.printStackTrace();
+            // Check network connection and retry if disconnected
             return Result.failure();
         }
     }

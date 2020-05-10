@@ -15,7 +15,8 @@ public class AlertMessageCreator extends ContextWrapper {
     private AlertDialog currentMessage;
 
     /*
-       Constructs a AlertMessageCreator with the given context
+       Constructs an AlertMessageCreator with the given context, which is the
+       context of the parent view of the alert messages
      */
     public AlertMessageCreator(Context base) {
         super(base);
@@ -31,6 +32,7 @@ public class AlertMessageCreator extends ContextWrapper {
                 (this, R.style.Theme_MaterialComponents_BottomSheetDialog)
                 .setTitle(title)
                 .setMessage(message)
+                .setCancelable(false)
                 .create();
         alertMessage.show();
         currentMessage = alertMessage;

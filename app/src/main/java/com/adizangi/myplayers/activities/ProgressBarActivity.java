@@ -121,6 +121,7 @@ public class ProgressBarActivity extends AppCompatActivity {
 
     private void updateWorkProgress(WorkInfo workInfo) {
         WorkInfo.State state = workInfo.getState();
+        Log.i("Debug", "state: " + state);
         Log.i("Debug", "is connected: " + scheduleManager.isConnectedToNetwork());
         if (state == WorkInfo.State.ENQUEUED &&
                 !scheduleManager.isConnectedToNetwork()) {
