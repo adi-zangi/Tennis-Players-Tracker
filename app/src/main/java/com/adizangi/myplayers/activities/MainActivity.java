@@ -74,9 +74,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.appBar);
-        setSupportActionBar(toolbar);
-        setUpTabs();
         FileManager fileManager = new FileManager(this);
         // start progress bar activity if there is no version code
         int currentVersionCode = BuildConfig.VERSION_CODE;
@@ -86,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             //scheduleDailyDataFetch();
             //scheduleDailyNotif();
+        } else {
+            Toolbar toolbar = findViewById(R.id.appBar);
+            setSupportActionBar(toolbar);
+            setUpTabs();
         }
         //sharedPrefs.edit().putInt(VERSION_CODE_KEY, currentVersionCode).apply();
     }

@@ -11,6 +11,9 @@ import androidx.work.WorkManager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.widget.ProgressBar;
 
@@ -100,6 +103,13 @@ public class ProgressBarActivity extends AppCompatActivity {
 
     private void loadData(NetworkType networkType) {
         scheduleManager = new ScheduleManager(this, networkType);
+        Handler handler = new Handler(Looper.myLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+            }
+        };
+        scheduleManager.initializeWorkManager(handler);
         workRequestId = scheduleManager.fetchDataImmediately();
         WorkManager.getInstance(this)
                 .getWorkInfoByIdLiveData(workRequestId)

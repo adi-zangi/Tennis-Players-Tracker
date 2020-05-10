@@ -11,15 +11,19 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Handler;
 
+import com.adizangi.myplayers.workers.CustomWorkerFactory;
 import com.adizangi.myplayers.workers.FetchDataWorker;
 
 import java.util.UUID;
 
+import androidx.work.Configuration;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
+import androidx.work.WorkerFactory;
 
 public class ScheduleManager extends ContextWrapper {
 
@@ -34,6 +38,17 @@ public class ScheduleManager extends ContextWrapper {
     public ScheduleManager(Context base, NetworkType networkType) {
         super(base);
         this.networkType = networkType;
+    }
+
+    /*
+       Initializes WorkManager with the given Handler on the UI
+     */
+    public void initializeWorkManager(Handler UIHandler) {
+        WorkerFactory workerFactory = new CustomWorkerFactory(UIHandler);
+        Configuration configuration = new Configuration.Builder()
+                .setWorkerFactory(workerFactory)
+                .build();
+        WorkManager.initialize(this, configuration);
     }
 
     /*

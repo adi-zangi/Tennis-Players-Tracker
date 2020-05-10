@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
@@ -47,8 +48,10 @@ public class FetchDataWorker extends Worker {
        Constructs a FetchDataWorker
      */
     public FetchDataWorker(@NonNull Context context,
-                           @NonNull WorkerParameters workerParams) {
+                           @NonNull WorkerParameters workerParams,
+                           Handler UIHandler) {
         super(context, workerParams);
+        Log.i("Debug", "UI handler: " + UIHandler);
         this.context = context;
     }
 
