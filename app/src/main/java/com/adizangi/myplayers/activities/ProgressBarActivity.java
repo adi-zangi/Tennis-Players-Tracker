@@ -11,9 +11,11 @@ import androidx.work.WorkManager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ProgressBar;
 
 import com.adizangi.myplayers.R;
+import com.adizangi.myplayers.fragments.AlertMessageCreator;
 import com.adizangi.myplayers.objects.ScheduleManager;
 import com.adizangi.myplayers.workers.FetchDataWorker;
 
@@ -22,12 +24,16 @@ import java.util.UUID;
 public class ProgressBarActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
+    private ScheduleManager scheduleManager;
+    private AlertMessageCreator alertMessageCreator;
+    // remove
+    private UUID workRequestId;
 
     private DialogInterface.OnClickListener useAnyNetworkListener =
             new DialogInterface.OnClickListener() {
         @Override
         /*
-           Called when the user selects the 'Use any network type' option
+           Called when the user selects the 'Use any network' option
            Loads data using any network type
          */
         public void onClick(DialogInterface dialog, int which) {
@@ -38,8 +44,8 @@ public class ProgressBarActivity extends AppCompatActivity {
     private DialogInterface.OnClickListener useWifiOnlyListener =
             new DialogInterface.OnClickListener() {
         /*
-           Called when the user selects the 'Use wifi only' option
-           Loads data using wifi only
+           Called when the user selects the 'Use unmetered only' option
+           Loads data using unmetered network only
          */
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -81,6 +87,8 @@ public class ProgressBarActivity extends AppCompatActivity {
         // send the right network type when construct schedule manager
 
         progressBar = findViewById(R.id.progressBar);
+        alertMessageCreator = new AlertMessageCreator(this);
+
         AlertDialog networkTypeDialog = new AlertDialog.Builder
                 (this, R.style.Theme_AppCompat_DayNight_Dialog_Alert)
                 .setMessage(R.string.dialog_network_type)
@@ -91,22 +99,30 @@ public class ProgressBarActivity extends AppCompatActivity {
     }
 
     private void loadData(NetworkType networkType) {
-        ScheduleManager scheduleManager = new ScheduleManager(this, networkType);
-        UUID workRequestId = scheduleManager.fetchDataImmediately();
+        scheduleManager = new ScheduleManager(this, networkType);
+        workRequestId = scheduleManager.fetchDataImmediately();
         WorkManager.getInstance(this)
                 .getWorkInfoByIdLiveData(workRequestId)
                 .observe(this, workStateObserver);
     }
 
     private void updateWorkProgress(WorkInfo workInfo) {
-        if (workInfo.getState() == WorkInfo.State.ENQUEUED) {
+        WorkInfo.State state = workInfo.getState();
+        Log.i("Debug", "state: " + workInfo.getState());
+        Log.i("Debug", "is connected: " + scheduleManager.isConnectedToNetwork());
+        if (state == WorkInfo.State.ENQUEUED &&
+                !scheduleManager.isConnectedToNetwork()) {
+            alertMessageCreator.showMessage("No Connection", "There is no connection");
+        } else if (state == WorkInfo.State.RUNNING) {
+            alertMessageCreator.dismissMessage();
+        } else if (state == WorkInfo.State.FAILED) {
 
-        } else if (workInfo.getState() == WorkInfo.State.FAILED) {
-
-        } else {
-            Data progressData = workInfo.getProgress();
-            int progress = progressData.getInt(FetchDataWorker.PROGRESS_KEY, 0);
-            progressBar.setProgress(progress);
+        }
+        Data progressData = workInfo.getProgress();
+        int progress = progressData.getInt(FetchDataWorker.PROGRESS_KEY, 0);
+        progressBar.setProgress(progress);
+        if (progress == 40) { // remove
+            WorkManager.getInstance(this).cancelWorkById(workRequestId);
         }
     }
 

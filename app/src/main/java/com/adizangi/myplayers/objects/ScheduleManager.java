@@ -6,6 +6,11 @@ package com.adizangi.myplayers.objects;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
+import android.os.Build;
 
 import com.adizangi.myplayers.workers.FetchDataWorker;
 
@@ -48,6 +53,32 @@ public class ScheduleManager extends ContextWrapper {
                 .build();
         WorkManager.getInstance(this).enqueue(fetchDataRequest);
         return fetchDataRequest.getId();
+    }
+
+    /*
+       Returns true if there is network connection of the permitted type
+       Returns false otherwise
+     */
+    public boolean isConnectedToNetwork() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (networkType == NetworkType.METERED &&
+                connectivityManager.isActiveNetworkMetered()) {
+            return false;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            NetworkCapabilities capabilities =
+                    connectivityManager.getNetworkCapabilities(
+                            connectivityManager.getActiveNetwork());
+            return capabilities == null |
+                    !capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) |
+                    !capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) |
+                    !capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) |
+                    !capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH);
+        } else {
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnected();
+        }
     }
 
     // If show overlay whenever screen updates, use alert dialog for overlay and use

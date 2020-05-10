@@ -7,11 +7,14 @@ package com.adizangi.myplayers.workers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
+import com.adizangi.myplayers.fragments.AlertMessageCreator;
 import com.adizangi.myplayers.objects.FileManager;
 import com.adizangi.myplayers.objects.NotificationFetcher;
 import com.adizangi.myplayers.objects.PlayerStats;
 import com.adizangi.myplayers.objects.PlayerStatsFetcher;
+import com.adizangi.myplayers.objects.ScheduleManager;
 import com.adizangi.myplayers.objects.TotalPlayersFetcher;
 
 import org.jsoup.Jsoup;
@@ -26,6 +29,7 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
+import androidx.work.NetworkType;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -33,6 +37,7 @@ public class FetchDataWorker extends Worker {
 
     public static final String PROGRESS_KEY = "PROGRESS";
 
+    private Context context;
     private Document mRankings;
     private Document wRankings;
     private Document tSchedule;
@@ -44,6 +49,7 @@ public class FetchDataWorker extends Worker {
     public FetchDataWorker(@NonNull Context context,
                            @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
+        this.context = context;
     }
 
     /*
@@ -122,4 +128,12 @@ public class FetchDataWorker extends Worker {
         sharedPrefs.edit().putInt("Minute", calendar.get(Calendar.MINUTE)).apply();
     }
 
+    @Override
+    public void onStopped() {
+        super.onStopped();
+        Log.i("Debug", "stopped");
+        // add checking network connection here later
+        AlertMessageCreator alertMessageCreator = new AlertMessageCreator(getApplicationContext());
+        alertMessageCreator.showMessage("No Connection", "There is no connection");
+    }
 }
