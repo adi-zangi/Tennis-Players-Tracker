@@ -61,19 +61,6 @@ public class ProgressBarActivity extends AppCompatActivity {
         }
     };
 
-    private Handler handler = new Handler(Looper.myLooper()) {
-        @Override
-        public void handleMessage(Message msg) {
-            int what = msg.what;
-            if (what == FetchDataWorker.NO_CONNECTION_CODE) {
-                alertMessageCreator.showMessage("No Connection",
-                        getResources().getString(R.string.no_connection_message));
-            } else {
-                super.handleMessage(msg);
-            }
-        }
-    };
-
     @Override
     /*
        Dialog that prompts the user to select which network type the app is
@@ -93,6 +80,8 @@ public class ProgressBarActivity extends AppCompatActivity {
         // have method that checks if connected. If connected and delayed, show dialog that
         // says phone is busy, and may need to be charged.
         // add something for if fails- show popup
+        // maybe remove handler message because will go to enqueue and show no connection
+        // screen anyway- test this with stopping network before starts
 
         // first, say app uses network and ask which network type to use- wifi only or any
         // network. which network type should this app use? use any network/use wifi only.
@@ -106,13 +95,14 @@ public class ProgressBarActivity extends AppCompatActivity {
                 .setMessage(R.string.dialog_network_type)
                 .setPositiveButton(R.string.button_use_any_network, useAnyNetworkListener)
                 .setNegativeButton(R.string.button_use_wifi_only, useUnmeteredOnlyListener)
+                .setCancelable(false)
                 .create();
         networkTypeDialog.show();
     }
 
     private void loadData(NetworkType networkType) {
         scheduleManager = new ScheduleManager(this, networkType);
-        scheduleManager.initializeWorkManager(handler);
+        scheduleManager.initializeWorkManager(null);
         UUID workRequestId = scheduleManager.fetchDataImmediately();
         WorkManager.getInstance(this)
                 .getWorkInfoByIdLiveData(workRequestId)

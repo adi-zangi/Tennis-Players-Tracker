@@ -38,13 +38,11 @@ import androidx.work.WorkerParameters;
 public class FetchDataWorker extends Worker {
 
     public static final String PROGRESS_KEY = "PROGRESS";
-    public static final int NO_CONNECTION_CODE = 0;
 
     private Document mRankings;
     private Document wRankings;
     private Document tSchedule;
     private Document ySchedule;
-    private Handler UIHandler;
 
     /*
        Constructs a FetchDataWorker
@@ -53,7 +51,6 @@ public class FetchDataWorker extends Worker {
                            @NonNull WorkerParameters workerParams,
                            Handler UIHandler) {
         super(context, workerParams);
-        this.UIHandler = UIHandler;
     }
 
     /*
@@ -132,13 +129,5 @@ public class FetchDataWorker extends Worker {
         Calendar calendar = Calendar.getInstance();
         sharedPrefs.edit().putInt("Hour", calendar.get(Calendar.HOUR_OF_DAY)).apply();
         sharedPrefs.edit().putInt("Minute", calendar.get(Calendar.MINUTE)).apply();
-    }
-
-    @Override
-    public void onStopped() {
-        super.onStopped();
-        // add checking network connection here when network type is in preferences
-        Message handlerMessage = UIHandler.obtainMessage(NO_CONNECTION_CODE);
-        handlerMessage.sendToTarget();
     }
 }
