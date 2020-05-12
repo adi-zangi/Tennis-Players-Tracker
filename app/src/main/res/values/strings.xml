@@ -15,8 +15,11 @@
     </string>
     <string name="button_use_any_network">Use any network</string>
     <string name="button_use_wifi_only">Use unmetered network only</string>
-    <string name="no_connection_message">
+    <string name="message_no_connection">
         The app will not start until there is network connection
+    </string>
+    <string name="message_process_failed">
+        Process failed. Please allow time for the problem to get fixed.
     </string>
 
     <!-- Preference Titles -->

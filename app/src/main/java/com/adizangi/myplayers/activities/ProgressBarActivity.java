@@ -11,9 +11,6 @@ import androidx.work.WorkManager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 import android.widget.ProgressBar;
 
@@ -72,7 +69,7 @@ public class ProgressBarActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.appBar);
         setSupportActionBar(toolbar);
         // Do work, when status is finished save version code and start main activity
-        // do something for notifying if there is no internet before and also when work is stopped
+        // do something for notifying if there is no internet before and also when work is stopped- not needed
         // maybe also schedule other things, or maybe in main activity after start this activity
         // add class that manages scheduling
         // while work is enqueued or stopped, show dialog that says needs connection (app will
@@ -82,6 +79,7 @@ public class ProgressBarActivity extends AppCompatActivity {
         // add something for if fails- show popup
         // maybe remove handler message because will go to enqueue and show no connection
         // screen anyway- test this with stopping network before starts
+        // make it send email to myself when fails
 
         // first, say app uses network and ask which network type to use- wifi only or any
         // network. which network type should this app use? use any network/use wifi only.
@@ -116,11 +114,12 @@ public class ProgressBarActivity extends AppCompatActivity {
         if (state == WorkInfo.State.ENQUEUED &&
                 !scheduleManager.isConnectedToNetwork()) {
             alertMessageCreator.showMessage("No Connection",
-                    getResources().getString(R.string.no_connection_message));
+                    getResources().getString(R.string.message_no_connection));
         } else if (state == WorkInfo.State.RUNNING) {
             alertMessageCreator.dismissMessage();
         } else if (state == WorkInfo.State.FAILED) {
-
+            alertMessageCreator.showMessage("",
+                    getResources().getString(R.string.message_process_failed));
         }
         Data progressData = workInfo.getProgress();
         int progress = progressData.getInt(FetchDataWorker.PROGRESS_KEY, 0);
