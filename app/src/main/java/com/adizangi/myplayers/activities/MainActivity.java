@@ -30,9 +30,11 @@ import androidx.work.WorkManager;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -74,21 +76,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ComponentName callingActivity = getCallingActivity();
         FileManager fileManager = new FileManager(this);
-        // start progress bar activity if there is no version code
-        int currentVersionCode = BuildConfig.VERSION_CODE;
         int savedVersionCode = fileManager.readVersionCode();
         if (savedVersionCode == -1) {
             Intent intent = new Intent(this, ProgressBarActivity.class);
             startActivity(intent);
+        } else if (callingActivity != null && callingActivity.getShortClassName()
+                .equals(".activities.ProgressBarActivity")) {
+            // maybe also schedule other things, or maybe in main activity after start this activity
+            // new user dialog
             //scheduleDailyDataFetch();
             //scheduleDailyNotif();
-        } else {
+        }
+         else {
             Toolbar toolbar = findViewById(R.id.appBar);
             setSupportActionBar(toolbar);
             setUpTabs();
         }
-        //sharedPrefs.edit().putInt(VERSION_CODE_KEY, currentVersionCode).apply();
     }
 
     @Override

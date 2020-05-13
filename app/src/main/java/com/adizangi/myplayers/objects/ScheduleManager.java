@@ -40,6 +40,7 @@ public class ScheduleManager extends ContextWrapper {
         this.networkType = networkType;
     }
 
+    // combine this with scheduling work and set handler to what's appropriate for the task
     /*
        Initializes WorkManager with the given Handler on the UI
      */

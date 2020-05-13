@@ -1,3 +1,8 @@
+/*
+   A screen with a progress bar that shows the progress of loading data when
+   the app opens for the first time
+ */
+
 package com.adizangi.myplayers.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,12 +15,15 @@ import androidx.work.WorkManager;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ProgressBar;
 
+import com.adizangi.myplayers.BuildConfig;
 import com.adizangi.myplayers.R;
 import com.adizangi.myplayers.fragments.AlertMessageCreator;
+import com.adizangi.myplayers.objects.FileManager;
 import com.adizangi.myplayers.objects.ScheduleManager;
 import com.adizangi.myplayers.workers.FetchDataWorker;
 
@@ -60,31 +68,18 @@ public class ProgressBarActivity extends AppCompatActivity {
 
     @Override
     /*
-       Dialog that prompts the user to select which network type the app is
-       permitted to use
+       Displays the ProgressBarActivity layout
+       Opens a dialog that prompts the user to select which network type the
+       app is permitted to use, with the options 'use any network' and 'use
+       unmetered network only'
+       Sets responses to the dialog selections, which load the data using the
+       selected network type
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progress_bar);
         Toolbar toolbar = findViewById(R.id.appBar);
         setSupportActionBar(toolbar);
-        // Do work, when status is finished save version code and start main activity
-        // do something for notifying if there is no internet before and also when work is stopped- not needed
-        // maybe also schedule other things, or maybe in main activity after start this activity
-        // add class that manages scheduling
-        // while work is enqueued or stopped, show dialog that says needs connection (app will
-        // not start until there is network connection). No buttons in dialog.
-        // have method that checks if connected. If connected and delayed, show dialog that
-        // says phone is busy, and may need to be charged.
-        // add something for if fails- show popup
-        // maybe remove handler message because will go to enqueue and show no connection
-        // screen anyway- test this with stopping network before starts
-        // make it send email to myself when fails
-
-        // first, say app uses network and ask which network type to use- wifi only or any
-        // network. which network type should this app use? use any network/use wifi only.
-        // send the right network type when construct schedule manager
-
         progressBar = findViewById(R.id.progressBar);
         alertMessageCreator = new AlertMessageCreator(this);
 
@@ -98,6 +93,10 @@ public class ProgressBarActivity extends AppCompatActivity {
         networkTypeDialog.show();
     }
 
+    /*
+       Schedules background work that fetches data using the given network type
+       Sets an Observer for the work status
+     */
     private void loadData(NetworkType networkType) {
         scheduleManager = new ScheduleManager(this, networkType);
         scheduleManager.initializeWorkManager(null);
@@ -107,10 +106,18 @@ public class ProgressBarActivity extends AppCompatActivity {
                 .observe(this, workStateObserver);
     }
 
+    /*
+       Updates the UI based on the given WorkInfo
+       If there is no network connection when the work is waiting to run or if
+       connection is lost while it runs, shows a 'No Connection' message on the
+       screen that stays until connection is back
+       If the work's progress changed, updates the progress bar on the screen
+       If the work succeeded, saves the app's version code to indicate that
+       the app had its first run, and opens MainActivity
+       If the work failed, shows a message and prevents the user from proceeding
+     */
     private void updateWorkProgress(WorkInfo workInfo) {
         WorkInfo.State state = workInfo.getState();
-        Log.i("Debug", "state: " + state);
-        Log.i("Debug", "is connected: " + scheduleManager.isConnectedToNetwork());
         if (state == WorkInfo.State.ENQUEUED &&
                 !scheduleManager.isConnectedToNetwork()) {
             alertMessageCreator.showMessage("No Connection",
@@ -120,6 +127,12 @@ public class ProgressBarActivity extends AppCompatActivity {
         } else if (state == WorkInfo.State.FAILED) {
             alertMessageCreator.showMessage("",
                     getResources().getString(R.string.message_process_failed));
+        } else if (state == WorkInfo.State.SUCCEEDED) {
+            FileManager fileManager = new FileManager(this);
+            int versionCode = BuildConfig.VERSION_CODE;
+            fileManager.storeVersionCode(versionCode);
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivityForResult(intent, 0);
         }
         Data progressData = workInfo.getProgress();
         int progress = progressData.getInt(FetchDataWorker.PROGRESS_KEY, 0);
