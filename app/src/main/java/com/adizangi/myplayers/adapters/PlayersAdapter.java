@@ -42,12 +42,12 @@ public class PlayersAdapter extends RecyclerView.Adapter
     /*
        Interface used to communicate remove button clicks to PlayersTabFragment
      */
-    public interface OnRemovePlayerListener {
-        void onRemovePlayer(String player);
+    public interface OnRemoveClickListener {
+        void onRemoveClick(String player);
     }
 
     private List<String> myPlayers;
-    private OnRemovePlayerListener callback;
+    private OnRemoveClickListener callback;
 
     /*
        Constructs a PlayersAdapter with the given list of players
@@ -57,9 +57,9 @@ public class PlayersAdapter extends RecyclerView.Adapter
     }
 
     /*
-       Sets the OnRemovePlayerListener callback to the given callback
+       Sets the OnRemoveClickListener callback to the given callback
      */
-    public void setOnRemoveClickListener(OnRemovePlayerListener callback) {
+    public void setOnRemoveClickListener(OnRemoveClickListener callback) {
         this.callback = callback;
     }
 
@@ -79,7 +79,7 @@ public class PlayersAdapter extends RecyclerView.Adapter
             @Override
             public void onClick(View removeButton) {
                 String removedPlayer = viewHolder.playerName.getText().toString();
-                callback.onRemovePlayer(removedPlayer);
+                callback.onRemoveClick(removedPlayer);
             }
         });
         return viewHolder;

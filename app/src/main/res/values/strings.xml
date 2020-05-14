@@ -14,7 +14,7 @@
         Which network type should this app use?
     </string>
     <string name="button_use_any_network">Use any network</string>
-    <string name="button_use_wifi_only">Use unmetered network only</string>
+    <string name="button_use_unmetered_only">Use unmetered network only</string>
     <string name="message_no_connection">
         The app will not start until there is network connection
     </string>

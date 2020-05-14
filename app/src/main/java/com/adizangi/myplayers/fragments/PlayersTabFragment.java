@@ -45,13 +45,13 @@ public class PlayersTabFragment extends Fragment {
         }
     };
 
-    private PlayersAdapter.OnRemovePlayerListener removeButtonListener =
-            new PlayersAdapter.OnRemovePlayerListener() {
+    private PlayersAdapter.OnRemoveClickListener removeButtonListener =
+            new PlayersAdapter.OnRemoveClickListener() {
         @Override
         /*
            Removes the given player from the list
          */
-        public void onRemovePlayer(String player) {
+        public void onRemoveClick(String player) {
             tabsViewModel.removePlayer(player);
             playersAdapter.notifyDataSetChanged();
         }

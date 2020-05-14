@@ -7,6 +7,7 @@ package com.adizangi.myplayers.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.work.Data;
 import androidx.work.NetworkType;
@@ -17,12 +18,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ProgressBar;
 
 import com.adizangi.myplayers.BuildConfig;
 import com.adizangi.myplayers.R;
 import com.adizangi.myplayers.fragments.AlertMessageCreator;
+import com.adizangi.myplayers.fragments.NetworkTypeDialog;
 import com.adizangi.myplayers.objects.FileManager;
 import com.adizangi.myplayers.objects.ScheduleManager;
 import com.adizangi.myplayers.workers.FetchDataWorker;
@@ -35,26 +36,23 @@ public class ProgressBarActivity extends AppCompatActivity {
     private ScheduleManager scheduleManager;
     private AlertMessageCreator alertMessageCreator;
 
-    private DialogInterface.OnClickListener useAnyNetworkListener =
-            new DialogInterface.OnClickListener() {
-        @Override
+    private NetworkTypeDialog.NetworkTypeListener networkTypeListener =
+            new NetworkTypeDialog.NetworkTypeListener() {
         /*
            Called when the user selects the 'Use any network' option
            Loads data using any network type
          */
-        public void onClick(DialogInterface dialog, int which) {
+        @Override
+        public void onSelectAnyNetwork() {
             loadData(NetworkType.CONNECTED);
         }
-    };
 
-    private DialogInterface.OnClickListener useUnmeteredOnlyListener =
-            new DialogInterface.OnClickListener() {
         /*
            Called when the user selects the 'Use unmetered only' option
            Loads data using unmetered network only
          */
         @Override
-        public void onClick(DialogInterface dialog, int which) {
+        public void onSelectUnmeteredOnly() {
             loadData(NetworkType.UNMETERED);
         }
     };
@@ -83,14 +81,9 @@ public class ProgressBarActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         alertMessageCreator = new AlertMessageCreator(this);
 
-        AlertDialog networkTypeDialog = new AlertDialog.Builder
-                (this, R.style.Theme_AppCompat_DayNight_Dialog_Alert)
-                .setMessage(R.string.dialog_network_type)
-                .setPositiveButton(R.string.button_use_any_network, useAnyNetworkListener)
-                .setNegativeButton(R.string.button_use_wifi_only, useUnmeteredOnlyListener)
-                .setCancelable(false)
-                .create();
-        networkTypeDialog.show();
+        NetworkTypeDialog dialog = new NetworkTypeDialog();
+        dialog.setNetworkTypeListener(networkTypeListener);
+        dialog.show(getSupportFragmentManager(), "networkType");
     }
 
     /*
