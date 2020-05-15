@@ -4,7 +4,7 @@
    Information is taken from the ESPN website
  */
 
-package com.adizangi.myplayers.objects;
+package com.adizangi.myplayers.network_calls;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

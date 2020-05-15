@@ -2,7 +2,7 @@
    Represents a tennis player's statistics
  */
 
-package com.adizangi.myplayers.objects;
+package com.adizangi.myplayers.utils_data;
 
 import java.io.Serializable;
 

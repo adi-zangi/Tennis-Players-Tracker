@@ -8,16 +8,12 @@ package com.adizangi.myplayers.workers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 
-import com.adizangi.myplayers.fragments.AlertMessageCreator;
-import com.adizangi.myplayers.objects.FileManager;
-import com.adizangi.myplayers.objects.NotificationFetcher;
-import com.adizangi.myplayers.objects.PlayerStats;
-import com.adizangi.myplayers.objects.PlayerStatsFetcher;
-import com.adizangi.myplayers.objects.ScheduleManager;
-import com.adizangi.myplayers.objects.TotalPlayersFetcher;
+import com.adizangi.myplayers.utils_data.FileManager;
+import com.adizangi.myplayers.network_calls.NotificationFetcher;
+import com.adizangi.myplayers.utils_data.PlayerStats;
+import com.adizangi.myplayers.network_calls.PlayerStatsFetcher;
+import com.adizangi.myplayers.network_calls.TotalPlayersFetcher;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -31,7 +27,6 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
-import androidx.work.NetworkType;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 

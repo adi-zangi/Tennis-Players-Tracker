@@ -6,10 +6,10 @@
 
 package com.adizangi.myplayers;
 
-import com.adizangi.myplayers.objects.NotificationFetcher;
-import com.adizangi.myplayers.objects.PlayerStats;
-import com.adizangi.myplayers.objects.PlayerStatsFetcher;
-import com.adizangi.myplayers.objects.TotalPlayersFetcher;
+import com.adizangi.myplayers.network_calls.NotificationFetcher;
+import com.adizangi.myplayers.utils_data.PlayerStats;
+import com.adizangi.myplayers.network_calls.PlayerStatsFetcher;
+import com.adizangi.myplayers.network_calls.TotalPlayersFetcher;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

@@ -7,25 +7,22 @@ package com.adizangi.myplayers.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.work.Data;
 import androidx.work.NetworkType;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ProgressBar;
 
 import com.adizangi.myplayers.BuildConfig;
 import com.adizangi.myplayers.R;
-import com.adizangi.myplayers.fragments.AlertMessageCreator;
+import com.adizangi.myplayers.utils_ui.AlertMessageCreator;
 import com.adizangi.myplayers.fragments.NetworkTypeDialog;
-import com.adizangi.myplayers.objects.FileManager;
-import com.adizangi.myplayers.objects.ScheduleManager;
+import com.adizangi.myplayers.utils_data.FileManager;
+import com.adizangi.myplayers.utils_data.ScheduleManager;
 import com.adizangi.myplayers.workers.FetchDataWorker;
 
 import java.util.UUID;

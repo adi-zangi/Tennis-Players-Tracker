@@ -17,8 +17,8 @@ import android.content.Intent;
 import android.os.Build;
 
 import com.adizangi.myplayers.R;
-import com.adizangi.myplayers.objects.FileManager;
-import com.adizangi.myplayers.objects.PlayerStats;
+import com.adizangi.myplayers.utils_data.FileManager;
+import com.adizangi.myplayers.utils_data.PlayerStats;
 
 import java.util.Calendar;
 import java.util.List;

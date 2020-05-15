@@ -2,7 +2,7 @@
    Creates alert messages that show on the screen
  */
 
-package com.adizangi.myplayers.fragments;
+package com.adizangi.myplayers.utils_ui;
 
 import android.app.AlertDialog;
 import android.content.Context;

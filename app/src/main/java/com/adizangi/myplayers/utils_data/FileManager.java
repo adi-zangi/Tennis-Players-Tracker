@@ -5,7 +5,7 @@
    is installed, but are removed when the app is uninstalled
  */
 
-package com.adizangi.myplayers.objects;
+package com.adizangi.myplayers.utils_data;
 
 import android.content.Context;
 import android.content.ContextWrapper;

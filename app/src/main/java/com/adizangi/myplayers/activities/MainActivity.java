@@ -2,7 +2,7 @@
    Adi Zangi
    2019-2020
 
-   This app is meant for those who like to watch professional tennis
+   This app is meant for people who like to watch professional tennis
    The purpose of the app MyPlayers is to help the user keep track of tennis
    players that they select
    The user can select players and view statistics and tournament results for
@@ -34,15 +34,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.adizangi.myplayers.BuildConfig;
 import com.adizangi.myplayers.TimeActivity;
 import com.adizangi.myplayers.adapters.TabAdapter;
-import com.adizangi.myplayers.objects.FileManager;
+import com.adizangi.myplayers.utils_data.FileManager;
 import com.adizangi.myplayers.receivers.NotifAlarmReceiver;
 import com.adizangi.myplayers.workers.FetchDataWorker;
 import com.adizangi.myplayers.R;

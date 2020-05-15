@@ -4,7 +4,7 @@
    the ESPN website
  */
 
-package com.adizangi.myplayers.objects;
+package com.adizangi.myplayers.network_calls;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
