@@ -34,6 +34,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -76,12 +77,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ComponentName callingActivity = getCallingActivity();
         FileManager fileManager = new FileManager(this);
+        if (callingActivity != null)
+            Log.i("Debug", callingActivity.getShortClassName());
         int savedVersionCode = fileManager.readVersionCode();
         if (savedVersionCode == -1) {
             Intent intent = new Intent(this, ProgressActivity.class);
             startActivity(intent);
         } else if (callingActivity != null && callingActivity.getShortClassName()
-                .equals(".activities.ProgressBarActivity")) {
+                .equals(".activities.ProgressActivity")) {
             // maybe also schedule other things, or maybe in main activity after start this activity
             // new user dialog
             //scheduleDailyDataFetch();

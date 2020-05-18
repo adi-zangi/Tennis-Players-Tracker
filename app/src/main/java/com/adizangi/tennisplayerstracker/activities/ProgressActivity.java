@@ -110,13 +110,12 @@ public class ProgressActivity extends AppCompatActivity {
         WorkInfo.State state = workInfo.getState();
         if (state == WorkInfo.State.ENQUEUED &&
                 !scheduleManager.isConnectedToNetwork()) {
-            screenBlocker.blockScreen("No Connection",
+            screenBlocker.blockScreen(getResources().getString(R.string.title_no_connection),
                     getResources().getString(R.string.message_no_connection));
         } else if (state == WorkInfo.State.RUNNING) {
-            screenBlocker.dismissMessage();
+            screenBlocker.unBlockScreen();
         } else if (state == WorkInfo.State.FAILED) {
-            screenBlocker.blockScreen("",
-                    getResources().getString(R.string.message_process_failed));
+            screenBlocker.blockScreen(getResources().getString(R.string.message_process_failed));
         } else if (state == WorkInfo.State.SUCCEEDED) {
             FileManager fileManager = new FileManager(this);
             int versionCode = BuildConfig.VERSION_CODE;

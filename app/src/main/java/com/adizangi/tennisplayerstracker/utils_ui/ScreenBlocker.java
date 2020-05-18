@@ -1,5 +1,6 @@
 /*
-   Used to display an error message on the screen that blocks the screen
+   Used to display an alert message that blocks the UI while the message is
+   showing
  */
 
 package com.adizangi.tennisplayerstracker.utils_ui;
@@ -12,7 +13,7 @@ import com.adizangi.tennisplayerstracker.R;
 
 public class ScreenBlocker extends ContextWrapper {
 
-    private AlertDialog currentMessage;
+    private AlertDialog screenBlock;
 
     /*
        Constructs a ScreenBlocker with the given context, which is the context
@@ -23,29 +24,42 @@ public class ScreenBlocker extends ContextWrapper {
     }
 
     /*
-       Shows an alert message with the given title and message
-       The message shows as a transparent overlay on the screen with text in
-       the center
+       Displays a screen-blocking alert with the given title and message
+       The screen block covers the screen, has a transparent gray background,
+       and contains the alert text at the center
      */
-    public void blockScreen(String title, String message) {
-        AlertDialog alertMessage = new AlertDialog.Builder
+    public void blockScreen(String alertTitle, String alertMessage) {
+        screenBlock = new AlertDialog.Builder
                 (this, R.style.Theme_MaterialComponents_BottomSheetDialog)
-                .setTitle(title)
-                .setMessage(message)
+                .setTitle(alertTitle)
+                .setMessage(alertMessage)
                 .setCancelable(false)
                 .create();
-        alertMessage.show();
-        currentMessage = alertMessage;
+        screenBlock.show();
     }
 
     /*
-       Un-shows the message that is currently showing, if there is one
+       Displays a screen-blocking alert with the given message and no title
+       The screen block covers the screen, has a transparent gray background,
+       and contains the alert text at the center
      */
-    public void dismissMessage() {
-        if (currentMessage != null) {
-            currentMessage.dismiss();
+    public void blockScreen(String alertMessage) {
+        screenBlock = new AlertDialog.Builder
+                (this, R.style.Theme_MaterialComponents_BottomSheetDialog)
+                .setMessage(alertMessage)
+                .setCancelable(false)
+                .create();
+        screenBlock.show();
+    }
+
+    /*
+       Un-blocks the screen, if it is currently blocked
+     */
+    public void unBlockScreen() {
+        if (screenBlock != null) {
+            screenBlock.dismiss();
         }
-        currentMessage = null;
+        screenBlock = null;
     }
 
 }

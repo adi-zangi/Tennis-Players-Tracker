@@ -15,6 +15,7 @@
     </string>
     <string name="button_use_any_network">Use any network</string>
     <string name="button_use_unmetered_only">Use unmetered network only</string>
+    <string name="title_no_connection">No Connection</string>
     <string name="message_no_connection">
         The app will not start until there is network connection
     </string>
