@@ -23,10 +23,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
+import androidx.work.Configuration;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
+import androidx.work.WorkerFactory;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -34,7 +36,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,8 +47,9 @@ import com.adizangi.tennisplayerstracker.TimeActivity;
 import com.adizangi.tennisplayerstracker.adapters.TabAdapter;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.receivers.NotifAlarmReceiver;
-import com.adizangi.tennisplayerstracker.workers.FetchDataWorker;
+import com.adizangi.tennisplayerstracker.workers.CustomWorkerFactory;
 import com.adizangi.tennisplayerstracker.R;
+import com.adizangi.tennisplayerstracker.workers.RefreshDataWorker;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -65,6 +70,14 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private Handler handler = new Handler(Looper.myLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            // refresh
+        }
+    };
+
     /*
        Called when the app is launched
        Displays the MainActivity layout and fills it with data
@@ -75,16 +88,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initializeWorkManager();
         ComponentName callingActivity = getCallingActivity();
         FileManager fileManager = new FileManager(this);
-        if (callingActivity != null)
-            Log.i("Debug", callingActivity.getShortClassName());
         int savedVersionCode = fileManager.readVersionCode();
         if (savedVersionCode == -1) {
             Intent intent = new Intent(this, ProgressActivity.class);
             startActivity(intent);
-        } else if (callingActivity != null && callingActivity.getShortClassName()
-                .equals(".activities.ProgressActivity")) {
+        } else if (callingActivity != null && callingActivity.getClassName()
+                .equals("com.adizangi.tennisplayerstracker.activities.ProgressActivity")) {
             // maybe also schedule other things, or maybe in main activity after start this activity
             // new user dialog
             //scheduleDailyDataFetch();
@@ -111,6 +123,23 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /*
+       Initializes WorkManager with a custom worker factory, but only if this
+       activity started after the app was launched
+       If this activity was started in another way, does nothing
+     */
+    private void initializeWorkManager() {
+        Intent activityIntent = getIntent();
+        String intentAction = activityIntent.getAction();
+        if (intentAction != null && intentAction.equals("android.intent.action.MAIN")) {
+            WorkerFactory workerFactory = new CustomWorkerFactory(handler);
+            Configuration configuration = new Configuration.Builder()
+                    .setWorkerFactory(workerFactory)
+                    .build();
+            WorkManager.initialize(this, configuration);
+        }
     }
 
     /*
@@ -148,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.SECOND, 0);
         long initialDelay = calendar.getTimeInMillis() - System.currentTimeMillis();
         PeriodicWorkRequest fetchDataRequest = new PeriodicWorkRequest.Builder
-                (FetchDataWorker.class, 1, TimeUnit.DAYS)
+                (RefreshDataWorker.class, 1, TimeUnit.DAYS)
                 .setConstraints(constraints)
                 .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
                 .build();

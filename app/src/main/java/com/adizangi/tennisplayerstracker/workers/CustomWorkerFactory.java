@@ -1,7 +1,6 @@
 /*
    Used for custom initialization of WorkManager
-   Passes a Handler to every Worker in the constructor in addition to the
-   default parameters
+   Creates different Workers with different arguments
  */
 
 package com.adizangi.tennisplayerstracker.workers;
@@ -32,7 +31,10 @@ public class CustomWorkerFactory extends WorkerFactory {
     @Override
     /*
        Returns a new instance of the specified workerClassName with the given
-       context, worker parameters, and Handler on the UI thread
+       context and worker parameters
+       If the worker class is RefreshDataWorker sends it the context, worker
+       parameters, and the UI handler
+       Otherwise, sends the worker just the context and worker parameters
        Returns null if a worker could not be created, which makes the default
        WorkerFactory be used instead
      */
@@ -42,10 +44,17 @@ public class CustomWorkerFactory extends WorkerFactory {
         try {
             Class<? extends ListenableWorker> workerClass =
                     Class.forName(workerClassName).asSubclass(ListenableWorker.class);
-            Constructor<? extends ListenableWorker> constructor =
-                    workerClass.getDeclaredConstructor(Context.class, WorkerParameters.class,
-                            Handler.class);
-            return constructor.newInstance(appContext, workerParameters, UIHandler);
+            if (workerClassName.equals(
+                    "com.adizangi.tennisplayerstracker.workers.RefreshDataWorker")) {
+                Constructor<? extends ListenableWorker> constructor =
+                        workerClass.getDeclaredConstructor(Context.class,WorkerParameters.class,
+                                Handler.class);
+                return constructor.newInstance(appContext, workerParameters, UIHandler);
+            } else {
+                Constructor<? extends ListenableWorker> constructor =
+                        workerClass.getDeclaredConstructor(Context.class, WorkerParameters.class);
+                return constructor.newInstance(appContext, workerParameters);
+            }
         } catch (Exception e) {
             return null;
         }

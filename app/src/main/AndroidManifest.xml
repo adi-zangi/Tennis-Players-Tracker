@@ -15,10 +15,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.adizangi.tennisplayerstracker.activities.ProgressActivity" />
-        <activity
-            android:name="com.adizangi.tennisplayerstracker.TimeActivity"
-            android:parentActivityName="com.adizangi.tennisplayerstracker.activities.MainActivity" />
         <activity android:name="com.adizangi.tennisplayerstracker.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,9 +22,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.adizangi.tennisplayerstracker.activities.ProgressActivity" />
         <activity
             android:name="com.adizangi.tennisplayerstracker.activities.SettingsActivity"
             android:label="@string/title_activity_settings" />
+        <activity
+            android:name="com.adizangi.tennisplayerstracker.TimeActivity"
+            android:parentActivityName="com.adizangi.tennisplayerstracker.activities.MainActivity"
+        />
 
         <receiver android:name="com.adizangi.tennisplayerstracker.receivers.NotifAlarmReceiver" />
         <receiver android:name="com.adizangi.tennisplayerstracker.receivers.NotifAlarmReceiver$ButtonReceiver" />

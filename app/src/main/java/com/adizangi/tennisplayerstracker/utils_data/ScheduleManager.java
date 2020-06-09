@@ -10,19 +10,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.os.Handler;
 
-import com.adizangi.tennisplayerstracker.workers.CustomWorkerFactory;
-import com.adizangi.tennisplayerstracker.workers.FetchDataWorker;
+import com.adizangi.tennisplayerstracker.workers.LoadDataWorker;
 
 import java.util.UUID;
 
-import androidx.work.Configuration;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
-import androidx.work.WorkerFactory;
 
 public class ScheduleManager extends ContextWrapper {
 
@@ -40,33 +36,22 @@ public class ScheduleManager extends ContextWrapper {
     }
 
     /*
-       Initializes WorkManager with the given Handler on the UI
-     */
-    public void initializeWorkManager(Handler UIHandler) {
-        WorkerFactory workerFactory = new CustomWorkerFactory(UIHandler);
-        Configuration configuration = new Configuration.Builder()
-                .setWorkerFactory(workerFactory)
-                .build();
-        WorkManager.initialize(this, configuration);
-    }
-
-    /*
-       Schedules background work that fetches data, with a constraint that
+       Schedules background work that loads data, with a constraint that
        there is network connection
        The work will start as soon as there is network connection of the
        permitted type
        Returns the WorkRequest id
      */
-    public UUID fetchDataImmediately() {
+    public UUID loadDataImmediately() {
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(networkType)
                 .build();
-        OneTimeWorkRequest fetchDataRequest = new OneTimeWorkRequest.Builder
-                (FetchDataWorker.class)
+        OneTimeWorkRequest loadDataRequest = new OneTimeWorkRequest.Builder
+                (LoadDataWorker.class)
                 .setConstraints(constraints)
                 .build();
-        WorkManager.getInstance(this).enqueue(fetchDataRequest);
-        return fetchDataRequest.getId();
+        WorkManager.getInstance(this).enqueue(loadDataRequest);
+        return loadDataRequest.getId();
     }
 
     public void scheduleDailyDataFetch() {

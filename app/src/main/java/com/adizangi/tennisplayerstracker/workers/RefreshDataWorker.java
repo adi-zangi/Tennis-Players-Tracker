@@ -1,6 +1,6 @@
 /*
-   A background task that fetches data that will be displayed in the app and
-   sent to the user in notifications
+   A background task that fetches data from the web and refreshes the UI with
+   updated data
  */
 
 package com.adizangi.tennisplayerstracker.workers;
@@ -9,11 +9,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 
-import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.network_calls.NotificationFetcher;
-import com.adizangi.tennisplayerstracker.utils_data.PlayerStats;
 import com.adizangi.tennisplayerstracker.network_calls.PlayerStatsFetcher;
 import com.adizangi.tennisplayerstracker.network_calls.TotalPlayersFetcher;
+import com.adizangi.tennisplayerstracker.utils_data.FileManager;
+import com.adizangi.tennisplayerstracker.utils_data.PlayerStats;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,41 +26,39 @@ import java.util.Locale;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
-import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-public class FetchDataWorker extends Worker {
+public class RefreshDataWorker extends Worker {
 
-    public static final String PROGRESS_KEY = "PROGRESS";
-
+    private Handler UIHandler;
     private Document mRankings;
     private Document wRankings;
     private Document tSchedule;
     private Document ySchedule;
 
     /*
-       Constructs a FetchDataWorker
+       Constructs a RefreshDataWorker with the given context, worker params,
+       and UI handler
      */
-    public FetchDataWorker(@NonNull Context context,
+    public RefreshDataWorker(@NonNull Context context,
                            @NonNull WorkerParameters workerParams,
                            Handler UIHandler) {
         super(context, workerParams);
+        this.UIHandler = UIHandler;
     }
 
-    /*
-       Fetches the data in the background and saves it to files
-       Updates the observable progress as the work is running
-       Returns a Result that indicates whether the task was successful
-     */
     @NonNull
     @Override
+    /*
+       Fetches the data in the background and saves it to files
+       Refreshes the UI
+       Returns a Result that indicates whether the task was successful
+     */
     public Result doWork() {
         try {
-            setProgress(0);
             saveTime(); // method for debugging
             getHTMLDocuments();
-            setProgress(10);
             TotalPlayersFetcher playersFetcher =
                     new TotalPlayersFetcher(mRankings, wRankings);
             PlayerStatsFetcher statsFetcher =
@@ -68,15 +66,13 @@ public class FetchDataWorker extends Worker {
             NotificationFetcher notifFetcher =
                     new NotificationFetcher(tSchedule, ySchedule);
             List<String> totalPlayers = playersFetcher.getTotalPlayersList();
-            setProgress(40);
             Map<String, PlayerStats> stats = statsFetcher.getPlayerStatsMap();
-            setProgress(70);
             List<String> notificationList = notifFetcher.getNotificationList();
-            setProgress(100);
             FileManager fileManager = new FileManager(getApplicationContext());
             fileManager.storeTotalPlayers(totalPlayers);
             fileManager.storePlayerStats(stats);
             fileManager.storeNotificationList(notificationList);
+            // use handler to update UI
             return Result.success();
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,16 +104,6 @@ public class FetchDataWorker extends Worker {
                         dateOfYesterday).get();
     }
 
-    /*
-       Sets this Work's observable progress to the given progress percentage
-     */
-    private void setProgress(int progressPercentage) {
-        Data progress = new Data.Builder()
-                .putInt(PROGRESS_KEY, progressPercentage)
-                .build();
-        setProgressAsync(progress);
-    }
-
     private void saveTime() {
         SharedPreferences sharedPrefs = getApplicationContext()
                 .getSharedPreferences("Time file", Context.MODE_PRIVATE);
@@ -125,4 +111,5 @@ public class FetchDataWorker extends Worker {
         sharedPrefs.edit().putInt("Hour", calendar.get(Calendar.HOUR_OF_DAY)).apply();
         sharedPrefs.edit().putInt("Minute", calendar.get(Calendar.MINUTE)).apply();
     }
+
 }
