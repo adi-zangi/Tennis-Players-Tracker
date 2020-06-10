@@ -8,6 +8,7 @@ package com.adizangi.tennisplayerstracker.workers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
+import android.os.Message;
 
 import com.adizangi.tennisplayerstracker.network_calls.NotificationFetcher;
 import com.adizangi.tennisplayerstracker.network_calls.PlayerStatsFetcher;
@@ -30,6 +31,8 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 public class RefreshDataWorker extends Worker {
+
+    public static final int REFRESH_MSG_CODE = 0;
 
     private Handler UIHandler;
     private Document mRankings;
@@ -72,7 +75,8 @@ public class RefreshDataWorker extends Worker {
             fileManager.storeTotalPlayers(totalPlayers);
             fileManager.storePlayerStats(stats);
             fileManager.storeNotificationList(notificationList);
-            // use handler to update UI
+            Message refreshMessage = UIHandler.obtainMessage(REFRESH_MSG_CODE);
+            refreshMessage.sendToTarget();
             return Result.success();
         } catch (Exception e) {
             e.printStackTrace();

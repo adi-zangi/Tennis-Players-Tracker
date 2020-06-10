@@ -42,6 +42,7 @@ import android.os.Message;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.adizangi.tennisplayerstracker.TimeActivity;
 import com.adizangi.tennisplayerstracker.adapters.TabAdapter;
@@ -72,9 +73,16 @@ public class MainActivity extends AppCompatActivity {
 
     private Handler handler = new Handler(Looper.myLooper()) {
         @Override
+        /*
+           Called when this handler receives a message
+           If the message is to refresh the UI, reloads the tabs
+         */
         public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            // refresh
+            if (msg.what == RefreshDataWorker.REFRESH_MSG_CODE) {
+                setUpTabs();
+                Toast.makeText(getApplicationContext(),
+                        "Stats were refreshed", Toast.LENGTH_LONG).show();
+            }
         }
     };
 
@@ -97,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         } else if (callingActivity != null && callingActivity.getClassName()
                 .equals("com.adizangi.tennisplayerstracker.activities.ProgressActivity")) {
-            // maybe also schedule other things, or maybe in main activity after start this activity
             // new user dialog
             //scheduleDailyDataFetch();
             //scheduleDailyNotif();
