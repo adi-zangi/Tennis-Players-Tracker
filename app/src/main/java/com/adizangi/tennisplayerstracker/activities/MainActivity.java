@@ -46,6 +46,7 @@ import android.widget.Toast;
 
 import com.adizangi.tennisplayerstracker.TimeActivity;
 import com.adizangi.tennisplayerstracker.adapters.TabAdapter;
+import com.adizangi.tennisplayerstracker.fragments.NewUserDialog;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.receivers.NotifAlarmReceiver;
 import com.adizangi.tennisplayerstracker.workers.CustomWorkerFactory;
@@ -105,7 +106,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         } else if (callingActivity != null && callingActivity.getClassName()
                 .equals("com.adizangi.tennisplayerstracker.activities.ProgressActivity")) {
-            // new user dialog
+            NewUserDialog dialog = new NewUserDialog();
+            dialog.show(getSupportFragmentManager(), "newUser");
             //scheduleDailyDataFetch();
             //scheduleDailyNotif();
         }
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.app_bar, menu);
+        inflater.inflate(R.menu.app_bar_items, menu);
         return true;
     }
 
