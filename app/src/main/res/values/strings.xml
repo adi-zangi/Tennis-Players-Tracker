@@ -24,10 +24,9 @@
     </string>
     <string name="dialog_new_user_title">New User</string>
     <string name="dialog_new_user_intro">
-        Welcome new user! Here is how to use this app:
-        &#10;Add instructions with pictures
+        Welcome new user! Here is how to use this app: Add instructions with pictures
     </string>
-    <string name="button_close">Close</string>
+    <string name="button_done">Done</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>

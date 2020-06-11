@@ -26,7 +26,7 @@ public class NewUserDialog extends DialogFragment {
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.dialog_new_user_title)
                 .setView(View.inflate(getContext(), R.layout.dialog_new_user, null))
-                .setPositiveButton(R.string.button_close, null)
+                .setPositiveButton(R.string.button_done, null)
                 .setCancelable(false)
                 .create();
         dialog.setCanceledOnTouchOutside(false);
