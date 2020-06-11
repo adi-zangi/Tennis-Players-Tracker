@@ -58,12 +58,13 @@ public class NetworkTypeDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder
+        AlertDialog dialog = new AlertDialog.Builder
                 (getActivity(), R.style.Theme_AppCompat_DayNight_Dialog_Alert)
                 .setMessage(R.string.dialog_network_type)
                 .setPositiveButton(R.string.button_use_any_network, onPositiveClick)
                 .setNegativeButton(R.string.button_use_unmetered_only, onNegativeClick)
-                .setCancelable(false);
-        return dialogBuilder.create();
+                .create();
+        dialog.setCanceledOnTouchOutside(false);
+        return dialog;
     }
 }

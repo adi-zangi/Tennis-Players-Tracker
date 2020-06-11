@@ -23,11 +23,13 @@ public class NewUserDialog extends DialogFragment {
        Creates the dialog and returns it
      */
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity())
+        AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.dialog_new_user_title)
                 .setView(View.inflate(getContext(), R.layout.dialog_new_user, null))
                 .setPositiveButton(R.string.button_close, null)
-                .setCancelable(false);
-        return dialogBuilder.create();
+                .setCancelable(false)
+                .create();
+        dialog.setCanceledOnTouchOutside(false);
+        return dialog;
     }
 }
