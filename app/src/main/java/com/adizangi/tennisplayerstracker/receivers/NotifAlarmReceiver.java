@@ -123,7 +123,7 @@ public class NotifAlarmReceiver extends BroadcastReceiver {
             return "";
         }
         String notificationContent = notificationList.get(0);
-        List<String> myPlayers = fileManager.readMyPlayers();
+        List<String> myPlayers = fileManager.readSelectedPlayers();
         Map<String, PlayerStats> stats = fileManager.readPlayerStats();
         StringBuilder upcomingMatches = new StringBuilder();
         for (String player : myPlayers) {

@@ -1,32 +1,42 @@
 <resources>
+    <!-- Activity Labels -->
     <string name="app_name">Tennis Players Tracker</string>
     <string name="title_activity_settings">Settings</string>
+
+    <!-- Button Labels -->
     <string name="button_add">Add</string>
     <string name="button_remove">Remove</string>
+    <string name="button_done">Done</string>
     <string name="button_see_results">See more match results</string>
     <string name="button_live_scores">View Live Scores</string>
-    <string name="player_search_hint">Search player</string>
-    <string name="notification_channel_name">Notifications</string>
-    <string name="progress_bar_description">loading data&#8230;</string>
-    <string name="action_time">Time</string>
-    <string name="dialog_network_type">
+    <string name="button_use_any_network">Use any network</string>
+    <string name="button_use_unmetered_only">Use unmetered network only</string>
+
+    <!-- Text -->
+    <string name="hint_player_search_bar">Search player</string>
+    <string name="text_progress_bar">loading data&#8230;</string>
+    <string name="text_welcome">
+        Welcome new user! Here is how to use this app: Add instructions with pictures
+    </string>
+    <string name="dialog_message_network_type">
         This app uses the network daily for a short time (less than a minute).
         Which network type should this app use?
     </string>
-    <string name="button_use_any_network">Use any network</string>
-    <string name="button_use_unmetered_only">Use unmetered network only</string>
-    <string name="title_no_connection">No Connection</string>
-    <string name="message_no_connection">
+    <string name="warning_title_no_connection">No Connection</string>
+    <string name="warning_message_no_connection">
         The app will not start until there is network connection
     </string>
-    <string name="message_process_failed">
+    <string name="warning_message_process_failed">
         Process failed. Please allow time for the problem to get fixed.
     </string>
-    <string name="dialog_new_user_title">New User</string>
-    <string name="dialog_new_user_intro">
-        Welcome new user! Here is how to use this app: Add instructions with pictures
-    </string>
-    <string name="button_done">Done</string>
+
+    <!-- App Bar Items -->
+    <string name="item_time">Time</string>
+
+    <!-- Notification Channel -->
+    <string name="notification_channel_name">Notifications</string>
+
+
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>

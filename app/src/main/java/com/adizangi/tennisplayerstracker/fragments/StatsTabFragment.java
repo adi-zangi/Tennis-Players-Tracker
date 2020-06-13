@@ -86,11 +86,11 @@ public class StatsTabFragment extends Fragment {
                         .getInstance(requireActivity().getApplication());
         tabsViewModel = new ViewModelProvider(requireActivity(), factory)
                 .get(TabsViewModel.class);
-        RecyclerView statsList = view.findViewById(R.id.stats_list);
+        RecyclerView statsRecyclerView = view.findViewById(R.id.stats_recycler_view);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(requireContext());
-        statsList.setLayoutManager(manager);
-        statsAdapter = new StatsAdapter(tabsViewModel.getMyPlayersStats());
-        statsList.setAdapter(statsAdapter);
+        statsRecyclerView.setLayoutManager(manager);
+        statsAdapter = new StatsAdapter(tabsViewModel.getSelectedPlayersStats());
+        statsRecyclerView.setAdapter(statsAdapter);
         MutableLiveData<String> addedPlayer = tabsViewModel.getAddedPlayer();
         addedPlayer.observe(getViewLifecycleOwner(), addedPlayerObserver);
         MutableLiveData<String> removedPlayer = tabsViewModel.getRemovedPlayer();

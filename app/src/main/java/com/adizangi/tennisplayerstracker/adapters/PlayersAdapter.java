@@ -1,5 +1,5 @@
 /*
-   Adapter for the list of the user's selected players in PlayersTabFragment
+   Adapter for the RecyclerView in PlayersTabFragment
  */
 
 package com.adizangi.tennisplayerstracker.adapters;
@@ -22,7 +22,7 @@ public class PlayersAdapter extends RecyclerView.Adapter
         <PlayersAdapter.ViewHolder> {
 
     /*
-       Holds a reference to the views of an item in the list
+       Holds a reference to the views of an item in the RecyclerView
      */
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -30,7 +30,7 @@ public class PlayersAdapter extends RecyclerView.Adapter
         Button removeButton;
 
         /*
-           Constructs a ViewHolder with the given layout of an item in the list
+           Constructs a ViewHolder with the given layout of an item in the RecyclerView
          */
         ViewHolder(ConstraintLayout layout) {
             super(layout);

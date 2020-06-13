@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class FileManager extends ContextWrapper {
 
-    private static final String MY_PLAYERS_FILENAME = "my_players";
+    private static final String SELECTED_PLAYERS_FILENAME = "selected_players";
     private static final String TOTAL_PLAYERS_FILENAME = "total_players";
     private static final String STATS_FILENAME = "player_stats";
     private static final String NOTIF_FILENAME = "notification_list";
@@ -41,9 +41,9 @@ public class FileManager extends ContextWrapper {
        Returns an empty list if there is an error
      */
     @SuppressWarnings("unchecked")
-    public List<String> readMyPlayers() {
+    public List<String> readSelectedPlayers() {
         try {
-            FileInputStream inputStream = openFileInput(MY_PLAYERS_FILENAME);
+            FileInputStream inputStream = openFileInput(SELECTED_PLAYERS_FILENAME);
             ObjectInputStream objectInputStream =
                     new ObjectInputStream(inputStream);
             List<String> myPlayers =
@@ -124,10 +124,10 @@ public class FileManager extends ContextWrapper {
     /*
        Stores the given list of the user's players in a file
      */
-    public void storeMyPlayers(List<String> myPlayers) {
+    public void storeSelectedPlayers(List<String> myPlayers) {
         try {
             FileOutputStream outputStream = openFileOutput
-                    (MY_PLAYERS_FILENAME, Context.MODE_PRIVATE);
+                    (SELECTED_PLAYERS_FILENAME, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream =
                     new ObjectOutputStream(outputStream);
             objectOutputStream.writeObject(myPlayers);

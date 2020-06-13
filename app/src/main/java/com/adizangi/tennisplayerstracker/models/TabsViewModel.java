@@ -22,15 +22,15 @@ public class TabsViewModel extends AndroidViewModel {
 
     private final List<String> totalPlayers;
     private final Map<String, PlayerStats> statsMap;
-    private List<String> myPlayers;
-    private List<PlayerStats> myPlayersStats;
+    private List<String> selectedPlayers;
+    private List<PlayerStats> selectedPlayersStats;
     private MutableLiveData<String> addedPlayer;
     private MutableLiveData<String> removedPlayer;
     private FileManager fileManager;
 
     /*
        Constructs a TabsViewModel with the given Application reference
-       Retrieves saved data and initialized the data for the views
+       Retrieves saved data and initializes the data for the views
        Initializes the observable data to empty values
      */
     public TabsViewModel(@NonNull Application application) {
@@ -38,13 +38,13 @@ public class TabsViewModel extends AndroidViewModel {
         fileManager = new FileManager(application);
         totalPlayers = fileManager.readTotalPlayers();
         statsMap = fileManager.readPlayerStats();
-        myPlayers = fileManager.readMyPlayers();
-        myPlayersStats = new ArrayList<>();
-        for (String player : myPlayers) {
+        selectedPlayers = fileManager.readSelectedPlayers();
+        selectedPlayersStats = new ArrayList<>();
+        for (String player : selectedPlayers) {
             PlayerStats playerStats = statsMap.get(player);
-            myPlayersStats.add(playerStats);
+            selectedPlayersStats.add(playerStats);
         }
-        Collections.sort(myPlayersStats, Collections.reverseOrder());
+        Collections.sort(selectedPlayersStats, Collections.reverseOrder());
         addedPlayer = new MutableLiveData<>();
         removedPlayer = new MutableLiveData<>();
     }
@@ -52,8 +52,8 @@ public class TabsViewModel extends AndroidViewModel {
     /*
        Returns a list of the user's selected players
      */
-    public List<String> getMyPlayers() {
-        return myPlayers;
+    public List<String> getSelectedPlayers() {
+        return selectedPlayers;
     }
 
     /*
@@ -68,8 +68,8 @@ public class TabsViewModel extends AndroidViewModel {
        user's selected players
        The list is sorted in descending order
      */
-    public List<PlayerStats> getMyPlayersStats() {
-        return myPlayersStats;
+    public List<PlayerStats> getSelectedPlayersStats() {
+        return selectedPlayersStats;
     }
 
     /*
@@ -94,8 +94,8 @@ public class TabsViewModel extends AndroidViewModel {
      */
     public void addPlayer(String player) {
         addedPlayer.setValue(player);
-        myPlayers.add(player);
-        fileManager.storeMyPlayers(myPlayers);
+        selectedPlayers.add(player);
+        fileManager.storeSelectedPlayers(selectedPlayers);
     }
 
     /*
@@ -105,8 +105,8 @@ public class TabsViewModel extends AndroidViewModel {
      */
     public void addPlayerStats(String player) {
         PlayerStats playerStats = statsMap.get(player);
-        myPlayersStats.add(playerStats);
-        Collections.sort(myPlayersStats, Collections.reverseOrder());
+        selectedPlayersStats.add(playerStats);
+        Collections.sort(selectedPlayersStats, Collections.reverseOrder());
     }
 
     /*
@@ -116,8 +116,8 @@ public class TabsViewModel extends AndroidViewModel {
      */
     public void removePlayer(String player) {
         removedPlayer.setValue(player);
-        myPlayers.remove(player);
-        fileManager.storeMyPlayers(myPlayers);
+        selectedPlayers.remove(player);
+        fileManager.storeSelectedPlayers(selectedPlayers);
     }
 
     /*
@@ -126,15 +126,15 @@ public class TabsViewModel extends AndroidViewModel {
        The list remains sorted
      */
     public void removePlayerStats(String player) {
-        int size = myPlayersStats.size();
+        int size = selectedPlayersStats.size();
         for (int i = 0; i < size; i++) {
-            PlayerStats playerStats = myPlayersStats.get(i);
+            PlayerStats playerStats = selectedPlayersStats.get(i);
             String name = playerStats.getName();
             String fullRanking = playerStats.getRanking();
             String ranking = fullRanking.substring(fullRanking.indexOf(":") + 2);
             String playerAtIndex = name + " (" + ranking + ")";
             if (playerAtIndex.equals(player)) {
-                myPlayersStats.remove(i);
+                selectedPlayersStats.remove(i);
                 break;
             }
         }

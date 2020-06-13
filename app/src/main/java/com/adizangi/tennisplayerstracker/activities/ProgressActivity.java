@@ -19,7 +19,7 @@ import android.widget.ProgressBar;
 
 import com.adizangi.tennisplayerstracker.BuildConfig;
 import com.adizangi.tennisplayerstracker.R;
-import com.adizangi.tennisplayerstracker.utils_ui.ScreenBlocker;
+import com.adizangi.tennisplayerstracker.utils_ui.WarningManager;
 import com.adizangi.tennisplayerstracker.fragments.NetworkTypeDialog;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.utils_data.ScheduleManager;
@@ -31,7 +31,7 @@ public class ProgressActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private ScheduleManager scheduleManager;
-    private ScreenBlocker screenBlocker;
+    private WarningManager warningManager;
 
     private NetworkTypeDialog.NetworkTypeListener networkTypeListener =
             new NetworkTypeDialog.NetworkTypeListener() {
@@ -72,11 +72,11 @@ public class ProgressActivity extends AppCompatActivity {
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_progress_bar);
-        Toolbar toolbar = findViewById(R.id.appBar);
+        setContentView(R.layout.activity_progress);
+        Toolbar toolbar = findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
-        progressBar = findViewById(R.id.progressBar);
-        screenBlocker = new ScreenBlocker(this);
+        progressBar = findViewById(R.id.progress_bar);
+        warningManager = new WarningManager(this);
 
         NetworkTypeDialog dialog = new NetworkTypeDialog();
         dialog.setNetworkTypeListener(networkTypeListener);
@@ -109,12 +109,12 @@ public class ProgressActivity extends AppCompatActivity {
         WorkInfo.State state = workInfo.getState();
         if (state == WorkInfo.State.ENQUEUED &&
                 !scheduleManager.isConnectedToNetwork()) {
-            screenBlocker.blockScreen(getResources().getString(R.string.title_no_connection),
-                    getResources().getString(R.string.message_no_connection));
+            warningManager.showWarning(getResources().getString(R.string.warning_title_no_connection),
+                    getResources().getString(R.string.warning_message_no_connection));
         } else if (state == WorkInfo.State.RUNNING) {
-            screenBlocker.unBlockScreen();
+            warningManager.dismissWarning();
         } else if (state == WorkInfo.State.FAILED) {
-            screenBlocker.blockScreen(getResources().getString(R.string.message_process_failed));
+            warningManager.showWarning(getResources().getString(R.string.warning_message_process_failed));
         } else if (state == WorkInfo.State.SUCCEEDED) {
             FileManager fileManager = new FileManager(this);
             int versionCode = BuildConfig.VERSION_CODE;

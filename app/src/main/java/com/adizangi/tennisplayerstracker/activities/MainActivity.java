@@ -39,6 +39,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             //scheduleDailyNotif();
         }
          else {
-            Toolbar toolbar = findViewById(R.id.appBar);
+            Toolbar toolbar = findViewById(R.id.app_bar);
             setSupportActionBar(toolbar);
             setUpTabs();
         }
@@ -142,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeWorkManager() {
         Intent activityIntent = getIntent();
         String intentAction = activityIntent.getAction();
+        Log.i("Debug", "action: " + intentAction);
         if (intentAction != null && intentAction.equals("android.intent.action.MAIN")) {
             WorkerFactory workerFactory = new CustomWorkerFactory(handler);
             Configuration configuration = new Configuration.Builder()
@@ -157,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setUpTabs() {
         TabLayout tabLayout = findViewById(R.id.tab_layout);
-        ViewPager2 viewPager2 = findViewById(R.id.view_pager);
+        ViewPager2 viewPager2 = findViewById(R.id.view_pager_2);
         TabAdapter tabAdapter = new TabAdapter(this);
         viewPager2.setAdapter(tabAdapter);
         TabLayoutMediator mediator = new TabLayoutMediator(tabLayout, viewPager2,

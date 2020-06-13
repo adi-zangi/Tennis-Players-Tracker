@@ -1,5 +1,5 @@
 /*
-   Adapter for the list in StatsTabFragment
+   Adapter for the RecyclerView in StatsTabFragment
  */
 
 package com.adizangi.tennisplayerstracker.adapters;
@@ -29,7 +29,7 @@ public class StatsAdapter extends RecyclerView.Adapter
     private List<PlayerStats> stats;
 
     /*
-       Holds a reference to the views of an item in the list
+       Holds a reference to the views of an item in the RecyclerView
      */
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -42,7 +42,7 @@ public class StatsAdapter extends RecyclerView.Adapter
         Button seeResultsButton;
 
         /*
-           Constructs a ViewHolder with the given layout of an item in the list
+           Constructs a ViewHolder with the given layout of an item in the RecyclerView
          */
         ViewHolder(ConstraintLayout layout) {
             super(layout);

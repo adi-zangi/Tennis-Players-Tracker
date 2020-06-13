@@ -74,14 +74,14 @@ public class FileManagerTest {
     }
 
     private void storeFiles() {
-        fileManager.storeMyPlayers(myPlayers);
+        fileManager.storeSelectedPlayers(myPlayers);
         fileManager.storeTotalPlayers(totalPlayers);
         fileManager.storePlayerStats(stats);
         fileManager.storeNotificationList(notifList);
     }
 
     private void readFiles() {
-        assertEquals(myPlayers, fileManager.readMyPlayers());
+        assertEquals(myPlayers, fileManager.readSelectedPlayers());
         assertEquals(totalPlayers, fileManager.readTotalPlayers());
         assertEquals(stats.size(), fileManager.readPlayerStats().size());
         assertEquals(notifList, fileManager.readNotificationList());

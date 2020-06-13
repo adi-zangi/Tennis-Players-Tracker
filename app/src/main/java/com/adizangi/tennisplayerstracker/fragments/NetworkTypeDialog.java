@@ -60,7 +60,7 @@ public class NetworkTypeDialog extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog dialog = new AlertDialog.Builder
                 (getActivity(), R.style.Theme_AppCompat_DayNight_Dialog_Alert)
-                .setMessage(R.string.dialog_network_type)
+                .setMessage(R.string.dialog_message_network_type)
                 .setPositiveButton(R.string.button_use_any_network, onPositiveClick)
                 .setNegativeButton(R.string.button_use_unmetered_only, onNegativeClick)
                 .create();

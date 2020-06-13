@@ -35,7 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class PlayersTabFragment extends Fragment {
 
     private TabsViewModel tabsViewModel;
-    private AutoCompleteTextView autoCompleteSearch;
+    private AutoCompleteTextView playerSearchBar;
     private PlayersAdapter playersAdapter;
 
     private View.OnClickListener addButtonListener = new View.OnClickListener() {
@@ -86,40 +86,37 @@ public class PlayersTabFragment extends Fragment {
                         .getInstance(requireActivity().getApplication());
         tabsViewModel = new ViewModelProvider(requireActivity(), factory)
                 .get(TabsViewModel.class);
-        autoCompleteSearch =
-                view.findViewById(R.id.search_player_auto_complete);
-        ArrayAdapter<String> autoCompleteAdapter = new ArrayAdapter<>
+        playerSearchBar = view.findViewById(R.id.player_search_bar);
+        ArrayAdapter<String> searchBarAdapter = new ArrayAdapter<>
                 (requireContext(), android.R.layout.simple_list_item_1,
                         tabsViewModel.getTotalPlayers());
-        autoCompleteSearch.setAdapter(autoCompleteAdapter);
-        RecyclerView myPlayersList = view.findViewById(R.id.my_players_list);
+        playerSearchBar.setAdapter(searchBarAdapter);
+        RecyclerView playersRecyclerView = view.findViewById(R.id.players_recycler_view);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(requireContext());
-        myPlayersList.setLayoutManager(manager);
-        playersAdapter = new PlayersAdapter(tabsViewModel.getMyPlayers());
-        myPlayersList.setAdapter(playersAdapter);
+        playersRecyclerView.setLayoutManager(manager);
+        playersAdapter = new PlayersAdapter(tabsViewModel.getSelectedPlayers());
+        playersRecyclerView.setAdapter(playersAdapter);
         playersAdapter.setOnRemoveClickListener(removeButtonListener);
         Button addButton = view.findViewById(R.id.add_button);
         addButton.setOnClickListener(addButtonListener);
     }
 
     /*
-       If the player whose name is in the AutoCompleteTextView is in the total
-       players list and isn't already in the user's list, adds the player to the
-       user's list
+       If the player whose name is in the search bar is in the total players
+       list and isn't already in the user's list, adds the player to the user's
+       list
      */
     private void addPlayer() {
-        String playerName = autoCompleteSearch.getText().toString();
+        String playerName = playerSearchBar.getText().toString();
         if (!tabsViewModel.getTotalPlayers().contains(playerName)) {
-            Toast.makeText(getContext(), "Invalid player",
-                    Toast.LENGTH_LONG).show();
-        } else if (tabsViewModel.getMyPlayers().contains(playerName)) {
-            Toast.makeText(getContext(), "Player already in list",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Invalid player", Toast.LENGTH_LONG).show();
+        } else if (tabsViewModel.getSelectedPlayers().contains(playerName)) {
+            Toast.makeText(getContext(), "Player already in list", Toast.LENGTH_LONG).show();
         } else {
             tabsViewModel.addPlayer(playerName);
             playersAdapter.notifyDataSetChanged();
         }
-        autoCompleteSearch.getText().clear();
+        playerSearchBar.getText().clear();
     }
 
 }
