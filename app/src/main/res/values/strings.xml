@@ -31,6 +31,7 @@
     </string>
 
     <!-- App Bar Items -->
+    <string name="item_settings">Settings</string>
     <string name="item_time">Time</string>
 
     <!-- Notification Channel -->
