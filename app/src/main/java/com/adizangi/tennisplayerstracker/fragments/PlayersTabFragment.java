@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import com.adizangi.tennisplayerstracker.R;
 import com.adizangi.tennisplayerstracker.adapters.PlayersAdapter;
-import com.adizangi.tennisplayerstracker.models.TabsViewModel;
+import com.adizangi.tennisplayerstracker.view_models.TabsViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

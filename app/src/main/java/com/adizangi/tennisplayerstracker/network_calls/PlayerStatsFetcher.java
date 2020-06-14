@@ -40,8 +40,7 @@ public class PlayerStatsFetcher {
        In this case, returns an empty map
        May throw IOException
      */
-    public Map<String, PlayerStats> getPlayerStatsMap()
-            throws IOException {
+    public Map<String, PlayerStats> getPlayerStatsMap() throws IOException {
         Map<String, PlayerStats> stats = new HashMap<>();
         Element mRankingsTable = mRankings.selectFirst("table");
         if (mRankingsTable == null) {

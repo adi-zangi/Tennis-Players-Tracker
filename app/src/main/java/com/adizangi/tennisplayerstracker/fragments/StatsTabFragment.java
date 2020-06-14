@@ -30,7 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.adizangi.tennisplayerstracker.R;
 import com.adizangi.tennisplayerstracker.adapters.StatsAdapter;
-import com.adizangi.tennisplayerstracker.models.TabsViewModel;
+import com.adizangi.tennisplayerstracker.view_models.TabsViewModel;
 
 public class StatsTabFragment extends Fragment {
 

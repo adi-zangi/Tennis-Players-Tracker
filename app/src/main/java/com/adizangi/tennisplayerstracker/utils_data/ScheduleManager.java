@@ -11,7 +11,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
 
-import com.adizangi.tennisplayerstracker.workers.LoadDataWorker;
+import com.adizangi.tennisplayerstracker.workers.FetchDataWorker;
 
 import java.util.UUID;
 
@@ -36,22 +36,22 @@ public class ScheduleManager extends ContextWrapper {
     }
 
     /*
-       Schedules background work that loads data, with a constraint that
+       Schedules background work that fetches data, with a constraint that
        there is network connection
        The work will start as soon as there is network connection of the
        permitted type
        Returns the WorkRequest id
      */
-    public UUID loadDataImmediately() {
+    public UUID fetchDataImmediately() {
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(networkType)
                 .build();
-        OneTimeWorkRequest loadDataRequest = new OneTimeWorkRequest.Builder
-                (LoadDataWorker.class)
+        OneTimeWorkRequest fetchDataRequest = new OneTimeWorkRequest.Builder
+                (FetchDataWorker.class)
                 .setConstraints(constraints)
                 .build();
-        WorkManager.getInstance(this).enqueue(loadDataRequest);
-        return loadDataRequest.getId();
+        WorkManager.getInstance(this).enqueue(fetchDataRequest);
+        return fetchDataRequest.getId();
     }
 
     public void scheduleDailyDataFetch() {

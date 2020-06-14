@@ -23,7 +23,7 @@ import com.adizangi.tennisplayerstracker.utils_ui.WarningManager;
 import com.adizangi.tennisplayerstracker.fragments.NetworkTypeDialog;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.utils_data.ScheduleManager;
-import com.adizangi.tennisplayerstracker.workers.LoadDataWorker;
+import com.adizangi.tennisplayerstracker.workers.FetchDataWorker;
 
 import java.util.UUID;
 
@@ -89,7 +89,7 @@ public class ProgressActivity extends AppCompatActivity {
      */
     private void loadData(NetworkType networkType) {
         scheduleManager = new ScheduleManager(this, networkType);
-        UUID workRequestId = scheduleManager.loadDataImmediately();
+        UUID workRequestId = scheduleManager.fetchDataImmediately();
         WorkManager.getInstance(this)
                 .getWorkInfoByIdLiveData(workRequestId)
                 .observe(this, workStateObserver);
@@ -123,7 +123,7 @@ public class ProgressActivity extends AppCompatActivity {
             startActivityForResult(intent, 0);
         }
         Data progressData = workInfo.getProgress();
-        int progress = progressData.getInt(LoadDataWorker.PROGRESS_KEY, 0);
+        int progress = progressData.getInt(FetchDataWorker.PROGRESS_KEY, 0);
         progressBar.setProgress(progress);
     }
 

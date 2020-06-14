@@ -2,7 +2,7 @@
    ViewModel for the views in MainActivity's tabs
  */
 
-package com.adizangi.tennisplayerstracker.models;
+package com.adizangi.tennisplayerstracker.view_models;
 
 import android.app.Application;
 

@@ -23,12 +23,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
-import androidx.work.Configuration;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
-import androidx.work.WorkerFactory;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -36,23 +34,17 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.adizangi.tennisplayerstracker.TimeActivity;
 import com.adizangi.tennisplayerstracker.adapters.TabAdapter;
 import com.adizangi.tennisplayerstracker.fragments.NewUserDialog;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.receivers.NotifAlarmReceiver;
-import com.adizangi.tennisplayerstracker.workers.CustomWorkerFactory;
 import com.adizangi.tennisplayerstracker.R;
-import com.adizangi.tennisplayerstracker.workers.RefreshDataWorker;
+import com.adizangi.tennisplayerstracker.workers.FetchDataWorker;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -73,21 +65,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private Handler handler = new Handler(Looper.myLooper()) {
-        @Override
-        /*
-           Called when this handler receives a message
-           If the message is to refresh the UI, reloads the tabs
-         */
-        public void handleMessage(Message msg) {
-            if (msg.what == RefreshDataWorker.REFRESH_MSG_CODE) {
-                setUpTabs();
-                Toast.makeText(getApplicationContext(),
-                        "Stats were refreshed", Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
     /*
        Called when the app is launched
        Displays the MainActivity layout and fills it with data
@@ -98,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initializeWorkManager();
         ComponentName callingActivity = getCallingActivity();
         FileManager fileManager = new FileManager(this);
         int savedVersionCode = fileManager.readVersionCode();
@@ -109,8 +85,11 @@ public class MainActivity extends AppCompatActivity {
                 .equals("com.adizangi.tennisplayerstracker.activities.ProgressActivity")) {
             NewUserDialog dialog = new NewUserDialog();
             dialog.show(getSupportFragmentManager(), "newUser");
-            //scheduleDailyDataFetch();
-            //scheduleDailyNotif();
+            // scheduleDailyDataFetch();
+            // when done fetching data:
+            // setUpTabs();
+            // Toast.makeText(getApplicationContext(), "Stats were refreshed", Toast.LENGTH_LONG).show();
+            // scheduleDailyNotif();
         }
          else {
             Toolbar toolbar = findViewById(R.id.app_bar);
@@ -133,24 +112,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    /*
-       Initializes WorkManager with a custom worker factory, but only if this
-       activity started after the app was launched
-       If this activity was started in another way, does nothing
-     */
-    private void initializeWorkManager() {
-        Intent activityIntent = getIntent();
-        String intentAction = activityIntent.getAction();
-        Log.i("Debug", "action: " + intentAction);
-        if (intentAction != null && intentAction.equals("android.intent.action.MAIN")) {
-            WorkerFactory workerFactory = new CustomWorkerFactory(handler);
-            Configuration configuration = new Configuration.Builder()
-                    .setWorkerFactory(workerFactory)
-                    .build();
-            WorkManager.initialize(this, configuration);
-        }
     }
 
     /*
@@ -188,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.SECOND, 0);
         long initialDelay = calendar.getTimeInMillis() - System.currentTimeMillis();
         PeriodicWorkRequest fetchDataRequest = new PeriodicWorkRequest.Builder
-                (RefreshDataWorker.class, 1, TimeUnit.DAYS)
+                (FetchDataWorker.class, 1, TimeUnit.DAYS)
                 .setConstraints(constraints)
                 .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
                 .build();

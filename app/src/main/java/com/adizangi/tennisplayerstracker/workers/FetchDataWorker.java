@@ -6,6 +6,7 @@
 package com.adizangi.tennisplayerstracker.workers;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.adizangi.tennisplayerstracker.network_calls.NotificationFetcher;
 import com.adizangi.tennisplayerstracker.network_calls.PlayerStatsFetcher;
@@ -28,7 +29,7 @@ import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-public class LoadDataWorker extends Worker {
+public class FetchDataWorker extends Worker {
 
     public static final String PROGRESS_KEY = "PROGRESS";
 
@@ -38,10 +39,10 @@ public class LoadDataWorker extends Worker {
     private Document ySchedule;
 
     /*
-       Constructs a LoadDataWorker with the given context and worker params
+       Constructs a FetchDataWorker with the given context and worker params
      */
-    public LoadDataWorker(@NonNull Context context,
-                          @NonNull WorkerParameters workerParams) {
+    public FetchDataWorker(@NonNull Context context,
+                           @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
 
@@ -55,6 +56,7 @@ public class LoadDataWorker extends Worker {
     public Result doWork() {
         try {
             setProgress(0);
+            saveTime(); // method for debugging
             getHTMLDocuments();
             setProgress(10);
             TotalPlayersFetcher playersFetcher =
@@ -68,11 +70,13 @@ public class LoadDataWorker extends Worker {
             Map<String, PlayerStats> stats = statsFetcher.getPlayerStatsMap();
             setProgress(70);
             List<String> notificationList = notifFetcher.getNotificationList();
-            setProgress(100);
+            setProgress(99);
             FileManager fileManager = new FileManager(getApplicationContext());
             fileManager.storeTotalPlayers(totalPlayers);
             fileManager.storePlayerStats(stats);
             fileManager.storeNotificationList(notificationList);
+            setProgress(100);
+            // schedule notification
             return Result.success();
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,6 +116,14 @@ public class LoadDataWorker extends Worker {
                 .putInt(PROGRESS_KEY, progressPercentage)
                 .build();
         setProgressAsync(progress);
+    }
+
+    private void saveTime() {
+        SharedPreferences sharedPrefs = getApplicationContext()
+                .getSharedPreferences("Time file", Context.MODE_PRIVATE);
+        Calendar calendar = Calendar.getInstance();
+        sharedPrefs.edit().putInt("Hour", calendar.get(Calendar.HOUR_OF_DAY)).apply();
+        sharedPrefs.edit().putInt("Minute", calendar.get(Calendar.MINUTE)).apply();
     }
 
 }
