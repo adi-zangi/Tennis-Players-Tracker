@@ -27,6 +27,9 @@ public class SettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        // Add custom summary for list preference which is entries joined with ", "
+        // when changes, set summary
+        // make days visible only if notifications are on
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {

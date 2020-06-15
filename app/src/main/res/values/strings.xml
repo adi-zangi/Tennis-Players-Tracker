@@ -37,20 +37,20 @@
     <!-- Notification Channel -->
     <string name="notification_channel_name">Notifications</string>
 
+    <!-- Preference Categories -->
+    <string name="category_notifications">Notifications</string>
+    <string name="category_network">Network</string>
 
+    <!-- Notification Preferences -->
+    <string name="pref_notifications">Send notifications</string>
+    <string name="pref_notification_days">Change notification frequency</string>
+    <string name="pref_more_settings">More notification settings</string>
+    <string name="summary_more_settings">Change sound, vibration, priority</string>
 
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    <!-- Network Preferences -->
+    <string name="pref_network_type">Use unmetered connection only</string>
+    <string name="summary_network_type">
+        This app uses the network daily for a short time (less than a minute).
+        If this is off, any working network connection will be used.
     </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>
