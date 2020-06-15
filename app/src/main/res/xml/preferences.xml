@@ -4,29 +4,31 @@
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
-            app:key="notifications"
-            app:title="@string/pref_notifications" />
+            app:key="@string/pref_notifications_key"
+            app:title="@string/pref_notifications_title" />
 
         <MultiSelectListPreference
             app:defaultValue="@array/days_of_week_values"
+            app:enabled="false"
             app:entries="@array/days_of_week_names"
             app:entryValues="@array/days_of_week_values"
-            app:key="notification_days"
-            app:title="@string/pref_notification_days" />
+            app:key="@string/pref_notification_days_key"
+            app:title="@string/pref_notification_days_title" />
 
         <Preference
-            app:key="more_settings"
-            app:summary="@string/summary_more_settings"
-            app:title="@string/pref_more_settings" />
+            app:enabled="false"
+            app:key="@string/pref_more_settings_key"
+            app:summary="@string/pref_more_settings_summary"
+            app:title="@string/pref_more_settings_title" />
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/category_network">
 
         <SwitchPreferenceCompat
-            app:key="network_type"
-            app:summary="@string/summary_network_type"
-            app:title="@string/pref_network_type" />
+            app:key="@string/pref_network_type_key"
+            app:summary="@string/pref_network_type_summary"
+            app:title="@string/pref_network_type_title" />
 
     </PreferenceCategory>
 

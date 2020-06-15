@@ -46,11 +46,11 @@ public class FileManager extends ContextWrapper {
             FileInputStream inputStream = openFileInput(SELECTED_PLAYERS_FILENAME);
             ObjectInputStream objectInputStream =
                     new ObjectInputStream(inputStream);
-            List<String> myPlayers =
+            List<String> selectedPlayers =
                     (List<String>) objectInputStream.readObject();
             objectInputStream.close();
             inputStream.close();
-            return myPlayers;
+            return selectedPlayers;
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();
@@ -124,13 +124,13 @@ public class FileManager extends ContextWrapper {
     /*
        Stores the given list of the user's players in a file
      */
-    public void storeSelectedPlayers(List<String> myPlayers) {
+    public void storeSelectedPlayers(List<String> selectedPlayers) {
         try {
             FileOutputStream outputStream = openFileOutput
                     (SELECTED_PLAYERS_FILENAME, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream =
                     new ObjectOutputStream(outputStream);
-            objectOutputStream.writeObject(myPlayers);
+            objectOutputStream.writeObject(selectedPlayers);
             objectOutputStream.close();
             outputStream.close();
         } catch (Exception e) {

@@ -42,14 +42,18 @@
     <string name="category_network">Network</string>
 
     <!-- Notification Preferences -->
-    <string name="pref_notifications">Send notifications</string>
-    <string name="pref_notification_days">Change notification frequency</string>
-    <string name="pref_more_settings">More notification settings</string>
-    <string name="summary_more_settings">Change sound, vibration, priority</string>
+    <string name="pref_notifications_key">notifications</string>
+    <string name="pref_notifications_title">Send notifications</string>
+    <string name="pref_notification_days_key">notification_days</string>
+    <string name="pref_notification_days_title">Change notification frequency</string>
+    <string name="pref_more_settings_key">more_settings</string>
+    <string name="pref_more_settings_title">More notification settings</string>
+    <string name="pref_more_settings_summary">Change sound, vibration, priority</string>
 
     <!-- Network Preferences -->
-    <string name="pref_network_type">Use unmetered connection only</string>
-    <string name="summary_network_type">
+    <string name="pref_network_type_key">network_type</string>
+    <string name="pref_network_type_title">Use unmetered connection only</string>
+    <string name="pref_network_type_summary">
         This app uses the network daily for a short time (less than a minute).
         If this is off, any working network connection will be used.
     </string>
