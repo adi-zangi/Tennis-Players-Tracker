@@ -36,6 +36,9 @@
 
     <!-- Notification Channel -->
     <string name="notification_channel_name">Notifications</string>
+    <string
+        name="notification_channel_id">com.adizangi.tennisplayerstracker.NOTIFICATION_CHANNEL
+    </string>
 
     <!-- Preference Categories -->
     <string name="category_notifications">Notifications</string>

@@ -29,10 +29,13 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.preference.PreferenceManager;
 import android.view.Menu;
@@ -76,24 +79,33 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
         ComponentName callingActivity = getCallingActivity();
         FileManager fileManager = new FileManager(this);
         int savedVersionCode = fileManager.readVersionCode();
         if (savedVersionCode == -1) {
+            // If the app is opening after installed or cleared, loads initial data
             Intent intent = new Intent(this, ProgressActivity.class);
             startActivity(intent);
         } else if (callingActivity != null && callingActivity.getClassName()
                 .equals("com.adizangi.tennisplayerstracker.activities.ProgressActivity")) {
+            // If was opened from progress activity, schedules daily tasks
+            // shows dialog that explains how to use the app
             NewUserDialog dialog = new NewUserDialog();
             dialog.show(getSupportFragmentManager(), "newUser");
+            // Sets default settings the first time app runs
+            PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+            // initializes notification channel
+            createNotificationChannel();
             // scheduleDailyDataFetch();
+            // scheduleDailyNotif();
+
             // when done fetching data:
             // setUpTabs();
             // Toast.makeText(getApplicationContext(), "Stats were refreshed", Toast.LENGTH_LONG).show();
-            // scheduleDailyNotif();
         }
          else {
+             // Sets up for regular run
             Toolbar toolbar = findViewById(R.id.app_bar);
             setSupportActionBar(toolbar);
             setUpTabs();
@@ -134,6 +146,22 @@ public class MainActivity extends AppCompatActivity {
         TabLayoutMediator mediator = new TabLayoutMediator(tabLayout, viewPager2,
                 tabConfiguration);
         mediator.attach();
+    }
+
+    /*
+       Creates a notification channel for this app and registers it with the
+       system
+       If the notification channel already exists, performs no operations
+     */
+    private void createNotificationChannel() {
+        String id = getString(R.string.notification_channel_id);
+        String name = getString(R.string.notification_channel_name);
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel =
+                new NotificationChannel(id, name, importance);
+        NotificationManager notificationManager =
+                getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
 
     /*

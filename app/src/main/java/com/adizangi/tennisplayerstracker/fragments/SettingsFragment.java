@@ -1,6 +1,9 @@
 package com.adizangi.tennisplayerstracker.fragments;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.adizangi.tennisplayerstracker.R;
@@ -44,6 +47,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     /*
        Notif prefs are enabled only when notifs are enabled
        Custom summary
+       Opens notification channel settings
      */
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
@@ -55,6 +59,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         if (notificationsPref != null && daysPref != null && moreSettingsPref != null) {
             notificationsPref.setOnPreferenceChangeListener(notificationPrefListener);
             daysPref.setSummaryProvider(daysPrefSummary);
+            Intent intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE,
+                    requireContext().getPackageName());
+            intent.putExtra(Settings.EXTRA_CHANNEL_ID,
+                    getString(R.string.notification_channel_id));
+            moreSettingsPref.setIntent(intent);
             if (notificationsPref.isChecked()) {
                 daysPref.setEnabled(true);
                 moreSettingsPref.setEnabled(true);

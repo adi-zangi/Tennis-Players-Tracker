@@ -69,19 +69,14 @@ public class ScheduleManager extends ContextWrapper {
                 connectivityManager.isActiveNetworkMetered()) {
             return false;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             NetworkCapabilities capabilities =
                     connectivityManager.getNetworkCapabilities(
                             connectivityManager.getActiveNetwork());
-            return capabilities != null &&
-                    (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
-        } else {
-            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-            return activeNetwork != null && activeNetwork.isConnected();
-        }
+        return capabilities != null &&
+                (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
     }
 
 }
