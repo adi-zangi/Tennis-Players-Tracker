@@ -8,12 +8,15 @@ package com.adizangi.tennisplayerstracker.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
+import androidx.preference.PreferenceManager;
+import androidx.preference.SwitchPreferenceCompat;
 import androidx.work.Data;
 import androidx.work.NetworkType;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ProgressBar;
 
@@ -31,26 +34,33 @@ public class ProgressActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private ScheduleManager scheduleManager;
+    private SharedPreferences sharedPrefs;
     private WarningManager warningManager;
 
     private NetworkTypeDialog.NetworkTypeListener networkTypeListener =
             new NetworkTypeDialog.NetworkTypeListener() {
         /*
-           Called when the user selects the 'Use any network' option
-           Loads data using any network type
+           Called when the user selects the 'any connection' option
+           Saves this in Settings so the app will always use any connection
+           Begins loading the data
          */
         @Override
-        public void onSelectAnyNetwork() {
-            loadData(NetworkType.CONNECTED);
+        public void onSelectAnyConnection() {
+            sharedPrefs.edit()
+                    .putBoolean(getString(R.string.pref_network_type_key), false).apply();
+            loadData();
         }
 
         /*
-           Called when the user selects the 'Use unmetered only' option
-           Loads data using unmetered network only
+           Called when the user selects the 'unmetered connection only' option
+           Saves this in Settings so the app will always use unmetered connection
+           Begins loading the data
          */
         @Override
         public void onSelectUnmeteredOnly() {
-            loadData(NetworkType.UNMETERED);
+            sharedPrefs.edit()
+                    .putBoolean(getString(R.string.pref_network_type_key), true).apply();
+            loadData();
         }
     };
 
@@ -64,11 +74,11 @@ public class ProgressActivity extends AppCompatActivity {
     @Override
     /*
        Displays the ProgressBarActivity layout
-       Opens a dialog that prompts the user to select which network type the
-       app is permitted to use, with the options 'use any network' and 'use
-       unmetered network only'
+       Opens a dialog that prompts the user to select which network connection
+       the app is permitted to use, with the options 'any connection' and
+       'unmetered connection only'
        Sets responses to the dialog selections, which load the data using the
-       selected network type
+       selected connection type
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +87,7 @@ public class ProgressActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         progressBar = findViewById(R.id.progress_bar);
         warningManager = new WarningManager(this);
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         NetworkTypeDialog dialog = new NetworkTypeDialog();
         dialog.setNetworkTypeListener(networkTypeListener);
@@ -84,11 +95,11 @@ public class ProgressActivity extends AppCompatActivity {
     }
 
     /*
-       Schedules background work that loads data using the given network type
+       Schedules background work that loads data
        Sets an Observer for the work status
      */
-    private void loadData(NetworkType networkType) {
-        scheduleManager = new ScheduleManager(this, networkType);
+    private void loadData() {
+        scheduleManager = new ScheduleManager(this);
         UUID workRequestId = scheduleManager.fetchDataImmediately();
         WorkManager.getInstance(this)
                 .getWorkInfoByIdLiveData(workRequestId)

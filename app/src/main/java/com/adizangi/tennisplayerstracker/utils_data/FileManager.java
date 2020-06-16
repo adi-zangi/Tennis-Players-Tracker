@@ -26,7 +26,8 @@ public class FileManager extends ContextWrapper {
     private static final String TOTAL_PLAYERS_FILENAME = "total_players";
     private static final String STATS_FILENAME = "player_stats";
     private static final String NOTIF_FILENAME = "notification_list";
-    private static final String SHARED_PREFS_FILENAME = "com.adizangi.myplayers.APP_DATA";
+    private static final String SHARED_PREFS_FILENAME =
+            "com.adizangi.tennisplayerstracker.APP_DATA";
     private static final String VERSION_CODE_KEY = "version_code";
 
     /*

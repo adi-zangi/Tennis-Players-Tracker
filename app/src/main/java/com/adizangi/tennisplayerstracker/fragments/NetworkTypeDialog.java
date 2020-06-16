@@ -1,7 +1,7 @@
 /*
-   A dialog that prompts the user to select which network type the app is
-   permitted to use, with the options 'use any network' and 'use unmetered
-   network only'
+   A dialog that prompts the user to select which type of network connection
+   the app is permitted to use, with the options 'any connection' and 'unmetered
+   connection only'
  */
 
 package com.adizangi.tennisplayerstracker.fragments;
@@ -23,7 +23,7 @@ public class NetworkTypeDialog extends DialogFragment {
        Interface used to communicate click events to the hosting activity
      */
     public interface NetworkTypeListener {
-        void onSelectAnyNetwork();
+        void onSelectAnyConnection();
         void onSelectUnmeteredOnly();
     }
 
@@ -33,7 +33,7 @@ public class NetworkTypeDialog extends DialogFragment {
             new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            callback.onSelectAnyNetwork();
+            callback.onSelectAnyConnection();
         }
     };
 
@@ -61,8 +61,8 @@ public class NetworkTypeDialog extends DialogFragment {
         AlertDialog dialog = new AlertDialog.Builder
                 (getActivity(), R.style.Theme_AppCompat_DayNight_Dialog_Alert)
                 .setMessage(R.string.dialog_message_network_type)
-                .setPositiveButton(R.string.button_use_any_network, onPositiveClick)
-                .setNegativeButton(R.string.button_use_unmetered_only, onNegativeClick)
+                .setPositiveButton(R.string.button_any_connection, onPositiveClick)
+                .setNegativeButton(R.string.button_unmetered_connection_only, onNegativeClick)
                 .create();
         dialog.setCanceledOnTouchOutside(false);
         return dialog;
