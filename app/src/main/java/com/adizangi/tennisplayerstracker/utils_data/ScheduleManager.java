@@ -57,24 +57,6 @@ public class ScheduleManager extends ContextWrapper {
     }
 
     /*
-       Gets the current value of the network type preference in this app's
-       Settings, which indicates the type of network connection this app is
-       permitted to use
-       Returns a NetworkType that corresponds to the preference value
-     */
-    private NetworkType getNetworkType() {
-        SharedPreferences sharedPrefs =
-                PreferenceManager.getDefaultSharedPreferences(this);
-        boolean useUnmeteredOnly =
-                sharedPrefs.getBoolean(getString(R.string.pref_network_type_key), true);
-        if (useUnmeteredOnly) {
-            return NetworkType.UNMETERED;
-        } else {
-            return NetworkType.CONNECTED;
-        }
-    }
-
-    /*
        Returns true if there is network connection of a type that this app is
        permitted to use
        Returns false otherwise
@@ -94,6 +76,24 @@ public class ScheduleManager extends ContextWrapper {
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
+    }
+
+    /*
+       Gets the current value of the network type preference in this app's
+       Settings, which indicates the type of network connection this app is
+       permitted to use
+       Returns a NetworkType that corresponds to the preference value
+     */
+    private NetworkType getNetworkType() {
+        SharedPreferences sharedPrefs =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        boolean useUnmeteredOnly =
+                sharedPrefs.getBoolean(getString(R.string.pref_network_type_key), true);
+        if (useUnmeteredOnly) {
+            return NetworkType.UNMETERED;
+        } else {
+            return NetworkType.CONNECTED;
+        }
     }
 
 }

@@ -7,17 +7,21 @@ package com.adizangi.tennisplayerstracker.workers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.adizangi.tennisplayerstracker.network_calls.NotificationFetcher;
 import com.adizangi.tennisplayerstracker.network_calls.PlayerStatsFetcher;
 import com.adizangi.tennisplayerstracker.network_calls.TotalPlayersFetcher;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.utils_data.PlayerStats;
+import com.adizangi.tennisplayerstracker.utils_data.ScheduleManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -33,6 +37,7 @@ public class FetchDataWorker extends Worker {
 
     public static final String PROGRESS_KEY = "PROGRESS";
 
+    private ScheduleManager scheduleManager;
     private Document mRankings;
     private Document wRankings;
     private Document tSchedule;
@@ -44,12 +49,15 @@ public class FetchDataWorker extends Worker {
     public FetchDataWorker(@NonNull Context context,
                            @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
+        scheduleManager = new ScheduleManager(context);
     }
 
     /*
        Fetches the data in the background and saves it to files
-       Updates the observable progress as the work is running
-       Returns a Result that indicates whether the work was successful
+       Updates the observable progress while the work is running
+       Returns Result.success() if the work was successful, Result.retry() if
+       the work failed due to a problem with the network, and Result.failure()
+       if the work failed for another reason
      */
     @NonNull
     @Override
@@ -78,9 +86,11 @@ public class FetchDataWorker extends Worker {
             setProgress(100);
             // schedule notification
             return Result.success();
+        } catch (UnknownHostException | SocketException e) {
+            e.printStackTrace();
+            return Result.retry();
         } catch (Exception e) {
             e.printStackTrace();
-            // Check network connection and retry if disconnected
             return Result.failure();
         }
     }
