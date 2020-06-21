@@ -7,14 +7,12 @@ package com.adizangi.tennisplayerstracker.workers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.adizangi.tennisplayerstracker.network_calls.NotificationFetcher;
 import com.adizangi.tennisplayerstracker.network_calls.PlayerStatsFetcher;
 import com.adizangi.tennisplayerstracker.network_calls.TotalPlayersFetcher;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.utils_data.PlayerStats;
-import com.adizangi.tennisplayerstracker.utils_data.ScheduleManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -35,9 +33,8 @@ import androidx.work.WorkerParameters;
 
 public class FetchDataWorker extends Worker {
 
-    public static final String PROGRESS_KEY = "PROGRESS";
+    public static final String PROGRESS_KEY = "progress";
 
-    private ScheduleManager scheduleManager;
     private Document mRankings;
     private Document wRankings;
     private Document tSchedule;
@@ -49,7 +46,6 @@ public class FetchDataWorker extends Worker {
     public FetchDataWorker(@NonNull Context context,
                            @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
-        scheduleManager = new ScheduleManager(context);
     }
 
     /*

@@ -1,8 +1,5 @@
 /*
    Manages reading and writing to files
-   Files are saved in internal storage
-   They are only accessible to this app and are persistent as long as the app
-   is installed, but are removed when the app is uninstalled
  */
 
 package com.adizangi.tennisplayerstracker.utils_data;
@@ -26,9 +23,6 @@ public class FileManager extends ContextWrapper {
     private static final String TOTAL_PLAYERS_FILENAME = "total_players";
     private static final String STATS_FILENAME = "player_stats";
     private static final String NOTIF_FILENAME = "notification_list";
-    private static final String SHARED_PREFS_FILENAME =
-            "com.adizangi.tennisplayerstracker.APP_DATA";
-    private static final String VERSION_CODE_KEY = "version_code";
 
     /*
        Constructs a FileManager with the given application context
@@ -188,25 +182,6 @@ public class FileManager extends ContextWrapper {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /*
-       Reads the version code from shared preferences and returns it
-       Returns -1 if no version code was saved
-     */
-    public int readVersionCode() {
-        SharedPreferences sharedPrefs = getSharedPreferences
-                (SHARED_PREFS_FILENAME, Context.MODE_PRIVATE);
-        return sharedPrefs.getInt(VERSION_CODE_KEY, -1);
-    }
-
-    /*
-       Stores the given version code in shared preferences
-     */
-    public void storeVersionCode(int versionCode) {
-        SharedPreferences sharedPrefs = getSharedPreferences
-                (SHARED_PREFS_FILENAME, Context.MODE_PRIVATE);
-        sharedPrefs.edit().putInt(VERSION_CODE_KEY, versionCode).apply();
     }
 
 }

@@ -18,13 +18,13 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     /*
        Displays the Settings screen
-       It includes an app bar with a back button that returns to MainActivity,
-       and SettingsFragment which fills the rest of the screen
+       It includes an action bar with a back button that returns to
+       MainActivity, and SettingsFragment which fills the rest of the screen
      */
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        Toolbar toolbar = findViewById(R.id.app_bar);
+        Toolbar toolbar = findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

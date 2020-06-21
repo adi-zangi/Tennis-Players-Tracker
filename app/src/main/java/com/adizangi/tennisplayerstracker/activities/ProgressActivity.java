@@ -1,6 +1,6 @@
 /*
-   A screen that shows the progress of loading data when the app opens for the
-   first time
+   A screen that shows a progress bar filling while the app's data and
+   settings are being initialized
  */
 
 package com.adizangi.tennisplayerstracker.activities;
@@ -9,32 +9,31 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.preference.PreferenceManager;
-import androidx.preference.SwitchPreferenceCompat;
 import androidx.work.Data;
-import androidx.work.NetworkType;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ProgressBar;
 
-import com.adizangi.tennisplayerstracker.BuildConfig;
 import com.adizangi.tennisplayerstracker.R;
 import com.adizangi.tennisplayerstracker.utils_ui.WarningManager;
 import com.adizangi.tennisplayerstracker.fragments.NetworkTypeDialog;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
-import com.adizangi.tennisplayerstracker.utils_data.ScheduleManager;
+import com.adizangi.tennisplayerstracker.utils_data.BackgroundManager;
 import com.adizangi.tennisplayerstracker.workers.FetchDataWorker;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class ProgressActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
-    private ScheduleManager scheduleManager;
-    private SharedPreferences sharedPrefs;
+    private BackgroundManager backgroundManager;
+    private SharedPreferences settings;
     private WarningManager warningManager;
 
     private NetworkTypeDialog.NetworkTypeListener networkTypeListener =
@@ -46,7 +45,7 @@ public class ProgressActivity extends AppCompatActivity {
          */
         @Override
         public void onSelectAnyConnection() {
-            sharedPrefs.edit()
+            settings.edit()
                     .putBoolean(getString(R.string.pref_network_type_key), false).apply();
             loadData();
         }
@@ -58,7 +57,7 @@ public class ProgressActivity extends AppCompatActivity {
          */
         @Override
         public void onSelectUnmeteredOnly() {
-            sharedPrefs.edit()
+            settings.edit()
                     .putBoolean(getString(R.string.pref_network_type_key), true).apply();
             loadData();
         }
@@ -73,34 +72,39 @@ public class ProgressActivity extends AppCompatActivity {
 
     @Override
     /*
-       Displays the ProgressBarActivity layout
+       Shows the content defined in the layout resource file and sets up an
+       action bar
+       Initializes this app's preferences to their default values and creates
+       a notification channel
        Opens a dialog that prompts the user to select which network connection
        the app is permitted to use, with the options 'any connection' and
        'unmetered connection only'
-       Sets responses to the dialog selections, which load the data using the
-       selected connection type
+       Sets responses to the dialog selections, which load the app's data using
+       the selected connection type
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progress);
-        Toolbar toolbar = findViewById(R.id.app_bar);
+        Toolbar toolbar = findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         progressBar = findViewById(R.id.progress_bar);
+        backgroundManager = new BackgroundManager(this);
         warningManager = new WarningManager(this);
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
+        settings = PreferenceManager.getDefaultSharedPreferences(this);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        backgroundManager.createNotificationChannel();
         NetworkTypeDialog dialog = new NetworkTypeDialog();
         dialog.setNetworkTypeListener(networkTypeListener);
         dialog.show(getSupportFragmentManager(), "networkType");
     }
 
     /*
-       Schedules background work that loads data
+       Schedules background work that loads data and then sends a notification
+       containing a summary of today's tennis tournaments
        Sets an Observer for the work status
      */
     private void loadData() {
-        scheduleManager = new ScheduleManager(this);
-        UUID workRequestId = scheduleManager.fetchDataImmediately();
+        UUID workRequestId = backgroundManager.fetchDataImmediately();
         WorkManager.getInstance(this)
                 .getWorkInfoByIdLiveData(workRequestId)
                 .observe(this, workStateObserver);
@@ -113,13 +117,15 @@ public class ProgressActivity extends AppCompatActivity {
        screen that stays until connection is back
        If the work's progress changed, updates the progress bar on the screen
        If the work succeeded, saves the app's version code to indicate that
-       the app had its first run, and opens MainActivity
+       the app was initialized, and switches back to MainActivity
        If the work failed, shows a message and prevents the user from proceeding
      */
     private void updateWorkProgress(WorkInfo workInfo) {
+        Data progressData = workInfo.getProgress();
+        int progress = progressData.getInt(FetchDataWorker.PROGRESS_KEY, 0);
+        progressBar.setProgress(progress);
         WorkInfo.State state = workInfo.getState();
-        if (state == WorkInfo.State.ENQUEUED &&
-                !scheduleManager.isConnectedToNetwork()) {
+        if (state == WorkInfo.State.ENQUEUED && !backgroundManager.isConnectedToNetwork()) {
             warningManager.showWarning(getResources().getString(R.string.warning_title_no_connection),
                     getResources().getString(R.string.warning_message_no_connection));
         } else if (state == WorkInfo.State.RUNNING) {
@@ -127,15 +133,15 @@ public class ProgressActivity extends AppCompatActivity {
         } else if (state == WorkInfo.State.FAILED) {
             warningManager.showWarning(getResources().getString(R.string.warning_message_process_failed));
         } else if (state == WorkInfo.State.SUCCEEDED) {
+            final int VERSION_CODE = 0;
             FileManager fileManager = new FileManager(this);
-            int versionCode = BuildConfig.VERSION_CODE;
-            fileManager.storeVersionCode(versionCode);
+            fileManager.storeSelectedPlayers(new ArrayList<String>());
+            SharedPreferences prefs = getSharedPreferences(
+                    getString(R.string.shared_prefs_filename), Context.MODE_PRIVATE);
+            prefs.edit().putInt(getString(R.string.version_code_key), VERSION_CODE).apply();
             Intent intent = new Intent(this, MainActivity.class);
-            startActivityForResult(intent, 0);
+            startActivity(intent);
         }
-        Data progressData = workInfo.getProgress();
-        int progress = progressData.getInt(FetchDataWorker.PROGRESS_KEY, 0);
-        progressBar.setProgress(progress);
     }
 
 }

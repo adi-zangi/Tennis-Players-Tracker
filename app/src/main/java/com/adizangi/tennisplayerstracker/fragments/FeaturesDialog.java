@@ -1,5 +1,5 @@
 /*
-   A dialog that explains how to use the app
+   A dialog that explains about the app's features
  */
 
 package com.adizangi.tennisplayerstracker.fragments;
@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-public class NewUserDialog extends DialogFragment {
+public class FeaturesDialog extends DialogFragment {
 
     @NonNull
     @Override
@@ -24,7 +24,7 @@ public class NewUserDialog extends DialogFragment {
      */
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                .setView(View.inflate(getContext(), R.layout.dialog_new_user, null))
+                .setView(View.inflate(getContext(), R.layout.dialog_features, null))
                 .setPositiveButton(R.string.button_done, null)
                 .setCancelable(false)
                 .create();

@@ -1,9 +1,12 @@
 /*
-   Manages scheduling background tasks
+   Manages background processes like background tasks, network usage, and
+   sending notifications
  */
 
 package com.adizangi.tennisplayerstracker.utils_data;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
@@ -24,13 +27,29 @@ import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
-public class ScheduleManager extends ContextWrapper {
+public class BackgroundManager extends ContextWrapper {
 
     /*
-       Constructs a ScheduleManager with the given application context
+       Constructs a BackgroundManager with the given application context
      */
-    public ScheduleManager(Context base) {
+    public BackgroundManager(Context base) {
         super(base);
+    }
+
+    /*
+       Creates a notification channel for this app and registers it with the
+       system
+       If the notification channel already exists, performs no operations
+     */
+    public void createNotificationChannel() {
+        String id = getString(R.string.notification_channel_id);
+        String name = getString(R.string.notification_channel_name);
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel =
+                new NotificationChannel(id, name, importance);
+        NotificationManager notificationManager =
+                getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
 
     /*
@@ -52,7 +71,7 @@ public class ScheduleManager extends ContextWrapper {
         return fetchDataRequest.getId();
     }
 
-    public void scheduleDailyDataFetch() {
+    public void scheduleDailyRefresh() {
 
     }
 

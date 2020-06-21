@@ -29,23 +29,20 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.adizangi.tennisplayerstracker.BuildConfig;
 import com.adizangi.tennisplayerstracker.TimeActivity;
 import com.adizangi.tennisplayerstracker.adapters.TabAdapter;
-import com.adizangi.tennisplayerstracker.fragments.NewUserDialog;
-import com.adizangi.tennisplayerstracker.utils_data.FileManager;
+import com.adizangi.tennisplayerstracker.fragments.FeaturesDialog;
+import com.adizangi.tennisplayerstracker.utils_data.BackgroundManager;
 import com.adizangi.tennisplayerstracker.receivers.NotifAlarmReceiver;
 import com.adizangi.tennisplayerstracker.R;
 import com.adizangi.tennisplayerstracker.workers.FetchDataWorker;
@@ -70,45 +67,46 @@ public class MainActivity extends AppCompatActivity {
     };
 
     /*
-       Called when the app is launched
-       Displays the MainActivity layout and fills it with data
-       If the app is running for the first time after installation, schedules a
-       daily task that fetches data and a daily notification
+       Opens the app's main page based on the state of the app
+       If the app is opening for the first time after it was installed or
+       cleared, shows a loading screen that initializes the app
+       Otherwise, shows the content defined in the layout resource file, sets
+       up an action bar, and fills the screen with data
+       If this activity is opening for the first time after the loading screen
+       was done loading, also shows a dialog that explains how to use the app
+       and does final initializations
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ComponentName callingActivity = getCallingActivity();
-        FileManager fileManager = new FileManager(this);
-        int savedVersionCode = fileManager.readVersionCode();
-        if (savedVersionCode == -1) {
-            // If the app is opening after installed or cleared, loads initial data
+        final int DOESNT_EXIST = -1;
+        int currentVersionCode = BuildConfig.VERSION_CODE;
+        SharedPreferences prefs = getSharedPreferences(
+                getString(R.string.shared_prefs_filename), Context.MODE_PRIVATE);
+        int savedVersionCode = prefs.getInt(getString(R.string.version_code_key), DOESNT_EXIST);
+        boolean isNewInstall = savedVersionCode == DOESNT_EXIST;
+        boolean isInitialized = savedVersionCode < currentVersionCode;
+        boolean isRegularRun = savedVersionCode == currentVersionCode;
+        if (isRegularRun) {
+            Toolbar toolbar = findViewById(R.id.action_bar);
+            setSupportActionBar(toolbar);
+            setUpTabs();
+        } else if (isNewInstall) {
             Intent intent = new Intent(this, ProgressActivity.class);
             startActivity(intent);
-        } else if (callingActivity != null && callingActivity.getClassName()
-                .equals("com.adizangi.tennisplayerstracker.activities.ProgressActivity")) {
-            // If was opened from progress activity, schedules daily tasks
-            // shows dialog that explains how to use the app
-            NewUserDialog dialog = new NewUserDialog();
+        } else if (isInitialized) {
+            Toolbar toolbar = findViewById(R.id.action_bar);
+            setSupportActionBar(toolbar);
+            setUpTabs();
+            FeaturesDialog dialog = new FeaturesDialog();
             dialog.show(getSupportFragmentManager(), "newUser");
-            // Sets default settings the first time app runs
-            PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-            // initializes notification channel
-            createNotificationChannel();
-            // scheduleDailyDataFetch();
-            // scheduleDailyNotif();
-
+            BackgroundManager backgroundManager = new BackgroundManager(this);
+            backgroundManager.scheduleDailyRefresh();
+            prefs.edit().putInt(getString(R.string.version_code_key), currentVersionCode).apply();
             // when done fetching data:
             // setUpTabs();
             // Toast.makeText(getApplicationContext(), "Stats were refreshed", Toast.LENGTH_LONG).show();
-        }
-         else {
-             // Sets up for regular run
-            Toolbar toolbar = findViewById(R.id.app_bar);
-            setSupportActionBar(toolbar);
-            setUpTabs();
         }
     }
 
@@ -146,22 +144,6 @@ public class MainActivity extends AppCompatActivity {
         TabLayoutMediator mediator = new TabLayoutMediator(tabLayout, viewPager2,
                 tabConfiguration);
         mediator.attach();
-    }
-
-    /*
-       Creates a notification channel for this app and registers it with the
-       system
-       If the notification channel already exists, performs no operations
-     */
-    private void createNotificationChannel() {
-        String id = getString(R.string.notification_channel_id);
-        String name = getString(R.string.notification_channel_name);
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-        NotificationChannel channel =
-                new NotificationChannel(id, name, importance);
-        NotificationManager notificationManager =
-                getSystemService(NotificationManager.class);
-        notificationManager.createNotificationChannel(channel);
     }
 
     /*

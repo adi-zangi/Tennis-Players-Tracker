@@ -60,4 +60,8 @@
         This app uses the network daily for a short time (less than a minute).
         If this is off, any working network connection will be used.
     </string>
+
+    <!-- Shared Preferences Files -->
+    <string name="shared_prefs_filename">com.adizangi.tennisplayerstracker.APP_DATA</string>
+    <string name="version_code_key">version_code</string>
 </resources>
