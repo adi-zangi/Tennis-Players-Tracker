@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import com.adizangi.tennisplayerstracker.network_calls.NotificationFetcher;
 import com.adizangi.tennisplayerstracker.network_calls.PlayerStatsFetcher;
 import com.adizangi.tennisplayerstracker.network_calls.TotalPlayersFetcher;
+import com.adizangi.tennisplayerstracker.utils_data.BackgroundManager;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.utils_data.PlayerStats;
 
@@ -51,6 +52,8 @@ public class FetchDataWorker extends Worker {
     /*
        Fetches the data in the background and saves it to files
        Updates the observable progress while the work is running
+       After the data is saved, schedules another worker that sends a
+       notification
        Returns Result.success() if the work was successful, Result.retry() if
        the work failed due to a problem with the network, and Result.failure()
        if the work failed for another reason
@@ -80,7 +83,8 @@ public class FetchDataWorker extends Worker {
             fileManager.storePlayerStats(stats);
             fileManager.storeNotificationList(notificationList);
             setProgress(100);
-            // schedule notification
+            BackgroundManager backgroundManager = new BackgroundManager(getApplicationContext());
+            backgroundManager.scheduleNotification();
             return Result.success();
         } catch (UnknownHostException | SocketException e) {
             e.printStackTrace();

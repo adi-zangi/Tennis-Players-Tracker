@@ -12,13 +12,13 @@ import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
-import android.net.NetworkInfo;
-import android.os.Build;
-import android.util.Log;
 
 import com.adizangi.tennisplayerstracker.R;
 import com.adizangi.tennisplayerstracker.workers.FetchDataWorker;
+import com.adizangi.tennisplayerstracker.workers.NotificationWorker;
 
+import java.util.Calendar;
+import java.util.Set;
 import java.util.UUID;
 
 import androidx.preference.PreferenceManager;
@@ -57,6 +57,8 @@ public class BackgroundManager extends ContextWrapper {
        there is network connection
        The work will start as soon as there is network connection and the
        connection type is selected in Settings as one the app should use
+       After the worker saves the data, it schedules another worker that sends
+       a notification
        Returns the WorkRequest id
      */
     public UUID fetchDataImmediately() {
@@ -73,6 +75,20 @@ public class BackgroundManager extends ContextWrapper {
 
     public void scheduleDailyRefresh() {
 
+    }
+
+    /*
+       If a notification should be sent based on Settings, schedules background
+       work that will create and send a notification
+       The work will start right away
+     */
+    public void scheduleNotification() {
+        if (shouldSendToday()) {
+            OneTimeWorkRequest notificationRequest = new OneTimeWorkRequest.Builder
+                    (NotificationWorker.class)
+                    .build();
+            WorkManager.getInstance(this).enqueue(notificationRequest);
+        }
     }
 
     /*
@@ -104,15 +120,36 @@ public class BackgroundManager extends ContextWrapper {
        Returns a NetworkType that corresponds to the preference value
      */
     private NetworkType getNetworkType() {
-        SharedPreferences sharedPrefs =
+        SharedPreferences preferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
         boolean useUnmeteredOnly =
-                sharedPrefs.getBoolean(getString(R.string.pref_network_type_key), true);
+                preferences.getBoolean(getString(R.string.pref_network_type_key), true);
         if (useUnmeteredOnly) {
             return NetworkType.UNMETERED;
         } else {
             return NetworkType.CONNECTED;
         }
+    }
+
+    /*
+       Returns true if notifications are enabled and today is a day of the week
+       on which the user should receive a notification, based on the current
+       selections in this app's Settings
+       Returns false otherwise
+     */
+    private boolean shouldSendToday() {
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        boolean areNotificationsEnabled =
+                preferences.getBoolean(getString(R.string.pref_notifications_key), false);
+        Set<String> selectedDays = preferences.getStringSet(
+                getString(R.string.pref_notification_days_key), null);
+        if (areNotificationsEnabled && selectedDays != null) {
+            Calendar calendar = Calendar.getInstance();
+            String today = Integer.toString(calendar.get(Calendar.DAY_OF_WEEK));
+            return selectedDays.contains(today);
+        }
+        return false;
     }
 
 }
