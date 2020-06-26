@@ -40,9 +40,11 @@ public class TabsViewModel extends AndroidViewModel {
         statsMap = fileManager.readPlayerStats();
         selectedPlayers = fileManager.readSelectedPlayers();
         selectedPlayersStats = new ArrayList<>();
-        for (String player : selectedPlayers) {
-            PlayerStats playerStats = statsMap.get(player);
-            selectedPlayersStats.add(playerStats);
+        if (!statsMap.isEmpty()) {
+            for (String player : selectedPlayers) {
+                PlayerStats playerStats = statsMap.get(player);
+                selectedPlayersStats.add(playerStats);
+            }
         }
         Collections.sort(selectedPlayersStats, Collections.reverseOrder());
         addedPlayer = new MutableLiveData<>();
