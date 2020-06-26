@@ -15,33 +15,28 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.adizangi.tennisplayerstracker.activities.MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name="com.adizangi.tennisplayerstracker.activities.ProgressActivity" />
+        <activity android:name=".activities.ProgressActivity" />
 
         <activity
             android:label="@string/title_activity_settings"
-            android:name="com.adizangi.tennisplayerstracker.activities.SettingsActivity"
-            android:parentActivityName="com.adizangi.tennisplayerstracker.activities.MainActivity">
+            android:name=".activities.SettingsActivity"
+            android:parentActivityName=".activities.MainActivity">
         </activity>
 
         <activity
-            android:name="com.adizangi.tennisplayerstracker.TimeActivity"
-            android:parentActivityName="com.adizangi.tennisplayerstracker.activities.MainActivity">
+            android:name=".TimeActivity"
+            android:parentActivityName=".activities.MainActivity">
         </activity>
 
-        <receiver android:name="com.adizangi.tennisplayerstracker.receivers.NotifAlarmReceiver" />
-        <receiver android:name="com.adizangi.tennisplayerstracker.receivers.NotifAlarmReceiver$ButtonReceiver" />
-        <receiver android:name="com.adizangi.tennisplayerstracker.receivers.NotifAlarmReceiver$BootReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+        <receiver android:name=".receivers.NotificationButtonReceiver" />
+
     </application>
 
 </manifest>

@@ -93,6 +93,8 @@ public class ProgressActivity extends AppCompatActivity {
         settings = PreferenceManager.getDefaultSharedPreferences(this);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         backgroundManager.createNotificationChannel();
+        FileManager fileManager = new FileManager(this);
+        fileManager.storeSelectedPlayers(new ArrayList<String>());
         NetworkTypeDialog dialog = new NetworkTypeDialog();
         dialog.setNetworkTypeListener(networkTypeListener);
         dialog.show(getSupportFragmentManager(), "networkType");
@@ -134,8 +136,6 @@ public class ProgressActivity extends AppCompatActivity {
             warningManager.showWarning(getResources().getString(R.string.warning_message_process_failed));
         } else if (state == WorkInfo.State.SUCCEEDED) {
             final int VERSION_CODE = 0;
-            FileManager fileManager = new FileManager(this);
-            fileManager.storeSelectedPlayers(new ArrayList<String>());
             SharedPreferences prefs = getSharedPreferences(
                     getString(R.string.shared_prefs_filename), Context.MODE_PRIVATE);
             prefs.edit().putInt(getString(R.string.version_code_key), VERSION_CODE).apply();

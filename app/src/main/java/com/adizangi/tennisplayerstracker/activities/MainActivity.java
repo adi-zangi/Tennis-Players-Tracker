@@ -28,8 +28,6 @@ import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,7 +41,6 @@ import com.adizangi.tennisplayerstracker.TimeActivity;
 import com.adizangi.tennisplayerstracker.adapters.TabAdapter;
 import com.adizangi.tennisplayerstracker.fragments.FeaturesDialog;
 import com.adizangi.tennisplayerstracker.utils_data.BackgroundManager;
-import com.adizangi.tennisplayerstracker.receivers.NotifAlarmReceiver;
 import com.adizangi.tennisplayerstracker.R;
 import com.adizangi.tennisplayerstracker.workers.FetchDataWorker;
 import com.google.android.material.tabs.TabLayout;
@@ -172,27 +169,6 @@ public class MainActivity extends AppCompatActivity {
                 .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
                 .build();
         WorkManager.getInstance(this).enqueue(fetchDataRequest);
-    }
-
-    /*
-       Schedules a notification for the user at 9:30 a.m. daily
-       If there is no information to send to the user on a specific day, no
-       notification will be sent
-     */
-    private void scheduleDailyNotif() {
-        AlarmManager alarmManager =
-                (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, NotifAlarmReceiver.class);
-        PendingIntent pendingIntent =
-                PendingIntent.getBroadcast(this, 0, intent, 0);
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, 1);
-        calendar.set(Calendar.HOUR_OF_DAY, 9);
-        calendar.set(Calendar.MINUTE, 30);
-        calendar.set(Calendar.SECOND, 0);
-        long elapsedTime = calendar.getTimeInMillis() - System.currentTimeMillis();
-        alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTime,
-                pendingIntent);
     }
 
 }
