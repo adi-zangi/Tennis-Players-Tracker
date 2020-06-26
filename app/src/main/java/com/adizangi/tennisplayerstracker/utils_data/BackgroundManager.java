@@ -89,19 +89,13 @@ public class BackgroundManager extends ContextWrapper {
        worker that sends a notification
      */
     public void scheduleDailyRefresh() {
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, 1);
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        long initialDelay = c.getTimeInMillis() - System.currentTimeMillis();
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(getNetworkType())
                 .build();
         PeriodicWorkRequest refreshDataRequest = new PeriodicWorkRequest.Builder
                 (FetchDataWorker.class, 1, TimeUnit.DAYS)
                 .setConstraints(constraints)
-                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+                .setInitialDelay(getTimeToMidnight(), TimeUnit.MILLISECONDS)
                 .build();
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 REFRESH_WORK_NAME,
@@ -182,6 +176,18 @@ public class BackgroundManager extends ContextWrapper {
             return selectedDays.contains(today);
         }
         return false;
+    }
+
+    /*
+       Returns the number of milliseconds between the current time and 12:00am
+     */
+    private long getTimeToMidnight() {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, 1);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        return c.getTimeInMillis() - System.currentTimeMillis();
     }
 
 }
