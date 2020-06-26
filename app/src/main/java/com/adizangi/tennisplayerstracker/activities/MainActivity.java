@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
        Otherwise, shows the content defined in the layout resource file, sets
        up an action bar, and fills the screen with data
        If this activity is opening for the first time after the loading screen
-       was done loading, also shows a dialog that explains how to use the app
-       and does final initializations
+       finished loading, also shows a dialog that explains how to use the app
+       and schedules a task that refreshes the app's data every day
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,34 +141,6 @@ public class MainActivity extends AppCompatActivity {
         TabLayoutMediator mediator = new TabLayoutMediator(tabLayout, viewPager2,
                 tabConfiguration);
         mediator.attach();
-    }
-
-    /*
-       Schedules a background task that fetches data roughly at 5:00a.m.
-       every day, with a constraint that there is network connection
-       If there isn't network connection at the scheduled time, the task will
-       be delayed until there is
-     */
-    private void scheduleDailyDataFetch() {
-        Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
-        Calendar calendar = Calendar.getInstance();
-        if (calendar.get(Calendar.HOUR_OF_DAY) > 5 |
-                (calendar.get(Calendar.HOUR_OF_DAY) == 4 &&
-                        calendar.get(Calendar.MINUTE) == 59)) {
-            calendar.add(Calendar.DATE, 1);
-        }
-        calendar.set(Calendar.HOUR_OF_DAY, 5);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        long initialDelay = calendar.getTimeInMillis() - System.currentTimeMillis();
-        PeriodicWorkRequest fetchDataRequest = new PeriodicWorkRequest.Builder
-                (FetchDataWorker.class, 1, TimeUnit.DAYS)
-                .setConstraints(constraints)
-                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
-                .build();
-        WorkManager.getInstance(this).enqueue(fetchDataRequest);
     }
 
 }

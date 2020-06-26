@@ -12,6 +12,7 @@ import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
+import android.util.Log;
 
 import com.adizangi.tennisplayerstracker.R;
 import com.adizangi.tennisplayerstracker.workers.FetchDataWorker;
@@ -20,14 +21,19 @@ import com.adizangi.tennisplayerstracker.workers.NotificationWorker;
 import java.util.Calendar;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import androidx.preference.PreferenceManager;
 import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 public class BackgroundManager extends ContextWrapper {
+
+    private static final String REFRESH_WORK_NAME = "refresh_work";
 
     /*
        Constructs a BackgroundManager with the given application context
@@ -73,8 +79,34 @@ public class BackgroundManager extends ContextWrapper {
         return fetchDataRequest.getId();
     }
 
+    /*
+       Schedules background work that fetches new data and repeats every day
+       Data will be refreshed at the first time after 12:00am that the user is
+       using their phone (which makes the system exit doze mode), each day
+       The work also has a constraint that there is network connection of the
+       permitted type, and it will be delayed if there is no connection
+       After the data is refreshed each time, the worker will schedule another
+       worker that sends a notification
+     */
     public void scheduleDailyRefresh() {
-
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, 1);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        long initialDelay = c.getTimeInMillis() - System.currentTimeMillis();
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(getNetworkType())
+                .build();
+        PeriodicWorkRequest refreshDataRequest = new PeriodicWorkRequest.Builder
+                (FetchDataWorker.class, 1, TimeUnit.DAYS)
+                .setConstraints(constraints)
+                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+                .build();
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                REFRESH_WORK_NAME,
+                ExistingPeriodicWorkPolicy.KEEP,
+                refreshDataRequest);
     }
 
     /*
