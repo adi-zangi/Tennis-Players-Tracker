@@ -8,8 +8,6 @@
    to the next round, red text that says the player is out of the tournament,
    or gray text that says the player is not playing
    The sections are sorted so green sections are first and gray sections are last
-   Each section has a 'See More Match Results' button that opens an ESPN web
-   page that has all the match results of the player
  */
 
 package com.adizangi.tennisplayerstracker.fragments;

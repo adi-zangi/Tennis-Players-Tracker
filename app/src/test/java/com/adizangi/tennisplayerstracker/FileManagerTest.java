@@ -47,8 +47,7 @@ public class FileManagerTest {
                         "advanced to 2nd round",
                         "French Open",
                         "won 6-3, 6-3",
-                        "3pm ET",
-                        "URL");
+                        "3pm ET");
         PlayerStats playerStats2 =
                 new PlayerStats(
                         "playerName2",
@@ -57,8 +56,7 @@ public class FileManagerTest {
                         "advanced to 2nd round",
                         "French Open",
                         "won 6-3, 6-3",
-                        "3pm ET",
-                        "URL");
+                        "3pm ET");
         stats = new HashMap<>();
         stats.put("player1", playerStats1);
         stats.put("player2", playerStats2);

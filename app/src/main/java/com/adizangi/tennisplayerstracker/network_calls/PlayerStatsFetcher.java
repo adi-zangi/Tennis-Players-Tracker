@@ -107,7 +107,6 @@ public class PlayerStatsFetcher {
             upcomingMatch = getUpcomingMatch
                     (playerDocument, latestResultIndex);
         }
-        String resultsURL = getResultsURL(playerDocument);
         return new PlayerStats(
                 name,
                 ranking,
@@ -115,8 +114,7 @@ public class PlayerStatsFetcher {
                 standing,
                 currentTournament,
                 latestMatchResult,
-                upcomingMatch,
-                resultsURL);
+                upcomingMatch);
     }
 
     /*
@@ -284,15 +282,6 @@ public class PlayerStatsFetcher {
             }
         }
         return "";
-    }
-
-    /*
-       Returns the results URL of the player whose information is in the
-       given document
-     */
-    private String getResultsURL(Document playerDocument) {
-        return playerDocument.selectFirst("a:contains(Results)")
-                .attr("abs:href");
     }
 
 }

@@ -5,13 +5,9 @@
 package com.adizangi.tennisplayerstracker.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.adizangi.tennisplayerstracker.R;
@@ -39,7 +35,6 @@ public class StatsAdapter extends RecyclerView.Adapter
         TextView titles;
         TextView currentTournament;
         TextView latestMatchResult;
-        Button seeResultsButton;
 
         /*
            Constructs a ViewHolder with the given layout of an item in the RecyclerView
@@ -52,7 +47,6 @@ public class StatsAdapter extends RecyclerView.Adapter
             titles = layout.findViewById(R.id.titles);
             currentTournament = layout.findViewById(R.id.current_tournament);
             latestMatchResult = layout.findViewById(R.id.latest_match_result);
-            seeResultsButton = layout.findViewById(R.id.see_results_button);
         }
     }
 
@@ -65,8 +59,6 @@ public class StatsAdapter extends RecyclerView.Adapter
 
     /*
        Creates a new ViewHolder and returns it
-       Adds a listener to the See More Results button in the ViewHolder,
-       that opens an ESPN web page that has all the match results of the player
      */
     @NonNull
     @Override
@@ -75,20 +67,7 @@ public class StatsAdapter extends RecyclerView.Adapter
         LayoutInflater inflater = LayoutInflater.from(context);
         ConstraintLayout layout = (ConstraintLayout)
                 inflater.inflate(R.layout.stats_list_item, parent, false);
-        final ViewHolder viewHolder = new ViewHolder(layout);
-        viewHolder.seeResultsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View seeResultsButton) {
-                int position = viewHolder.getAdapterPosition();
-                PlayerStats playerStats = stats.get(position);
-                Uri webpage = Uri.parse(playerStats.getResultsURL());
-                Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-                if (intent.resolveActivity(context.getPackageManager()) != null) {
-                    context.startActivity(intent);
-                }
-            }
-        });
-        return viewHolder;
+        return new ViewHolder(layout);
     }
 
     /*

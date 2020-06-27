@@ -73,6 +73,7 @@ public class FetchDataTest {
         System.out.println();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void fetchPlayerStats() throws IOException {
         System.out.println("---------- Player Stats Fetcher ----------");
         System.out.println();
@@ -94,7 +95,6 @@ public class FetchDataTest {
             System.out.println("Tournament: " + stats.getCurrentTournament());
             System.out.println("Result: " + stats.getLatestMatchResult());
             System.out.println("Upcoming match: " + stats.getUpcomingMatch());
-            System.out.println("Results URL: " + stats.getResultsURL());
             i++;
         }
         System.out.println();

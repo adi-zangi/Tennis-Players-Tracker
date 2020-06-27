@@ -7,7 +7,6 @@
     <string name="button_add">Add</string>
     <string name="button_remove">Remove</string>
     <string name="button_done">Done</string>
-    <string name="button_see_results">See more match results</string>
     <string name="button_live_scores">View Live Scores</string>
     <string name="button_any_connection">Any connection</string>
     <string name="button_unmetered_connection_only">Unmetered connection only</string>

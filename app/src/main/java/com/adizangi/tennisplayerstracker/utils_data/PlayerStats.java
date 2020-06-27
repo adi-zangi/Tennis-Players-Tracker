@@ -17,7 +17,6 @@ public class PlayerStats implements Comparable<PlayerStats>, Serializable {
     private String currentTournament;
     private String latestMatchResult;
     private String upcomingMatch;
-    private String resultsURL;
 
     /*
        Constructs a PlayerStats object
@@ -28,8 +27,7 @@ public class PlayerStats implements Comparable<PlayerStats>, Serializable {
                 String tournamentStanding,
                 String currentTournament,
                 String latestMatchResult,
-                String upcomingMatch,
-                String resultsURL) {
+                String upcomingMatch) {
         this.name = name;
         this.ranking = ranking;
         this.titles = titles;
@@ -37,7 +35,6 @@ public class PlayerStats implements Comparable<PlayerStats>, Serializable {
         this.currentTournament = currentTournament;
         this.latestMatchResult = latestMatchResult;
         this.upcomingMatch = upcomingMatch;
-        this.resultsURL = resultsURL;
     }
 
     /*
@@ -98,14 +95,6 @@ public class PlayerStats implements Comparable<PlayerStats>, Serializable {
      */
     public String getUpcomingMatch() {
         return upcomingMatch;
-    }
-
-    /*
-       Returns the URL of an ESPN web page that has all the match results of
-       the player
-     */
-    public String getResultsURL() {
-        return resultsURL;
     }
 
     /*
