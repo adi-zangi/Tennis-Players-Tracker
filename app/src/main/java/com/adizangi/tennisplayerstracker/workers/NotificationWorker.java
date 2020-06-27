@@ -3,15 +3,12 @@ package com.adizangi.tennisplayerstracker.workers;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.adizangi.tennisplayerstracker.R;
 import com.adizangi.tennisplayerstracker.receivers.NotificationButtonReceiver;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.utils_data.PlayerStats;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 

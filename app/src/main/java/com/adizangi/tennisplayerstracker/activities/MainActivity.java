@@ -23,10 +23,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
-import androidx.work.Constraints;
-import androidx.work.NetworkType;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -42,12 +38,8 @@ import com.adizangi.tennisplayerstracker.adapters.TabAdapter;
 import com.adizangi.tennisplayerstracker.fragments.FeaturesDialog;
 import com.adizangi.tennisplayerstracker.utils_data.BackgroundManager;
 import com.adizangi.tennisplayerstracker.R;
-import com.adizangi.tennisplayerstracker.workers.FetchDataWorker;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-
-import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 

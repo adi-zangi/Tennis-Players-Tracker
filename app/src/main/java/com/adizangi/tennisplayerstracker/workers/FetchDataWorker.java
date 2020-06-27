@@ -82,9 +82,9 @@ public class FetchDataWorker extends Worker {
             fileManager.storeTotalPlayers(totalPlayers);
             fileManager.storePlayerStats(stats);
             fileManager.storeNotificationList(notificationList);
-            setProgress(100);
             BackgroundManager backgroundManager = new BackgroundManager(getApplicationContext());
             backgroundManager.scheduleNotification();
+            setProgress(100);
             return Result.success();
         } catch (UnknownHostException | SocketException e) {
             e.printStackTrace();

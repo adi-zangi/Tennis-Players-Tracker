@@ -1,6 +1,5 @@
 package com.adizangi.tennisplayerstracker.receivers;
 
-import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +10,7 @@ import com.adizangi.tennisplayerstracker.workers.NotificationWorker;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class NotificationButtonReceiver extends BroadcastReceiver {
 

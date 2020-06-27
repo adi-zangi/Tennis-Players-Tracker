@@ -12,7 +12,6 @@ import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
-import android.util.Log;
 
 import com.adizangi.tennisplayerstracker.R;
 import com.adizangi.tennisplayerstracker.workers.FetchDataWorker;
@@ -59,6 +58,20 @@ public class BackgroundManager extends ContextWrapper {
     }
 
     /*
+       If a notification should be sent based on Settings, schedules background
+       work that will create and send a notification
+       The work will start right away
+     */
+    public void scheduleNotification() {
+        if (shouldSendToday()) {
+            OneTimeWorkRequest notificationRequest = new OneTimeWorkRequest.Builder
+                    (NotificationWorker.class)
+                    .build();
+            WorkManager.getInstance(this).enqueue(notificationRequest);
+        }
+    }
+
+    /*
        Schedules background work that fetches data, with a constraint that
        there is network connection
        The work will start as soon as there is network connection and the
@@ -80,13 +93,12 @@ public class BackgroundManager extends ContextWrapper {
     }
 
     /*
-       Schedules background work that fetches new data and repeats every day
+       Schedules background work that refreshes the app's data every day
        Data will be refreshed at the first time after 12:00am that the user is
        using their phone (which makes the system exit doze mode), each day
-       The work also has a constraint that there is network connection of the
-       permitted type, and it will be delayed if there is no connection
-       After the data is refreshed each time, the worker will schedule another
-       worker that sends a notification
+       If there is no network connection, the work will be delayed until there is
+       After the data is refreshed, the worker will schedule another worker
+       that sends a notification
      */
     public void scheduleDailyRefresh() {
         Constraints constraints = new Constraints.Builder()
@@ -104,17 +116,12 @@ public class BackgroundManager extends ContextWrapper {
     }
 
     /*
-       If a notification should be sent based on Settings, schedules background
-       work that will create and send a notification
-       The work will start right away
+       Cancels and reschedules the background work from scheduleDailyRefresh(),
+       so any changes in network preferences and the time zone will be applied
      */
-    public void scheduleNotification() {
-        if (shouldSendToday()) {
-            OneTimeWorkRequest notificationRequest = new OneTimeWorkRequest.Builder
-                    (NotificationWorker.class)
-                    .build();
-            WorkManager.getInstance(this).enqueue(notificationRequest);
-        }
+    public void rescheduleDailyRefresh() {
+        WorkManager.getInstance(this).cancelUniqueWork(REFRESH_WORK_NAME);
+        scheduleDailyRefresh();
     }
 
     /*
@@ -140,24 +147,6 @@ public class BackgroundManager extends ContextWrapper {
     }
 
     /*
-       Gets the current value of the network type preference in this app's
-       Settings, which indicates the type of network connection this app is
-       permitted to use
-       Returns a NetworkType that corresponds to the preference value
-     */
-    private NetworkType getNetworkType() {
-        SharedPreferences preferences =
-                PreferenceManager.getDefaultSharedPreferences(this);
-        boolean useUnmeteredOnly =
-                preferences.getBoolean(getString(R.string.pref_network_type_key), true);
-        if (useUnmeteredOnly) {
-            return NetworkType.UNMETERED;
-        } else {
-            return NetworkType.CONNECTED;
-        }
-    }
-
-    /*
        Returns true if notifications are enabled and today is a day of the week
        on which the user should receive a notification, based on the current
        selections in this app's Settings
@@ -176,6 +165,24 @@ public class BackgroundManager extends ContextWrapper {
             return selectedDays.contains(today);
         }
         return false;
+    }
+
+    /*
+       Gets the current value of the network type preference in this app's
+       Settings, which indicates the type of network connection this app is
+       permitted to use
+       Returns a NetworkType that corresponds to the preference value
+     */
+    private NetworkType getNetworkType() {
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        boolean useUnmeteredOnly =
+                preferences.getBoolean(getString(R.string.pref_network_type_key), true);
+        if (useUnmeteredOnly) {
+            return NetworkType.UNMETERED;
+        } else {
+            return NetworkType.CONNECTED;
+        }
     }
 
     /*
