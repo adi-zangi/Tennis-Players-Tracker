@@ -63,7 +63,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         }
     };
 
-    @Override
     /*
        Adds the PreferenceScreen defined in the preferences xml file into the
        view with the given root key
@@ -74,6 +73,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
        If notifications are on, makes the rest of the notification preferences
        enabled
      */
+    @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
 

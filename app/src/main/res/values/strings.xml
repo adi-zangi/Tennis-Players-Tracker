@@ -64,4 +64,5 @@
     <!-- Shared Preferences Files -->
     <string name="shared_prefs_filename">com.adizangi.tennisplayerstracker.APP_DATA</string>
     <string name="version_code_key">version_code</string>
+
 </resources>
