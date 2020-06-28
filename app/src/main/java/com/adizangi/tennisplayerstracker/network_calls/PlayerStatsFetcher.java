@@ -5,6 +5,8 @@
 
 package com.adizangi.tennisplayerstracker.network_calls;
 
+import android.util.Log;
+
 import com.adizangi.tennisplayerstracker.utils_data.PlayerStats;
 
 import org.jsoup.Jsoup;
@@ -20,6 +22,8 @@ import java.util.Locale;
 import java.util.Map;
 
 public class PlayerStatsFetcher {
+
+    private static final String LOG_TAG = "Fetching_Data";
 
     private Document mRankings;
     private Document wRankings;
@@ -41,6 +45,7 @@ public class PlayerStatsFetcher {
        May throw IOException
      */
     public Map<String, PlayerStats> getPlayerStatsMap() throws IOException {
+        Log.i(LOG_TAG, "PlayerStatsFetcher starting");
         Map<String, PlayerStats> stats = new HashMap<>();
         Element mRankingsTable = mRankings.selectFirst("table");
         if (mRankingsTable == null) {
@@ -52,6 +57,7 @@ public class PlayerStatsFetcher {
         int mNumOfRows = mRows.size();
         int wNumOfRows = wRows.size();
         for (int rowIndex = 1; rowIndex < 101; rowIndex++) {
+            Log.i(LOG_TAG, "On row " + rowIndex);
             if (rowIndex < mNumOfRows) {  // Check is needed due to bug in the website
                 Elements mColumns = mRows.get(rowIndex).select("td");
                 Element playerNameLink = mColumns.get(2).selectFirst("a");

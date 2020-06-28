@@ -7,7 +7,9 @@ package com.adizangi.tennisplayerstracker.workers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
+import com.adizangi.tennisplayerstracker.R;
 import com.adizangi.tennisplayerstracker.network_calls.NotificationFetcher;
 import com.adizangi.tennisplayerstracker.network_calls.PlayerStatsFetcher;
 import com.adizangi.tennisplayerstracker.network_calls.TotalPlayersFetcher;
@@ -62,6 +64,8 @@ public class FetchDataWorker extends Worker {
     @Override
     public Result doWork() {
         try {
+            Log.i(getApplicationContext().getString(R.string.fetching_data_log),
+                    "FetchDataWorker starting work");
             setProgress(0);
             saveTime(); // method for debugging
             getHTMLDocuments();
@@ -73,18 +77,30 @@ public class FetchDataWorker extends Worker {
             NotificationFetcher notifFetcher =
                     new NotificationFetcher(tSchedule, ySchedule);
             List<String> totalPlayers = playersFetcher.getTotalPlayersList();
+            Log.i(getApplicationContext().getString(R.string.fetching_data_log),
+                    "Got total players list");
             setProgress(40);
             Map<String, PlayerStats> stats = statsFetcher.getPlayerStatsMap();
+            Log.i(getApplicationContext().getString(R.string.fetching_data_log),
+                    "Got player stats map");
             setProgress(70);
             List<String> notificationList = notifFetcher.getNotificationList();
+            Log.i(getApplicationContext().getString(R.string.fetching_data_log),
+                    "Got notification list");
             setProgress(99);
             FileManager fileManager = new FileManager(getApplicationContext());
             fileManager.storeTotalPlayers(totalPlayers);
             fileManager.storePlayerStats(stats);
             fileManager.storeNotificationList(notificationList);
+            Log.i(getApplicationContext().getString(R.string.fetching_data_log),
+                    "Stored data in files");
             BackgroundManager backgroundManager = new BackgroundManager(getApplicationContext());
             backgroundManager.scheduleNotification();
+            Log.i(getApplicationContext().getString(R.string.fetching_data_log),
+                    "Scheduled a notification");
             setProgress(100);
+            Log.i(getApplicationContext().getString(R.string.fetching_data_log),
+                    "FetchDataWorker done");
             return Result.success();
         } catch (UnknownHostException | SocketException e) {
             e.printStackTrace();
@@ -109,13 +125,21 @@ public class FetchDataWorker extends Worker {
         String dateOfYesterday = dateFormat.format(calendar.getTime());
         mRankings = Jsoup.connect
                 ("https://www.espn.com/tennis/rankings").get();
+        Log.i(getApplicationContext().getString(R.string.fetching_data_log),
+                "Got men's rankings document");
         wRankings = Jsoup.connect
                 ("https://www.espn.com/tennis/rankings/_/type/wta").get();
+        Log.i(getApplicationContext().getString(R.string.fetching_data_log),
+                "Got women's rankings document");
         tSchedule = Jsoup.connect
                 ("http://www.espn.com/tennis/dailyResults").get();
+        Log.i(getApplicationContext().getString(R.string.fetching_data_log),
+                "Got today's schedule document");
         ySchedule = Jsoup.connect
                 ("http://www.espn.com/tennis/dailyResults?date=" +
                         dateOfYesterday).get();
+        Log.i(getApplicationContext().getString(R.string.fetching_data_log),
+                "Got yesterday's schedule document");
     }
 
     /*
