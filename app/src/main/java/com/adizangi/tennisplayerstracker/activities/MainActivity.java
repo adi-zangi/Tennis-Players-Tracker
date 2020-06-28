@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
             setUpTabs();
             FeaturesDialog dialog = new FeaturesDialog();
-            dialog.show(getSupportFragmentManager(), "newUser");
+            dialog.show(getSupportFragmentManager(), "features");
             BackgroundManager backgroundManager = new BackgroundManager(this);
             backgroundManager.scheduleDailyRefresh();
             prefs.edit().putInt(getString(R.string.version_code_key), currentVersionCode).apply();

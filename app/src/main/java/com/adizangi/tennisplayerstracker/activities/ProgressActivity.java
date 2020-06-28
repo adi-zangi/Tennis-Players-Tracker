@@ -17,7 +17,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.adizangi.tennisplayerstracker.R;
 import com.adizangi.tennisplayerstracker.utils_ui.WarningManager;
@@ -35,6 +38,7 @@ public class ProgressActivity extends AppCompatActivity {
     private BackgroundManager backgroundManager;
     private SharedPreferences settings;
     private WarningManager warningManager;
+    private CountDownTimer countDown;
 
     private NetworkTypeDialog.NetworkTypeListener networkTypeListener =
             new NetworkTypeDialog.NetworkTypeListener() {
@@ -91,6 +95,7 @@ public class ProgressActivity extends AppCompatActivity {
         backgroundManager = new BackgroundManager(this);
         warningManager = new WarningManager(this);
         settings = PreferenceManager.getDefaultSharedPreferences(this);
+        countDown = getCountDownTimer();
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         backgroundManager.createNotificationChannel();
         FileManager fileManager = new FileManager(this);
@@ -130,18 +135,55 @@ public class ProgressActivity extends AppCompatActivity {
         if (state == WorkInfo.State.ENQUEUED && !backgroundManager.isConnectedToNetwork()) {
             warningManager.showWarning(getResources().getString(R.string.warning_title_no_connection),
                     getResources().getString(R.string.warning_message_no_connection));
+            countDown.cancel();
         } else if (state == WorkInfo.State.RUNNING) {
             warningManager.dismissWarning();
+            countDown.start();
         } else if (state == WorkInfo.State.FAILED) {
             warningManager.showWarning(getResources().getString(R.string.warning_message_process_failed));
         } else if (state == WorkInfo.State.SUCCEEDED) {
             final int VERSION_CODE = 0;
+            countDown.cancel();
             SharedPreferences prefs = getSharedPreferences(
                     getString(R.string.shared_prefs_filename), Context.MODE_PRIVATE);
             prefs.edit().putInt(getString(R.string.version_code_key), VERSION_CODE).apply();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
+    }
+
+    /*
+       Returns a CountDownTimer that shows a 20 second countdown on the screen
+     */
+    private CountDownTimer getCountDownTimer() {
+        final TextView countDownView = findViewById(R.id.count_down_view);
+        return new CountDownTimer(20000, 1000) {
+
+            /*
+               Called each time the timer goes down by 1 second
+               Updates the text view with the number of seconds left
+             */
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long secondsRemaining = millisUntilFinished / 1000;
+                String secondsShown = countDownView.getText().toString();
+                if (secondsShown.isEmpty()) {
+                    countDownView.setText(String.valueOf(secondsRemaining));
+                } else if (secondsRemaining < Integer.parseInt(secondsShown)) { // needed due to bug
+                    countDownView.setText(String.valueOf(secondsRemaining));
+                }
+            }
+
+            /*
+               Called when the time is up
+               Updates the text view with "0"
+             */
+            @Override
+            public void onFinish() {
+                countDownView.setText("0");
+            }
+
+        };
     }
 
 }
