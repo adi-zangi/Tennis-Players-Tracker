@@ -27,6 +27,9 @@ public class NotificationWorker extends Worker {
         super(context, workerParams);
     }
 
+    /*
+      If no error and content isn't empty
+    */
     @NonNull
     @Override
     public Result doWork() {
@@ -34,7 +37,7 @@ public class NotificationWorker extends Worker {
         Context context = getApplicationContext();
         FileManager fileManager = new FileManager(context);
         List<String> notificationList = fileManager.readNotificationList();
-        notificationList.set(0, "bla..");
+        notificationList.set(0, "bla.."); // for debugging
         notificationList.add("Roland Garros");
         notificationList.add("Australian Open");
         List<String> selectedPlayers = fileManager.readSelectedPlayers();
@@ -43,9 +46,7 @@ public class NotificationWorker extends Worker {
         if (!notificationList.isEmpty() && !stats.isEmpty()
                 && !notificationList.get(0).isEmpty()) {
             String contentText = notificationList.get(0);
-            if (!selectedPlayers.isEmpty()) {
-                contentText = addMatchesToContent(contentText, selectedPlayers, stats);
-            }
+            contentText = addMatchesToContent(contentText, selectedPlayers, stats);
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder
                     (context, context.getString(R.string.notification_channel_id))
                     .setSmallIcon(R.drawable.ic_notification)
@@ -63,10 +64,13 @@ public class NotificationWorker extends Worker {
         return Result.success();
     }
 
+    /*
+      If any of players have upcoming match
+    */
     private String addMatchesToContent(String currentContent,
                                        List<String> selectedPlayers,
                                        Map<String, PlayerStats> stats) {
-        StringBuilder upcomingMatches = new StringBuilder("Matches-\n");
+        StringBuilder upcomingMatches = new StringBuilder();
         for (String player : selectedPlayers) {
             PlayerStats playerStats = stats.get(player);
             if (playerStats != null) {
@@ -74,7 +78,11 @@ public class NotificationWorker extends Worker {
                 upcomingMatches.append("\n");
             }
         }
-        return currentContent + upcomingMatches.toString();
+        if (upcomingMatches.length() > 0) {
+            upcomingMatches.insert(0, "Matches-\n");
+            return currentContent + upcomingMatches.toString();
+        }
+        return currentContent;
     }
 
     private void addNotificationButton(NotificationCompat.Builder builder,
