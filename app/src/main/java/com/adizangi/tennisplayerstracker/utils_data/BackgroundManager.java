@@ -63,7 +63,7 @@ public class BackgroundManager extends ContextWrapper {
        The work will start right away
      */
     public void scheduleNotification() {
-        if (shouldSendToday()) {
+        if (shouldNotifyToday()) {
             OneTimeWorkRequest notificationRequest = new OneTimeWorkRequest.Builder
                     (NotificationWorker.class)
                     .build();
@@ -152,7 +152,7 @@ public class BackgroundManager extends ContextWrapper {
        selections in this app's Settings
        Returns false otherwise
      */
-    private boolean shouldSendToday() {
+    private boolean shouldNotifyToday() {
         SharedPreferences preferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
         boolean areNotificationsEnabled =

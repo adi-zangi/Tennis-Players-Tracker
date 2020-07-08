@@ -33,7 +33,7 @@ public class FileManagerTest {
     private List<String> myPlayers;
     private List<String> totalPlayers;
     private Map<String, PlayerStats> stats;
-    private List<String> notifList;
+    private String notificationText;
 
     @Before
     public void setup() {
@@ -60,7 +60,7 @@ public class FileManagerTest {
         stats = new HashMap<>();
         stats.put("player1", playerStats1);
         stats.put("player2", playerStats2);
-        notifList = new ArrayList<>(Arrays.asList("Notification Text", "Tournament1"));
+        notificationText = "Notification Text";
     }
 
     @Test
@@ -75,14 +75,14 @@ public class FileManagerTest {
         fileManager.storeSelectedPlayers(myPlayers);
         fileManager.storeTotalPlayers(totalPlayers);
         fileManager.storePlayerStats(stats);
-        fileManager.storeNotificationList(notifList);
+        fileManager.storeNotificationText(notificationText);
     }
 
     private void readFiles() {
         assertEquals(myPlayers, fileManager.readSelectedPlayers());
         assertEquals(totalPlayers, fileManager.readTotalPlayers());
         assertEquals(stats.size(), fileManager.readPlayerStats().size());
-        assertEquals(notifList, fileManager.readNotificationList());
+        assertEquals(notificationText, fileManager.readNotificationText());
     }
 
 }

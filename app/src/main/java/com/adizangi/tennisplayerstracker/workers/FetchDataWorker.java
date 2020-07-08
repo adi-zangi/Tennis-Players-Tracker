@@ -52,7 +52,7 @@ public class FetchDataWorker extends Worker {
     }
 
     /*
-       Fetches the data in the background and saves it to files
+       Fetches the data in the background and saves it in files
        Updates the observable progress while the work is running
        After the data is saved, schedules another worker that sends a
        notification
@@ -84,14 +84,14 @@ public class FetchDataWorker extends Worker {
             Log.i(getApplicationContext().getString(R.string.fetching_data_log),
                     "Got player stats map");
             setProgress(70);
-            List<String> notificationList = notifFetcher.getNotificationList();
+            String notificationText = notifFetcher.getNotificationText();
             Log.i(getApplicationContext().getString(R.string.fetching_data_log),
-                    "Got notification list");
+                    "Got notification text");
             setProgress(99);
             FileManager fileManager = new FileManager(getApplicationContext());
             fileManager.storeTotalPlayers(totalPlayers);
             fileManager.storePlayerStats(stats);
-            fileManager.storeNotificationList(notificationList);
+            fileManager.storeNotificationText(notificationText);
             Log.i(getApplicationContext().getString(R.string.fetching_data_log),
                     "Stored data in files");
             BackgroundManager backgroundManager = new BackgroundManager(getApplicationContext());

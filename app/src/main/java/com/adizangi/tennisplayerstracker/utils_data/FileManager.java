@@ -21,7 +21,7 @@ public class FileManager extends ContextWrapper {
     private static final String SELECTED_PLAYERS_FILENAME = "selected_players";
     private static final String TOTAL_PLAYERS_FILENAME = "total_players";
     private static final String STATS_FILENAME = "player_stats";
-    private static final String NOTIF_FILENAME = "notification_list";
+    private static final String NOTIFICATION_FILENAME = "notification_text";
 
     /*
        Constructs a FileManager with the given application context
@@ -95,23 +95,22 @@ public class FileManager extends ContextWrapper {
     }
 
     /*
-       Reads the notification list from the file and returns it
-       Returns an empty list if there is an error
+       Reads the notification text from the file and returns it
+       Returns an empty string if there is an error
      */
-    @SuppressWarnings("unchecked")
-    public List<String> readNotificationList() {
+    public String readNotificationText() {
         try {
-            FileInputStream inputStream = openFileInput(NOTIF_FILENAME);
+            FileInputStream inputStream = openFileInput(NOTIFICATION_FILENAME);
             ObjectInputStream objectInputStream =
                     new ObjectInputStream(inputStream);
-            List<String> notifList =
-                    (List<String>) objectInputStream.readObject();
+            String notificationText =
+                    (String) objectInputStream.readObject();
             objectInputStream.close();
             inputStream.close();
-            return notifList;
+            return notificationText;
         } catch (Exception e) {
             e.printStackTrace();
-            return new ArrayList<>();
+            return "";
         }
     }
 
@@ -167,15 +166,15 @@ public class FileManager extends ContextWrapper {
     }
 
     /*
-       Stores the given notification list in a file
+       Stores the given notification text in a file
      */
-    public void storeNotificationList(List<String> notifList) {
+    public void storeNotificationText(String notificationText) {
         try {
             FileOutputStream outputStream = openFileOutput
-                    (NOTIF_FILENAME, Context.MODE_PRIVATE);
+                    (NOTIFICATION_FILENAME, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream =
                     new ObjectOutputStream(outputStream);
-            objectOutputStream.writeObject(notifList);
+            objectOutputStream.writeObject(notificationText);
             objectOutputStream.close();
             outputStream.close();
         } catch (Exception e) {

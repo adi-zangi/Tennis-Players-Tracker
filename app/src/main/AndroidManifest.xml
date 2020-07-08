@@ -34,8 +34,6 @@
             android:parentActivityName=".activities.MainActivity">
         </activity>
 
-        <receiver android:name=".receivers.NotificationButtonReceiver" />
-
         <receiver android:name=".receivers.TimeZoneChangedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />

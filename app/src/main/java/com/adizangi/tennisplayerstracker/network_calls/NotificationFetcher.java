@@ -1,7 +1,5 @@
 /*
-   Fetches information that will be put in the notification that will be sent
-   to the user
-   Information is taken from the ESPN website
+   Fetches information for today’s notification from the ESPN website
  */
 
 package com.adizangi.tennisplayerstracker.network_calls;
@@ -12,8 +10,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class NotificationFetcher {
 
@@ -30,22 +26,14 @@ public class NotificationFetcher {
     }
 
     /*
-       Returns a list of strings that contain information for the notification
-       The first item in the list is the text of the notification
-       The rest of the items are the names of current tournaments, which will
-       be used for the 'View Live Scores' button of the notification
-       If there are no current tournaments, the text will be an empty string
-       and the list will not have tournament names
+       Returns the text for today's notification
+       If there is no news about tennis, the text will be empty
        May throw IOException
      */
-    public List<String> getNotificationList() throws IOException {
-        List<String> notificationList = new ArrayList<>();
-        String reportForYesterday = getReportForYesterday();
-        String reportForToday = getReportForToday();
-        String notificationText = reportForYesterday + reportForToday;
-        notificationList.add(notificationText);
-        notificationList.addAll(getTournaments());
-        return notificationList;
+    public String getNotificationText() throws IOException {
+        String notificationText = getReportForYesterday();
+        notificationText = notificationText + getReportForToday();
+        return notificationText;
     }
 
     /*
@@ -138,26 +126,6 @@ public class NotificationFetcher {
             }
         }
         return dailyTournaments.toString() + dailyFinals.toString();
-    }
-
-    /*
-       Returns a list of the tournaments that are happening today
-       If there are no tournaments today, the list will be empty
-     */
-    private List<String> getTournaments() {
-        List<String> list = new ArrayList<>();
-        if (tSchedule.select("h3.noMatch").size() > 0) {
-            return list;
-        }
-        Elements tournaments = tSchedule.select("div.scoreHeadline");
-        for (Element tournament : tournaments) {
-            String fullTitle = tournament.text();
-            String tournamentName = fullTitle.substring(
-                    fullTitle.indexOf(" ") + 1,
-                    fullTitle.lastIndexOf(" "));
-            list.add(tournamentName);
-        }
-        return list;
     }
 
 }

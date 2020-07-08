@@ -6,6 +6,8 @@
 
 package com.adizangi.tennisplayerstracker;
 
+import android.util.Log;
+
 import com.adizangi.tennisplayerstracker.network_calls.NotificationFetcher;
 import com.adizangi.tennisplayerstracker.utils_data.PlayerStats;
 import com.adizangi.tennisplayerstracker.network_calls.PlayerStatsFetcher;
@@ -14,6 +16,10 @@ import com.adizangi.tennisplayerstracker.network_calls.TotalPlayersFetcher;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -24,6 +30,8 @@ import java.util.Map;
 
 import static org.junit.Assert.fail;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({Log.class})
 public class FetchDataTest {
 
     private Document mRankings;
@@ -33,6 +41,7 @@ public class FetchDataTest {
 
     @Test
     public void testFetchingData() {
+        PowerMockito.mockStatic(Log.class);
         try {
             System.out.println("---------------- Test for Fetching Data ----------------");
             System.out.println();
@@ -104,11 +113,8 @@ public class FetchDataTest {
         System.out.println("---------- Notification Fetcher ----------");
         System.out.println();
         NotificationFetcher fetcher = new NotificationFetcher(tSchedule, ySchedule);
-        List<String> notificationList = fetcher.getNotificationList();
-        System.out.println("List (size = " + notificationList.size() + "):");
-        for (String item : notificationList) {
-            System.out.println(item);
-        }
+        String notificationText = fetcher.getNotificationText();
+        System.out.println("Text:\n" + notificationText);
         System.out.println();
     }
 
