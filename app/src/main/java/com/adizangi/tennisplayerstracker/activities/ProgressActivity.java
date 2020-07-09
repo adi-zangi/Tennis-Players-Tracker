@@ -38,7 +38,7 @@ public class ProgressActivity extends AppCompatActivity {
     private BackgroundManager backgroundManager;
     private SharedPreferences settings;
     private WarningManager warningManager;
-    private CountDownTimer countDown;
+    //private CountDownTimer countDown;
 
     private NetworkTypeDialog.NetworkTypeListener networkTypeListener =
             new NetworkTypeDialog.NetworkTypeListener() {
@@ -95,7 +95,7 @@ public class ProgressActivity extends AppCompatActivity {
         backgroundManager = new BackgroundManager(this);
         warningManager = new WarningManager(this);
         settings = PreferenceManager.getDefaultSharedPreferences(this);
-        countDown = getCountDownTimer();
+        //countDown = getCountDownTimer();
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         backgroundManager.createNotificationChannel();
         FileManager fileManager = new FileManager(this);
@@ -135,15 +135,15 @@ public class ProgressActivity extends AppCompatActivity {
         if (state == WorkInfo.State.ENQUEUED && !backgroundManager.isConnectedToNetwork()) {
             warningManager.showWarning(getResources().getString(R.string.warning_title_no_connection),
                     getResources().getString(R.string.warning_message_no_connection));
-            countDown.cancel();
+            //countDown.cancel();
         } else if (state == WorkInfo.State.RUNNING) {
             warningManager.dismissWarning();
-            countDown.start();
+            //countDown.start();
         } else if (state == WorkInfo.State.FAILED) {
             warningManager.showWarning(getResources().getString(R.string.warning_message_process_failed));
         } else if (state == WorkInfo.State.SUCCEEDED) {
             final int VERSION_CODE = 0;
-            countDown.cancel();
+            //countDown.cancel();
             SharedPreferences prefs = getSharedPreferences(
                     getString(R.string.shared_prefs_filename), Context.MODE_PRIVATE);
             prefs.edit().putInt(getString(R.string.version_code_key), VERSION_CODE).apply();

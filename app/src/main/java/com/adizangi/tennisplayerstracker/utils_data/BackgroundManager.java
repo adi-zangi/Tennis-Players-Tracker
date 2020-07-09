@@ -147,6 +147,25 @@ public class BackgroundManager extends ContextWrapper {
     }
 
     /*
+       Returns true if internet speed is slow
+       Slow is considered to be below 25 Mbps
+       Returns false if either the connection is at or above 25 Mbps or there
+       is no connection of a type this app is permitted to use
+     */
+    public boolean isConnectionSlow() {
+        if (isConnectedToNetwork()) {
+            ConnectivityManager connectivityManager =
+                    (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkCapabilities capabilities =
+                    connectivityManager.getNetworkCapabilities(
+                            connectivityManager.getActiveNetwork());
+            int downstreamBandwidth = capabilities.getLinkDownstreamBandwidthKbps();
+            return downstreamBandwidth < 25000;
+        }
+        return false;
+    }
+
+    /*
        Returns true if notifications are enabled and today is a day of the week
        on which the user should receive a notification, based on the current
        selections in this app's Settings
