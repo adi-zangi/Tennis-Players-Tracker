@@ -64,9 +64,7 @@ public class FetchDataWorker extends Worker {
     @Override
     public Result doWork() {
         try {
-            Log.i(getApplicationContext().getString(R.string.fetching_data_log),
-                    "FetchDataWorker starting work");
-            setProgress(0);
+            setProgress(0); log("FetchDataWorker starting work");
             saveTime(); // method for debugging
             getHTMLDocuments();
             setProgress(10);
@@ -77,36 +75,29 @@ public class FetchDataWorker extends Worker {
             NotificationFetcher notifFetcher =
                     new NotificationFetcher(tSchedule, ySchedule);
             List<String> totalPlayers = playersFetcher.getTotalPlayersList();
-            Log.i(getApplicationContext().getString(R.string.fetching_data_log),
-                    "Got total players list");
-            setProgress(40);
+            setProgress(40); log("Got total players list");
             Map<String, PlayerStats> stats = statsFetcher.getPlayerStatsMap();
-            Log.i(getApplicationContext().getString(R.string.fetching_data_log),
-                    "Got player stats map");
-            setProgress(70);
+            setProgress(70); log("Got player stats map");
             String notificationText = notifFetcher.getNotificationText();
-            Log.i(getApplicationContext().getString(R.string.fetching_data_log),
-                    "Got notification text");
-            setProgress(99);
+            setProgress(99); log("Got notification text");
             FileManager fileManager = new FileManager(getApplicationContext());
             fileManager.storeTotalPlayers(totalPlayers);
             fileManager.storePlayerStats(stats);
             fileManager.storeNotificationText(notificationText);
-            Log.i(getApplicationContext().getString(R.string.fetching_data_log),
-                    "Stored data in files");
+            log("Stored data in files");
             BackgroundManager backgroundManager = new BackgroundManager(getApplicationContext());
             backgroundManager.scheduleNotification();
-            Log.i(getApplicationContext().getString(R.string.fetching_data_log),
-                    "Scheduled a notification");
-            setProgress(100);
-            Log.i(getApplicationContext().getString(R.string.fetching_data_log),
-                    "FetchDataWorker done");
+            setProgress(100); log("Scheduled a notification");
+            setIsRetrying(false);
+            log("FetchDataWorker done");
             return Result.success();
         } catch (UnknownHostException | SocketException e) {
             e.printStackTrace();
+            setIsRetrying(true);
             return Result.retry();
         } catch (Exception e) {
             e.printStackTrace();
+            setIsRetrying(false);
             return Result.failure();
         }
     }
@@ -125,21 +116,17 @@ public class FetchDataWorker extends Worker {
         String dateOfYesterday = dateFormat.format(calendar.getTime());
         mRankings = Jsoup.connect
                 ("https://www.espn.com/tennis/rankings").get();
-        Log.i(getApplicationContext().getString(R.string.fetching_data_log),
-                "Got men's rankings document");
+        log("Got men's rankings document");
         wRankings = Jsoup.connect
                 ("https://www.espn.com/tennis/rankings/_/type/wta").get();
-        Log.i(getApplicationContext().getString(R.string.fetching_data_log),
-                "Got women's rankings document");
+        log("Got women's rankings document");
         tSchedule = Jsoup.connect
                 ("http://www.espn.com/tennis/dailyResults").get();
-        Log.i(getApplicationContext().getString(R.string.fetching_data_log),
-                "Got today's schedule document");
+        log("Got today's schedule document");
         ySchedule = Jsoup.connect
                 ("http://www.espn.com/tennis/dailyResults?date=" +
                         dateOfYesterday).get();
-        Log.i(getApplicationContext().getString(R.string.fetching_data_log),
-                "Got yesterday's schedule document");
+        log("Got yesterday's schedule document");
     }
 
     /*
@@ -150,6 +137,25 @@ public class FetchDataWorker extends Worker {
                 .putInt(PROGRESS_KEY, progressPercentage)
                 .build();
         setProgressAsync(progress);
+    }
+
+    /*
+       Writes the given message to the logcat
+     */
+    private void log(String msg) {
+        Log.i(getApplicationContext().getString(R.string.fetching_data_log), msg);
+    }
+
+    /*
+       Saves the given value in shared preferences to indicate whether the
+       worker is retrying
+     */
+    private void setIsRetrying(boolean value) {
+        Context context = getApplicationContext();
+        SharedPreferences prefs = context.getSharedPreferences(
+                context.getString(R.string.shared_prefs_filename), Context.MODE_PRIVATE);
+        prefs.edit().putBoolean(
+                context.getString(R.string.is_worker_retrying_key), value).apply();
     }
 
     private void saveTime() {

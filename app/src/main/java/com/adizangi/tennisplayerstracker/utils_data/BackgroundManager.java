@@ -23,6 +23,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import androidx.preference.PreferenceManager;
+import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
@@ -87,6 +88,10 @@ public class BackgroundManager extends ContextWrapper {
         OneTimeWorkRequest fetchDataRequest = new OneTimeWorkRequest.Builder
                 (FetchDataWorker.class)
                 .setConstraints(constraints)
+                .setBackoffCriteria(
+                        BackoffPolicy.LINEAR,
+                        OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                        TimeUnit.MILLISECONDS)
                 .build();
         WorkManager.getInstance(this).enqueue(fetchDataRequest);
         return fetchDataRequest.getId();

@@ -8,7 +8,7 @@
     <string name="button_remove">Remove</string>
     <string name="button_done">Done</string>
     <string name="button_any_connection">Any connection</string>
-    <string name="button_unmetered_connection_only">Unmetered connection only</string>
+    <string name="button_unmetered_connection_only">Unmetered connection (wifi) only</string>
 
     <!-- Text -->
     <string name="hint_player_search_bar">Search player</string>
@@ -20,6 +20,10 @@
         This app uses the network daily for a short time (less than a minute).
         Which types of network connection should this app use?
     </string>
+    <string name="text_preparing_to_start">Preparing to start&#8230;</string>
+    <string name="text_starting">Starting</string>
+    <string name="text_retrying">Failed to load. Preparing to retry&#8230;</string>
+    <string name="text_slow_connection">Network connection is slow</string>
     <string name="warning_title_no_connection">No Connection</string>
     <string name="warning_message_no_connection">
         The app will not start until there is network connection
@@ -62,6 +66,7 @@
     <!-- Shared Preferences Files -->
     <string name="shared_prefs_filename">com.adizangi.tennisplayerstracker.APP_DATA</string>
     <string name="version_code_key">version_code</string>
+    <string name="is_worker_retrying_key">is_worker_retrying</string>
 
     <!-- Log Tags -->
     <string name="fetching_data_log">Fetching_Data</string>

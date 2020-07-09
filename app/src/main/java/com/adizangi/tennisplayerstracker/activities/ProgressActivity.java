@@ -18,9 +18,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.adizangi.tennisplayerstracker.R;
 import com.adizangi.tennisplayerstracker.utils_ui.WarningManager;
@@ -35,9 +35,12 @@ import java.util.UUID;
 public class ProgressActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
+    private TextView progressState;
+    private TextView connectionWarning;
     private BackgroundManager backgroundManager;
-    private SharedPreferences settings;
     private WarningManager warningManager;
+    private SharedPreferences settings;
+    private SharedPreferences prefs;
     //private CountDownTimer countDown;
 
     private NetworkTypeDialog.NetworkTypeListener networkTypeListener =
@@ -92,9 +95,13 @@ public class ProgressActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         progressBar = findViewById(R.id.progress_bar);
+        progressState = findViewById(R.id.progress_state);
+        connectionWarning = findViewById(R.id.connection_warning);
         backgroundManager = new BackgroundManager(this);
         warningManager = new WarningManager(this);
         settings = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs = getSharedPreferences(
+                getString(R.string.shared_prefs_filename), Context.MODE_PRIVATE);
         //countDown = getCountDownTimer();
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         backgroundManager.createNotificationChannel();
@@ -119,10 +126,8 @@ public class ProgressActivity extends AppCompatActivity {
 
     /*
        Updates the UI based on the given WorkInfo
-       If there is no network connection when the work is waiting to run or if
-       connection is lost while it runs, shows a 'No Connection' message on the
-       screen that stays until connection is back
-       If the work's progress changed, updates the progress bar on the screen
+       If the work's state changed, updates the progress state text view
+       If the work's progress changed, updates the progress bar
        If the work succeeded, saves the app's version code to indicate that
        the app was initialized, and switches back to MainActivity
        If the work failed, shows a message and prevents the user from proceeding
@@ -132,23 +137,51 @@ public class ProgressActivity extends AppCompatActivity {
         int progress = progressData.getInt(FetchDataWorker.PROGRESS_KEY, 0);
         progressBar.setProgress(progress);
         WorkInfo.State state = workInfo.getState();
-        if (state == WorkInfo.State.ENQUEUED && !backgroundManager.isConnectedToNetwork()) {
-            warningManager.showWarning(getResources().getString(R.string.warning_title_no_connection),
-                    getResources().getString(R.string.warning_message_no_connection));
+        if (state == WorkInfo.State.ENQUEUED) {
             //countDown.cancel();
+            checkEnqueuedState();
         } else if (state == WorkInfo.State.RUNNING) {
             warningManager.dismissWarning();
+            progressState.setText(R.string.text_starting);
             //countDown.start();
         } else if (state == WorkInfo.State.FAILED) {
             warningManager.showWarning(getResources().getString(R.string.warning_message_process_failed));
         } else if (state == WorkInfo.State.SUCCEEDED) {
             final int VERSION_CODE = 0;
             //countDown.cancel();
-            SharedPreferences prefs = getSharedPreferences(
-                    getString(R.string.shared_prefs_filename), Context.MODE_PRIVATE);
             prefs.edit().putInt(getString(R.string.version_code_key), VERSION_CODE).apply();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+        }
+    }
+
+    /*
+       Updates the screen based on the reason the work is enqueued
+       If the work is waiting to start because there is no network connection,
+       shows a 'No Connection' message on the screen that stays until
+       connection is back
+       If network connection is slow, shows a message that says this on the
+       screen
+     */
+    private void checkEnqueuedState() {
+        boolean isConnected = backgroundManager.isConnectedToNetwork();
+        boolean isConnectionSlow = backgroundManager.isConnectionSlow();
+        boolean isRetrying = prefs.getBoolean(
+                getString(R.string.is_worker_retrying_key), false);
+        if (!isConnected) {
+            warningManager.showWarning(getResources().getString(R.string.warning_title_no_connection),
+                    getResources().getString(R.string.warning_message_no_connection));
+        }
+        if (isRetrying) {
+            progressState.setText(R.string.text_retrying);
+        } else {
+            progressState.setText(R.string.text_preparing_to_start);
+        }
+        if (isConnectionSlow) {
+            connectionWarning.setText(R.string.text_slow_connection);
+            // edit timer
+        } else {
+
         }
     }
 
