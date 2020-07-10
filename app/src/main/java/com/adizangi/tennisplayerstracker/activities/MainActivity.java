@@ -93,9 +93,6 @@ public class MainActivity extends AppCompatActivity {
             BackgroundManager backgroundManager = new BackgroundManager(this);
             backgroundManager.scheduleDailyRefresh();
             prefs.edit().putInt(getString(R.string.version_code_key), currentVersionCode).apply();
-            // when done fetching data:
-            // setUpTabs();
-            // Toast.makeText(getApplicationContext(), "Stats were refreshed", Toast.LENGTH_LONG).show();
         }
     }
 

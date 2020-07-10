@@ -22,6 +22,7 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -91,7 +92,7 @@ public class FetchDataWorker extends Worker {
             setIsRetrying(false);
             log("FetchDataWorker done");
             return Result.success();
-        } catch (UnknownHostException | SocketException e) {
+        } catch (UnknownHostException | SocketException | SocketTimeoutException e) {
             e.printStackTrace();
             setIsRetrying(true);
             return Result.retry();

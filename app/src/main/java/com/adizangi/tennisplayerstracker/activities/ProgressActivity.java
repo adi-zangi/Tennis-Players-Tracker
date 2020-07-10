@@ -18,11 +18,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adizangi.tennisplayerstracker.R;
+import com.adizangi.tennisplayerstracker.utils_ui.Timer;
 import com.adizangi.tennisplayerstracker.utils_ui.WarningManager;
 import com.adizangi.tennisplayerstracker.fragments.NetworkTypeDialog;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
@@ -37,11 +39,13 @@ public class ProgressActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView progressState;
     private TextView connectionWarning;
+    private TextView countDownView;
+
     private BackgroundManager backgroundManager;
     private WarningManager warningManager;
     private SharedPreferences settings;
     private SharedPreferences prefs;
-    //private CountDownTimer countDown;
+    private Timer timer;
 
     private NetworkTypeDialog.NetworkTypeListener networkTypeListener =
             new NetworkTypeDialog.NetworkTypeListener() {
@@ -97,12 +101,13 @@ public class ProgressActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_bar);
         progressState = findViewById(R.id.progress_state);
         connectionWarning = findViewById(R.id.connection_warning);
+        countDownView = findViewById(R.id.count_down_view);
         backgroundManager = new BackgroundManager(this);
         warningManager = new WarningManager(this);
         settings = PreferenceManager.getDefaultSharedPreferences(this);
         prefs = getSharedPreferences(
                 getString(R.string.shared_prefs_filename), Context.MODE_PRIVATE);
-        //countDown = getCountDownTimer();
+        timer = new Timer(20000, 1000, countDownView);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         backgroundManager.createNotificationChannel();
         FileManager fileManager = new FileManager(this);
@@ -126,8 +131,8 @@ public class ProgressActivity extends AppCompatActivity {
 
     /*
        Updates the UI based on the given WorkInfo
-       If the work's state changed, updates the progress state text view
        If the work's progress changed, updates the progress bar
+       If the work's state changed, updates the state text view
        If the work succeeded, saves the app's version code to indicate that
        the app was initialized, and switches back to MainActivity
        If the work failed, shows a message and prevents the user from proceeding
@@ -138,17 +143,17 @@ public class ProgressActivity extends AppCompatActivity {
         progressBar.setProgress(progress);
         WorkInfo.State state = workInfo.getState();
         if (state == WorkInfo.State.ENQUEUED) {
-            //countDown.cancel();
+            timer.cancel();
             checkEnqueuedState();
         } else if (state == WorkInfo.State.RUNNING) {
             warningManager.dismissWarning();
             progressState.setText(R.string.text_starting);
-            //countDown.start();
+            timer.start();
         } else if (state == WorkInfo.State.FAILED) {
             warningManager.showWarning(getResources().getString(R.string.warning_message_process_failed));
         } else if (state == WorkInfo.State.SUCCEEDED) {
             final int VERSION_CODE = 0;
-            //countDown.cancel();
+            timer.cancel();
             prefs.edit().putInt(getString(R.string.version_code_key), VERSION_CODE).apply();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
@@ -160,8 +165,9 @@ public class ProgressActivity extends AppCompatActivity {
        If the work is waiting to start because there is no network connection,
        shows a 'No Connection' message on the screen that stays until
        connection is back
-       If network connection is slow, shows a message that says this on the
-       screen
+       If network connection is slow, shows a warning on the screen
+       Sets the timer that will show on the screen to 30 seconds if connection
+       is slow, and to 20 seconds otherwise
      */
     private void checkEnqueuedState() {
         boolean isConnected = backgroundManager.isConnectedToNetwork();
@@ -179,44 +185,10 @@ public class ProgressActivity extends AppCompatActivity {
         }
         if (isConnectionSlow) {
             connectionWarning.setText(R.string.text_slow_connection);
-            // edit timer
+            timer = new Timer(30000, 1000, countDownView);
         } else {
-
+            timer = new Timer(20000, 1000, countDownView);
         }
-    }
-
-    /*
-       Returns a CountDownTimer that shows a 20 second countdown on the screen
-     */
-    private CountDownTimer getCountDownTimer() {
-        final TextView countDownView = findViewById(R.id.count_down_view);
-        return new CountDownTimer(20000, 1000) {
-
-            /*
-               Called each time the timer goes down by 1 second
-               Updates the text view with the number of seconds left
-             */
-            @Override
-            public void onTick(long millisUntilFinished) {
-                long secondsRemaining = millisUntilFinished / 1000;
-                String secondsShown = countDownView.getText().toString();
-                if (secondsShown.isEmpty()) {
-                    countDownView.setText(String.valueOf(secondsRemaining));
-                } else if (secondsRemaining < Integer.parseInt(secondsShown)) { // needed due to bug
-                    countDownView.setText(String.valueOf(secondsRemaining));
-                }
-            }
-
-            /*
-               Called when the time is up
-               Updates the text view with "0"
-             */
-            @Override
-            public void onFinish() {
-                countDownView.setText("0");
-            }
-
-        };
     }
 
 }
