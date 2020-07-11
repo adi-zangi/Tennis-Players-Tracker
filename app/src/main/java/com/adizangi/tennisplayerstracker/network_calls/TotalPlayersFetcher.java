@@ -6,6 +6,8 @@
 
 package com.adizangi.tennisplayerstracker.network_calls;
 
+import com.adizangi.tennisplayerstracker.utils_data.FileManager;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -33,13 +35,13 @@ public class TotalPlayersFetcher {
        Each player is represented by name followed by ranking in parenthesis
        The ESPN website doesn't have tennis rankings when a new year starts
        and there have not been any tennis tournaments in the new year
-       In this case, returns an empty list
+       In this case, returns FileManager.TOTAL_PLAYERS_NO_RANKINGS
      */
     public List<String> getTotalPlayersList() {
         List<String> players = new ArrayList<>();
         Element mRankingsTable = mRankings.selectFirst("table");
         if (mRankingsTable == null) {
-            return players;
+            return FileManager.TOTAL_PLAYERS_NO_RANKINGS;
         }
         Elements mRows = mRankingsTable.select("tr");
         Element wRankingsTable = wRankings.selectFirst("table");

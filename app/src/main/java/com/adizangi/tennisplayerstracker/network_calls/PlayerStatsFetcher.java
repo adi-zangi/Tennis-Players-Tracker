@@ -7,6 +7,7 @@ package com.adizangi.tennisplayerstracker.network_calls;
 
 import android.util.Log;
 
+import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.utils_data.PlayerStats;
 
 import org.jsoup.Jsoup;
@@ -41,14 +42,14 @@ public class PlayerStatsFetcher {
        Returns a map from each player to a PlayerStats object
        The ESPN website doesn't have player information when a new year
        starts and there have not been any tennis tournaments in the new year
-       In this case, returns an empty map
+       In this case, returns FileManager.PLAYER_STATS_NO_RANKINGS
        May throw IOException
      */
     public Map<String, PlayerStats> getPlayerStatsMap() throws IOException {
         Map<String, PlayerStats> stats = new HashMap<>();
         Element mRankingsTable = mRankings.selectFirst("table");
         if (mRankingsTable == null) {
-            return stats;
+            return FileManager.PLAYER_STATS_NO_RANKINGS;
         }
         Elements mRows = mRankingsTable.select("tr");
         Element wRankingsTable = wRankings.selectFirst("table");

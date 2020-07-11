@@ -4,6 +4,8 @@
 
 package com.adizangi.tennisplayerstracker.network_calls;
 
+import com.adizangi.tennisplayerstracker.utils_data.FileManager;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -27,13 +29,17 @@ public class NotificationFetcher {
 
     /*
        Returns the text for today's notification
-       If there is no news about tennis, the text will be empty
+       If there is no news about tennis, returns FileManager.NOTIFICATION_TEXT_DOESNT_EXIST
        May throw IOException
      */
     public String getNotificationText() throws IOException {
         String notificationText = getReportForYesterday();
         notificationText = notificationText + getReportForToday();
-        return notificationText;
+        if (notificationText.isEmpty()) {
+            return FileManager.NOTIFICATION_TEXT_DOESNT_EXIST;
+        } else {
+            return notificationText;
+        }
     }
 
     /*
