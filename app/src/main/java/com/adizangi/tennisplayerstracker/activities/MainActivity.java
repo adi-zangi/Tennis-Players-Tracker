@@ -35,6 +35,7 @@ import android.view.MenuItem;
 import com.adizangi.tennisplayerstracker.BuildConfig;
 import com.adizangi.tennisplayerstracker.TimeActivity;
 import com.adizangi.tennisplayerstracker.adapters.TabAdapter;
+import com.adizangi.tennisplayerstracker.fragments.CreditsDialog;
 import com.adizangi.tennisplayerstracker.fragments.FeaturesDialog;
 import com.adizangi.tennisplayerstracker.utils_data.BackgroundManager;
 import com.adizangi.tennisplayerstracker.R;
@@ -96,26 +97,51 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /*
+       Initializes the action bar with buttons
+       Adds the buttons defined in action_bar.xml to the given Menu
+       Returns true so the buttons will show
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.app_bar_items, menu);
+        inflater.inflate(R.menu.action_bar_items, menu);
         return true;
     }
 
+    /*
+       Called when an item from the action bar is selected
+       If 'Settings' was selected, opens SettingsActivity
+       If 'How to use' was selected, shows a dialog that explains how to use
+       the app
+       If 'Credits' was selected, shows a dialog that displays a list of
+       credits for the information and images in this app
+       If the action was not recognized, passes it to the superclass
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
+        switch (item.getItemId()) {
+            case R.id.item_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.item_how_to_use:
+                FeaturesDialog featuresDialog = new FeaturesDialog();
+                featuresDialog.show(getSupportFragmentManager(), "features");
+                return true;
+            case R.id.item_credits:
+                // Add credit for app icon
+                CreditsDialog creditsDialog = new CreditsDialog();
+                creditsDialog.show(getSupportFragmentManager(), "credits");
+                return true;
+            case  R.id.item_time:
+                // Remove
+                Intent i = new Intent(this, TimeActivity.class);
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        else if (item.getItemId() == R.id.time) {
-            Intent intent = new Intent(this, TimeActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /*

@@ -2,11 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/settings"
+        android:id="@+id/item_settings"
         android:title="@string/item_settings"
         app:showAsAction="never" />
     <item
-        android:id="@+id/time"
+        android:id="@+id/item_how_to_use"
+        android:title="@string/item_how_to_use"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/item_credits"
+        android:title="@string/item_credits"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/item_time"
         android:title="@string/item_time"
         app:showAsAction="never" />
 </menu>

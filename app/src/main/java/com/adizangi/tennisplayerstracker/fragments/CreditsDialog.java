@@ -1,5 +1,6 @@
 /*
-   A dialog that explains about the app's features
+   A dialog that displays a list of credits for the information and images in
+   this app
  */
 
 package com.adizangi.tennisplayerstracker.fragments;
@@ -7,7 +8,6 @@ package com.adizangi.tennisplayerstracker.fragments;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.view.View;
 
 import com.adizangi.tennisplayerstracker.R;
 
@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-public class FeaturesDialog extends DialogFragment {
+public class CreditsDialog extends DialogFragment {
 
     /*
        Creates the dialog and returns it
@@ -23,12 +23,10 @@ public class FeaturesDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                .setView(View.inflate(getContext(), R.layout.dialog_features, null))
-                .setPositiveButton(R.string.button_done, null)
-                .setCancelable(false)
+        return new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.dialog_title_credits)
+                .setMessage(R.string.dialog_message_credits)
+                .setNegativeButton(R.string.button_close, null)
                 .create();
-        dialog.setCanceledOnTouchOutside(false);
-        return dialog;
     }
 }
