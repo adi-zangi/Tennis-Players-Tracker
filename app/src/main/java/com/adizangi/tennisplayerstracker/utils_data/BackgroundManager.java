@@ -65,9 +65,8 @@ public class BackgroundManager extends ContextWrapper {
      */
     public void scheduleNotification() {
         if (shouldNotifyToday()) {
-            OneTimeWorkRequest notificationRequest = new OneTimeWorkRequest.Builder
-                    (NotificationWorker.class)
-                    .build();
+            OneTimeWorkRequest notificationRequest =
+                    OneTimeWorkRequest.from(NotificationWorker.class);
             WorkManager.getInstance(this).enqueue(notificationRequest);
         }
     }

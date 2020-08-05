@@ -66,7 +66,7 @@ public class NotificationWorker extends Worker {
         StringBuilder upcomingMatches = new StringBuilder();
         for (String player : selectedPlayers) {
             PlayerStats playerStats = stats.get(player);
-            if (playerStats != null) {
+            if (playerStats != null && !playerStats.getUpcomingMatch().isEmpty()) {
                 upcomingMatches.append(playerStats.getUpcomingMatch());
                 upcomingMatches.append("\n");
             }

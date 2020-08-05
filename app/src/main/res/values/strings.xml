@@ -14,6 +14,10 @@
     <!-- Text -->
     <string name="hint_player_search_bar">Search player</string>
     <string name="text_progress_bar">loading data&#8230;</string>
+    <string name="text_preparing_to_start">Preparing to start&#8230;</string>
+    <string name="text_starting">Starting</string>
+    <string name="text_retrying">Failed to load. Preparing to retry&#8230;</string>
+    <string name="text_slow_connection">Network connection is slow</string>
     <string name="text_welcome">
         Welcome new user! Here is how to use this app: Add instructions with pictures
     </string>
@@ -26,10 +30,6 @@
         All information presented in this app was taken from www.espn.com/tennis.
         \n\nNotification icon was taken from simpleicon.com.
     </string>
-    <string name="text_preparing_to_start">Preparing to start&#8230;</string>
-    <string name="text_starting">Starting</string>
-    <string name="text_retrying">Failed to load. Preparing to retry&#8230;</string>
-    <string name="text_slow_connection">Network connection is slow</string>
     <string name="warning_title_no_connection">No Connection</string>
     <string name="warning_message_no_connection">
         The app will not start until there is network connection

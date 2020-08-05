@@ -17,11 +17,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.adizangi.tennisplayerstracker.R;
 import com.adizangi.tennisplayerstracker.utils_ui.Timer;
@@ -38,7 +35,7 @@ public class ProgressActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private TextView progressState;
-    private TextView connectionWarning;
+    private TextView slowConnectionWarning;
     private TextView countDownView;
 
     private BackgroundManager backgroundManager;
@@ -100,7 +97,7 @@ public class ProgressActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         progressBar = findViewById(R.id.progress_bar);
         progressState = findViewById(R.id.progress_state);
-        connectionWarning = findViewById(R.id.connection_warning);
+        slowConnectionWarning = findViewById(R.id.slow_connection_warning);
         countDownView = findViewById(R.id.count_down_view);
         backgroundManager = new BackgroundManager(this);
         warningManager = new WarningManager(this);
@@ -184,7 +181,7 @@ public class ProgressActivity extends AppCompatActivity {
             progressState.setText(R.string.text_preparing_to_start);
         }
         if (isConnectionSlow) {
-            connectionWarning.setText(R.string.text_slow_connection);
+            slowConnectionWarning.setText(R.string.text_slow_connection);
             timer = new Timer(30000, 1000, countDownView);
         } else {
             timer = new Timer(20000, 1000, countDownView);

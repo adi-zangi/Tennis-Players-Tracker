@@ -2,6 +2,13 @@
    Adi Zangi
    2019-2020
 
+   ^ is a tool for people who like to watch professional tennis
+   It helps the user keep track of their favorite players' advancement in
+   tournaments and also stay informed about the most recent tournaments
+   The Players tab lets the user edit the players they want to track. To add
+   a player, ...
+
+
    This app is meant for people who like to watch professional tennis
    The purpose of the app Tennis Players Tracker is to help the user keep track
    of tennis players that they select
