@@ -13,11 +13,11 @@
 
     <!-- Text -->
     <string name="hint_player_search_bar">Search player</string>
-    <string name="text_progress_bar">loading data&#8230;</string>
+    <string name="title_progress_bar">loading data&#8230;</string>
     <string name="text_preparing_to_start">Preparing to start&#8230;</string>
     <string name="text_starting">Starting</string>
     <string name="text_retrying">Failed to load. Preparing to retry&#8230;</string>
-    <string name="text_slow_connection">Network connection is slow</string>
+    <string name="text_slow_connection">Connection might be too slow</string>
     <string name="text_welcome">
         Welcome new user! Here is how to use this app: Add instructions with pictures
     </string>

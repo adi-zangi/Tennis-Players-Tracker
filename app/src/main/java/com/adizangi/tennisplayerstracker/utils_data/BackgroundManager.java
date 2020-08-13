@@ -33,6 +33,8 @@ import androidx.work.WorkManager;
 
 public class BackgroundManager extends ContextWrapper {
 
+    public static final String FETCH_DATA_WORK_TAG = "fetch_data"; // maybe combine both
+
     private static final String REFRESH_WORK_NAME = "refresh_work";
 
     /*
@@ -78,14 +80,15 @@ public class BackgroundManager extends ContextWrapper {
        connection type is selected in Settings as one the app should use
        After the worker saves the data, it schedules another worker that sends
        a notification
-       Returns the WorkRequest id
+       The work has the tag BackgroundManager.FETCH_DATA_WORK_TAG
      */
-    public UUID fetchDataImmediately() {
+    public void fetchData() {
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(getNetworkType())
                 .build();
         OneTimeWorkRequest fetchDataRequest = new OneTimeWorkRequest.Builder
                 (FetchDataWorker.class)
+                .addTag(FETCH_DATA_WORK_TAG)
                 .setConstraints(constraints)
                 .setBackoffCriteria(
                         BackoffPolicy.LINEAR,
@@ -93,7 +96,6 @@ public class BackgroundManager extends ContextWrapper {
                         TimeUnit.MILLISECONDS)
                 .build();
         WorkManager.getInstance(this).enqueue(fetchDataRequest);
-        return fetchDataRequest.getId();
     }
 
     /*
@@ -148,25 +150,6 @@ public class BackgroundManager extends ContextWrapper {
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
-    }
-
-    /*
-       Returns true if internet speed is slow
-       Slow is considered to be below 25 Mbps
-       Returns false if either the connection is at or above 25 Mbps or there
-       is no connection of a type this app is permitted to use
-     */
-    public boolean isConnectionSlow() {
-        if (isConnectedToNetwork()) {
-            ConnectivityManager connectivityManager =
-                    (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkCapabilities capabilities =
-                    connectivityManager.getNetworkCapabilities(
-                            connectivityManager.getActiveNetwork());
-            int downstreamBandwidth = capabilities.getLinkDownstreamBandwidthKbps();
-            return downstreamBandwidth < 25000;
-        }
-        return false;
     }
 
     /*

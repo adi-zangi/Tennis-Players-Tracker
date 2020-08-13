@@ -8,6 +8,7 @@ package com.adizangi.tennisplayerstracker.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
@@ -46,13 +47,7 @@ public class NetworkTypeDialog extends DialogFragment {
     };
 
     /*
-       Sets the NetworkTypeListener callback to the given callback
-     */
-    public void setNetworkTypeListener(NetworkTypeListener callback) {
-        this.callback = callback;
-    }
-
-    /*
+       Called after onAttach()
        Creates the dialog and returns it
      */
     @NonNull
@@ -67,4 +62,21 @@ public class NetworkTypeDialog extends DialogFragment {
         dialog.setCanceledOnTouchOutside(false);
         return dialog;
     }
+
+    /*
+       Called when the dialog is first attached to its host activity
+       If the host activity implements the callback interface, instantiates
+       callback
+       Otherwise, throws a ClassCastException
+     */
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            callback = (NetworkTypeListener) context;
+        } catch (Exception e) {
+            throw new ClassCastException(context + " must implement NetworkTypeListener");
+        }
+    }
+
 }
