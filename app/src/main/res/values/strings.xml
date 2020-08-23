@@ -16,26 +16,28 @@
     <string name="title_progress_bar">loading data&#8230;</string>
     <string name="text_preparing_to_start">Preparing to start&#8230;</string>
     <string name="text_starting">Starting</string>
-    <string name="text_retrying">Failed to load. Preparing to retry&#8230;</string>
+    <string name="text_stopped">Stopped</string>
+    <string name="text_retrying">Preparing to retry&#8230;</string>
+    <string name="text_finished">Finished</string>
     <string name="text_slow_connection">Connection might be too slow</string>
+    <string name="text_no_connection">
+        No Connection
+        \nThe app will not start until there is network connection
+    </string>
     <string name="text_welcome">
         Welcome new user! Here is how to use this app: Add instructions with pictures
-    </string>
-    <string name="dialog_message_network_type">
-        This app uses the network daily for a short time (less than a minute).
-        Which types of network connection should this app use?
     </string>
     <string name="dialog_title_credits">Credits</string>
     <string name="dialog_message_credits">
         All information presented in this app was taken from www.espn.com/tennis.
         \n\nNotification icon was taken from simpleicon.com.
     </string>
-    <string name="warning_title_no_connection">No Connection</string>
-    <string name="warning_message_no_connection">
-        The app will not start until there is network connection
+    <string name="dialog_message_network_type">
+        This app uses the network daily for a short time (less than a minute).
+        Which types of network connection should this app use?
     </string>
-    <string name="warning_message_process_failed">
-        Process failed. Please allow time for the problem to get fixed.
+    <string name="dialog_message_error">
+        There was an error. Admin was notified and will work on fixing it.
     </string>
 
     <!-- Action Bar Items -->

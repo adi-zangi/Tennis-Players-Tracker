@@ -33,7 +33,7 @@ import androidx.work.WorkManager;
 
 public class BackgroundManager extends ContextWrapper {
 
-    public static final String FETCH_DATA_WORK_TAG = "fetch_data"; // maybe combine both
+    public static final String FETCH_DATA_WORK_TAG = "fetchData"; // maybe combine both
 
     private static final String REFRESH_WORK_NAME = "refresh_work";
 

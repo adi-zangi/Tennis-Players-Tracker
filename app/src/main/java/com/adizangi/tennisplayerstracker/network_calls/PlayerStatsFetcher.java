@@ -63,6 +63,7 @@ public class PlayerStatsFetcher {
                 String playerURL = playerNameLink.attr("abs:href");
                 Document playerDocument = Jsoup.connect(playerURL).get();
                 String playerKey = getPlayerKey(playerDocument);
+                System.out.println("getting stats for " + playerKey);
                 PlayerStats playerStats = getPlayerStats(playerDocument);
                 stats.put(playerKey, playerStats);
             }
@@ -72,6 +73,7 @@ public class PlayerStatsFetcher {
                 String playerURL = playerNameLink.attr("abs:href");
                 Document playerDocument = Jsoup.connect(playerURL).get();
                 String playerKey = getPlayerKey(playerDocument);
+                System.out.println("getting stats for " + playerKey);
                 PlayerStats playerStats = getPlayerStats(playerDocument);
                 stats.put(playerKey, playerStats);
             }
@@ -236,6 +238,7 @@ public class PlayerStatsFetcher {
      */
     private String getLatestMatchResult(Document playerDocument,
                                         int latestResultIndex) {
+        System.out.println("latest result index: " + latestResultIndex);
         Element latestTournamentDiv =
                 playerDocument.selectFirst("#my-players-table");
         Element latestTournamentTable =
@@ -245,11 +248,17 @@ public class PlayerStatsFetcher {
         Elements columns = latestResultRow.select("td");
         String matchResult = columns.get(2).text();
         if (matchResult.equals("-")) {
+            if (latestResultIndex == 2) {
+                return "";
+            }
             latestResultRow = rows.get(latestResultIndex - 1);
             columns = latestResultRow.select("td");
         }
         String round = columns.get(0).text();
         String opponent = columns.get(1).text();
+        if (opponent.isEmpty()) {
+            return round + "- automatically advanced";
+        }
         String score = columns.get(3).text();
         return round + "- " + opponent + " " + score;
     }

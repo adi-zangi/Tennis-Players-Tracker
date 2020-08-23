@@ -3,7 +3,7 @@
    this app
  */
 
-package com.adizangi.tennisplayerstracker.fragments;
+package com.adizangi.tennisplayerstracker.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
