@@ -161,7 +161,7 @@ public class ProgressActivity extends AppCompatActivity
     public void onSelectAnyConnection() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         settings.edit().putBoolean(getString(R.string.pref_network_type_key), false).apply();
-        backgroundManager.fetchData();
+        backgroundManager.fetchDataSendNotif();
     }
 
     /*
@@ -174,7 +174,7 @@ public class ProgressActivity extends AppCompatActivity
     public void onSelectUnmeteredOnly() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         settings.edit().putBoolean(getString(R.string.pref_network_type_key), true).apply();
-        backgroundManager.fetchData();
+        backgroundManager.fetchDataSendNotif();
     }
 
     /*

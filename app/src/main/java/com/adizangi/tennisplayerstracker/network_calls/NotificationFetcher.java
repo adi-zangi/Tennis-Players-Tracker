@@ -99,7 +99,7 @@ public class NotificationFetcher {
         if (tSchedule.select("h3.noMatch").size() > 0) {
             return "";
         }
-        StringBuilder dailyTournaments = new StringBuilder("Today-\n");
+        StringBuilder dailyTournaments = new StringBuilder();
         StringBuilder dailyFinals = new StringBuilder();
         Elements tournaments = tSchedule.select("div.scoreHeadline");
         for (Element tournament : tournaments) {
@@ -111,7 +111,7 @@ public class NotificationFetcher {
                     (0, documentTitle.indexOf("Daily Match Schedule - ESPN") - 1);
             String tournamentRound = tournamentDocument
                     .selectFirst("div.matchCourt").text();
-            if (tournamentRound.contains("Singles")) {
+            if (tournamentDocument.text().contains("Singles")) {
                 if (tournamentRound.contains("Final")) {
                     Element matchTable = tournamentDocument.selectFirst("table");
                     Elements rows = matchTable.select("tr");
@@ -131,7 +131,11 @@ public class NotificationFetcher {
                 }
             }
         }
-        return dailyTournaments.toString() + dailyFinals.toString();
+        String reportForToday = dailyTournaments.toString() + dailyFinals.toString();
+        if (!reportForToday.isEmpty()) {
+            reportForToday = "Today-\n" + reportForToday;
+        }
+        return reportForToday;
     }
 
 }

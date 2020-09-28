@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             FeaturesDialog dialog = new FeaturesDialog();
             dialog.show(getSupportFragmentManager(), "features");
             BackgroundManager backgroundManager = new BackgroundManager(this);
-            backgroundManager.scheduleDailyRefresh();
+            backgroundManager.scheduleRefresh();
             prefs.edit().putInt(getString(R.string.version_code_key), currentVersionCode).apply();
         }
     }

@@ -5,8 +5,6 @@
 
 package com.adizangi.tennisplayerstracker.network_calls;
 
-import android.util.Log;
-
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.utils_data.PlayerStats;
 
@@ -23,8 +21,6 @@ import java.util.Locale;
 import java.util.Map;
 
 public class PlayerStatsFetcher {
-
-    private static final String LOG_TAG = "Fetching_Data";
 
     private Document mRankings;
     private Document wRankings;
@@ -63,7 +59,6 @@ public class PlayerStatsFetcher {
                 String playerURL = playerNameLink.attr("abs:href");
                 Document playerDocument = Jsoup.connect(playerURL).get();
                 String playerKey = getPlayerKey(playerDocument);
-                System.out.println("getting stats for " + playerKey);
                 PlayerStats playerStats = getPlayerStats(playerDocument);
                 stats.put(playerKey, playerStats);
             }
@@ -73,7 +68,6 @@ public class PlayerStatsFetcher {
                 String playerURL = playerNameLink.attr("abs:href");
                 Document playerDocument = Jsoup.connect(playerURL).get();
                 String playerKey = getPlayerKey(playerDocument);
-                System.out.println("getting stats for " + playerKey);
                 PlayerStats playerStats = getPlayerStats(playerDocument);
                 stats.put(playerKey, playerStats);
             }
@@ -238,7 +232,6 @@ public class PlayerStatsFetcher {
      */
     private String getLatestMatchResult(Document playerDocument,
                                         int latestResultIndex) {
-        System.out.println("latest result index: " + latestResultIndex);
         Element latestTournamentDiv =
                 playerDocument.selectFirst("#my-players-table");
         Element latestTournamentTable =

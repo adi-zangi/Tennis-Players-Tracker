@@ -7,6 +7,7 @@ package com.adizangi.tennisplayerstracker.workers;
 import android.content.Context;
 
 import com.adizangi.tennisplayerstracker.R;
+import com.adizangi.tennisplayerstracker.utils_data.BackgroundManager;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.utils_data.PlayerStats;
 
@@ -21,28 +22,36 @@ import androidx.work.WorkerParameters;
 
 public class NotificationWorker extends Worker {
 
+    private FileManager fileManager;
+    private BackgroundManager backgroundManager;
+
     /*
        Constructs a NotificationWorker with the given context and worker params
      */
     public NotificationWorker(@NonNull Context context,
                               @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
+        fileManager = new FileManager(context);
+        backgroundManager = new BackgroundManager(context);
     }
 
     /*
-       If the notification text that was fetched in FetchDataWorker is not
-       empty, sends a notification containing that text
+       If a notification should be sent today based on the selections in
+       Settings, and if the notification text that was fetched in
+       FetchDataWorker is not empty, sends a notification containing that text
+       If the input data contains BackgroundManager.RESCHEDULE_KEY, schedules
+       the next data refresh
     */
     @NonNull
     @Override
     public Result doWork() {
         final int NOTIFICATION_ID = 1;
         Context context = getApplicationContext();
-        FileManager fileManager = new FileManager(context);
         String contentText = fileManager.readNotificationText();
         List<String> selectedPlayers = fileManager.readSelectedPlayers();
         Map<String, PlayerStats> stats = fileManager.readPlayerStats();
-        if (!contentText.isEmpty() && !stats.isEmpty()) {
+        if (backgroundManager.shouldNotifyToday() &&
+                !contentText.isEmpty() && !stats.isEmpty()) {
             contentText = addMatchesToContent(contentText, selectedPlayers, stats);
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder
                     (context, context.getString(R.string.notification_channel_id))
@@ -52,6 +61,9 @@ public class NotificationWorker extends Worker {
             NotificationManagerCompat notificationManager =
                     NotificationManagerCompat.from(context);
             notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+        }
+        if (getInputData().getBoolean(BackgroundManager.RESCHEDULE_KEY, false)) {
+            backgroundManager.scheduleRefresh();
         }
         return Result.success();
     }

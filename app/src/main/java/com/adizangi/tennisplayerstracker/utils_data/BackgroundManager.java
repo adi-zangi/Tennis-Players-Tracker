@@ -19,23 +19,21 @@ import com.adizangi.tennisplayerstracker.workers.NotificationWorker;
 
 import java.util.Calendar;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import androidx.preference.PreferenceManager;
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
-import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.Data;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
-import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 public class BackgroundManager extends ContextWrapper {
 
-    public static final String FETCH_DATA_WORK_TAG = "fetchData"; // maybe combine both
-
-    private static final String REFRESH_WORK_NAME = "refresh_work";
+    public static final String FETCH_DATA_WORK_TAG = "fetchData";
+    public static final String NOTIFICATION_WORK_TAG = "notification";
+    public static final String RESCHEDULE_KEY = "reschedule";
 
     /*
        Constructs a BackgroundManager with the given application context
@@ -61,28 +59,14 @@ public class BackgroundManager extends ContextWrapper {
     }
 
     /*
-       If a notification should be sent based on Settings, schedules background
-       work that will create and send a notification
-       The work will start right away
+       Schedules a chain of work that fetches data and then sends a
+       notification
+       The chain has a constraint that there is network connection
+       If connection stops, the system will retry the work as soon as possible
+       The work requests contain the tags FETCH_DATA_WORK_TAG and
+       NOTIFICATION_WORK_TAG
      */
-    public void scheduleNotification() {
-        if (shouldNotifyToday()) {
-            OneTimeWorkRequest notificationRequest =
-                    OneTimeWorkRequest.from(NotificationWorker.class);
-            WorkManager.getInstance(this).enqueue(notificationRequest);
-        }
-    }
-
-    /*
-       Schedules background work that fetches data, with a constraint that
-       there is network connection
-       The work will start as soon as there is network connection and the
-       connection type is selected in Settings as one the app should use
-       After the worker saves the data, it schedules another worker that sends
-       a notification
-       The work has the tag BackgroundManager.FETCH_DATA_WORK_TAG
-     */
-    public void fetchData() {
+    public void fetchDataSendNotif() {
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(getNetworkType())
                 .build();
@@ -95,39 +79,57 @@ public class BackgroundManager extends ContextWrapper {
                         OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
                         TimeUnit.MILLISECONDS)
                 .build();
-        WorkManager.getInstance(this).enqueue(fetchDataRequest);
+        OneTimeWorkRequest notificationRequest = new OneTimeWorkRequest.Builder
+                (NotificationWorker.class)
+                .addTag(NOTIFICATION_WORK_TAG)
+                .build();
+        WorkManager.getInstance(this)
+                .beginWith(fetchDataRequest)
+                .then(notificationRequest)
+                .enqueue();
     }
 
     /*
-       Schedules background work that refreshes the app's data every day
-       Data will be refreshed at the first time after 12:00am that the user is
-       using their phone (which makes the system exit doze mode), each day
-       If there is no network connection, the work will be delayed until there is
-       After the data is refreshed, the worker will schedule another worker
-       that sends a notification
+       Schedules a chain of work that refreshes the app's data and then sends
+       a notification
+       The work is scheduled to run at midnight, but if the device is on doze
+       mode at midnight, then the work will be delayed until the device exits
+       doze mode
+       The notification worker will receive RESCHEDULE_KEY as input to indicate
+       that it should schedule this refresh sequence for the next day
      */
-    public void scheduleDailyRefresh() {
+    public void scheduleRefresh() {
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(getNetworkType())
                 .build();
-        PeriodicWorkRequest refreshDataRequest = new PeriodicWorkRequest.Builder
-                (FetchDataWorker.class, 1, TimeUnit.DAYS)
+        OneTimeWorkRequest fetchDataRequest = new OneTimeWorkRequest.Builder
+                (FetchDataWorker.class)
+                .addTag(FETCH_DATA_WORK_TAG)
                 .setConstraints(constraints)
-                .setInitialDelay(getTimeToMidnight(), TimeUnit.MILLISECONDS)
+                .setInitialDelay(getTimeUntilMidnight(), TimeUnit.MILLISECONDS)
                 .build();
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-                REFRESH_WORK_NAME,
-                ExistingPeriodicWorkPolicy.KEEP,
-                refreshDataRequest);
+        OneTimeWorkRequest notificationRequest = new OneTimeWorkRequest.Builder
+                (NotificationWorker.class)
+                .addTag(NOTIFICATION_WORK_TAG)
+                .setInputData(new Data.Builder()
+                        .putBoolean(RESCHEDULE_KEY, true)
+                        .build())
+                .build();
+        WorkManager.getInstance(this)
+                .beginWith(fetchDataRequest)
+                .then(notificationRequest)
+                .enqueue();
     }
 
     /*
-       Cancels and reschedules the background work from scheduleDailyRefresh(),
+       Cancels and reschedules the __ background work from scheduleDailyRefresh(),
        so any changes in network preferences and the time zone will be applied
      */
-    public void rescheduleDailyRefresh() {
-        WorkManager.getInstance(this).cancelUniqueWork(REFRESH_WORK_NAME);
-        scheduleDailyRefresh();
+    public void rescheduleRefresh() {
+        WorkManager workManager = WorkManager.getInstance(this);
+        workManager.cancelAllWorkByTag(FETCH_DATA_WORK_TAG);
+        workManager.cancelAllWorkByTag(NOTIFICATION_WORK_TAG);
+        scheduleRefresh();
     }
 
     /*
@@ -158,7 +160,7 @@ public class BackgroundManager extends ContextWrapper {
        selections in this app's Settings
        Returns false otherwise
      */
-    private boolean shouldNotifyToday() {
+    public boolean shouldNotifyToday() {
         SharedPreferences preferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
         boolean areNotificationsEnabled =
@@ -194,7 +196,7 @@ public class BackgroundManager extends ContextWrapper {
     /*
        Returns the number of milliseconds between the current time and 12:00am
      */
-    private long getTimeToMidnight() {
+    private long getTimeUntilMidnight() {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, 1);
         c.set(Calendar.HOUR_OF_DAY, 0);

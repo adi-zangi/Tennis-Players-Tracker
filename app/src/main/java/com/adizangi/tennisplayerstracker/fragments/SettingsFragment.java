@@ -47,7 +47,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             networkTypePref.setChecked((boolean) newValue);
-            new BackgroundManager(requireContext()).rescheduleDailyRefresh();
+            new BackgroundManager(requireContext()).rescheduleRefresh();
             return true;
         }
     };
