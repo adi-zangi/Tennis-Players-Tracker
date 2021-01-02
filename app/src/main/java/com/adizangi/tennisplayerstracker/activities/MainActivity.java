@@ -2,26 +2,17 @@
    Adi Zangi
    2019-2020
 
-   ^ is a tool for people who like to watch professional tennis
-   It helps the user keep track of their favorite players' advancement in
-   tournaments and also stay informed about the most recent tournaments
-   The Players tab lets the user edit the players they want to track. To add
-   a player, ...
-
-
-   This app is meant for people who like to watch professional tennis
-   The purpose of the app Tennis Players Tracker is to help the user keep track
-   of tennis players that they select
-   The user can select players and view statistics and tournament results for
-   each of those players, which are updated daily
-   The user can also receive notifications that give a summary of the
-   tournaments that are going on for the day and the times at which the
-   selected players are playing
+   Tennis Players Tracker is a tool for people who like to watch professional
+   tennis
+   The app helps the user keep track of tennis players' progress in tournaments
+   The user can add players to their list and view statistics and tournament
+   results for each of those players, which are refreshed daily
+   The user can also get notifications about the most recent tournaments
 
    MainActivity is the home screen of the app
-   The screen is separated into two tabs
-   The first tab shows the information about each selected player, and
-   the second tab enables to edit the currently selected players
+   It is separated into two tabs-
+   The first tab shows the statistics of each selected player, and
+   the second tab enables to edit the players list
  */
 
 package com.adizangi.tennisplayerstracker.activities;
@@ -90,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
             setUpTabs();
         } else if (isNewInstall) {
-            Intent intent = new Intent(this, ProgressActivity.class);
+            Intent intent = new Intent(this, ProgressBarActivity.class);
             startActivity(intent);
         } else if (isInitialized) {
             Toolbar toolbar = findViewById(R.id.action_bar);

@@ -11,6 +11,7 @@ import com.adizangi.tennisplayerstracker.utils_data.BackgroundManager;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.utils_data.PlayerStats;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +76,12 @@ public class NotificationWorker extends Worker {
     private String addMatchesToContent(String currentContent,
                                        List<String> selectedPlayers,
                                        Map<String, PlayerStats> stats) {
+        System.out.println("stats");
+        for(String player : stats.keySet()) {
+            System.out.println(player);
+            System.out.println(stats.get(player).getUpcomingMatch());
+        }
+        System.out.println("selected: " + selectedPlayers);
         StringBuilder upcomingMatches = new StringBuilder();
         for (String player : selectedPlayers) {
             PlayerStats playerStats = stats.get(player);

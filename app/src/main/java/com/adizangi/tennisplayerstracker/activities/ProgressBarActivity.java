@@ -31,7 +31,7 @@ import com.adizangi.tennisplayerstracker.workers.FetchDataWorker;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProgressActivity extends AppCompatActivity
+public class ProgressBarActivity extends AppCompatActivity
         implements NetworkTypeDialog.NetworkTypeListener {
 
     private static final String PROGRESS_KEY = "progress";
@@ -82,7 +82,7 @@ public class ProgressActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_progress);
+        setContentView(R.layout.activity_progress_bar);
         Toolbar toolbar = findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         progressBar = findViewById(R.id.progress_bar);

@@ -29,14 +29,14 @@ public class NotificationFetcher {
 
     /*
        Returns the text for today's notification
-       If there is no news about tennis, returns FileManager.NOTIFICATION_TEXT_DOESNT_EXIST
+       If there is no news about tennis, returns an empty string
        May throw IOException
      */
     public String getNotificationText() throws IOException {
         String notificationText = getReportForYesterday();
         notificationText = notificationText + getReportForToday();
         if (notificationText.isEmpty()) {
-            return FileManager.NOTIFICATION_TEXT_DOESNT_EXIST;
+            return "";
         } else {
             return notificationText;
         }

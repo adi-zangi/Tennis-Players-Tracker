@@ -38,14 +38,14 @@ public class PlayerStatsFetcher {
        Returns a map from each player to a PlayerStats object
        The ESPN website doesn't have player information when a new year
        starts and there have not been any tennis tournaments in the new year
-       In this case, returns FileManager.PLAYER_STATS_NO_RANKINGS
+       In this case, returns an empty map
        May throw IOException
      */
     public Map<String, PlayerStats> getPlayerStatsMap() throws IOException {
         Map<String, PlayerStats> stats = new HashMap<>();
         Element mRankingsTable = mRankings.selectFirst("table");
         if (mRankingsTable == null) {
-            return FileManager.PLAYER_STATS_NO_RANKINGS;
+            return new HashMap<>();
         }
         Elements mRows = mRankingsTable.select("tr");
         Element wRankingsTable = wRankings.selectFirst("table");
