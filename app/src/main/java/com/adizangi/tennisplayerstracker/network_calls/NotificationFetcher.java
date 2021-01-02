@@ -4,8 +4,6 @@
 
 package com.adizangi.tennisplayerstracker.network_calls;
 
-import com.adizangi.tennisplayerstracker.utils_data.FileManager;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

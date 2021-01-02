@@ -11,7 +11,6 @@ import com.adizangi.tennisplayerstracker.utils_data.BackgroundManager;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.utils_data.PlayerStats;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 

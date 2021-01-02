@@ -19,7 +19,6 @@
     <string name="text_stopped">Stopped</string>
     <string name="text_retrying">Preparing to retry&#8230;</string>
     <string name="text_finished">Finished</string>
-    <string name="text_slow_connection">Connection might be too slow</string>
     <string name="text_no_connection">
         No Connection
         \nThe app will not start until there is network connection
