@@ -31,10 +31,7 @@ public class StatsAdapter extends RecyclerView.Adapter
 
         TextView name;
         TextView tournamentStanding;
-        TextView ranking;
-        TextView titles;
-        TextView currentTournament;
-        TextView latestMatchResult;
+        TextView statsSummary;
 
         /*
            Constructs a ViewHolder with the given layout of an item in the RecyclerView
@@ -43,10 +40,7 @@ public class StatsAdapter extends RecyclerView.Adapter
             super(layout);
             name = layout.findViewById(R.id.name);
             tournamentStanding = layout.findViewById(R.id.tournament_standing);
-            ranking = layout.findViewById(R.id.ranking);
-            titles = layout.findViewById(R.id.titles);
-            currentTournament = layout.findViewById(R.id.current_tournament);
-            latestMatchResult = layout.findViewById(R.id.latest_match_result);
+            statsSummary = layout.findViewById(R.id.stats_summary);
         }
     }
 
@@ -78,10 +72,7 @@ public class StatsAdapter extends RecyclerView.Adapter
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PlayerStats playerStats = stats.get(position);
         holder.name.setText(playerStats.getName());
-        holder.ranking.setText(playerStats.getRanking());
-        holder.titles.setText(playerStats.getTitles());
-        holder.currentTournament.setText(playerStats.getCurrentTournament());
-        holder.latestMatchResult.setText(playerStats.getLatestMatchResult());
+        holder.statsSummary.setText(playerStats.getStatsSummary());
         String tournamentStanding = playerStats.getTournamentStanding();
         holder.tournamentStanding.setText(tournamentStanding);
         if (tournamentStanding.contains("advanced")) {

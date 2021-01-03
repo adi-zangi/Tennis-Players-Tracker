@@ -98,6 +98,18 @@ public class PlayerStats implements Comparable<PlayerStats>, Serializable {
     }
 
     /*
+       Returns a String containing the summary of this PlayerStats
+       The summary contains the ranking, titles, current tournament, and latest
+       match result, separated by new lines
+     */
+    public String getStatsSummary() {
+        return getRanking() +
+                "\n" + getTitles() +
+                "\n" + getCurrentTournament() +
+                "\n" + getLatestMatchResult();
+    }
+
+    /*
         Returns -1, 0, or 1 if this PlayerStats is less than, equal to, or
         greater than the given other PlayerStats, respectively
         PlayerStats objects are compared by tournament standing, such that a
