@@ -4,9 +4,12 @@
 
 package com.adizangi.tennisplayerstracker.workers;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 
 import com.adizangi.tennisplayerstracker.R;
+import com.adizangi.tennisplayerstracker.activities.MainActivity;
 import com.adizangi.tennisplayerstracker.utils_data.BackgroundManager;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.utils_data.PlayerStats;
@@ -53,11 +56,15 @@ public class NotificationWorker extends Worker {
         if (backgroundManager.shouldNotifyToday() &&
                 !contentText.isEmpty() && !stats.isEmpty()) {
             contentText = addMatchesToContent(contentText, selectedPlayers, stats);
+            Intent intent = new Intent(context, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent
+                    .getActivity(context, 0, intent, 0);
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder
                     (context, context.getString(R.string.notification_channel_id))
                     .setSmallIcon(R.drawable.ic_notification)
                     .setContentText(contentText)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText));
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText))
+                    .setContentIntent(pendingIntent);
             NotificationManagerCompat notificationManager =
                     NotificationManagerCompat.from(context);
             notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
