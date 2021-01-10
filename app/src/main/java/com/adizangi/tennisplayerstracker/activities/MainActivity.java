@@ -81,13 +81,16 @@ public class MainActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
             setUpTabs();
         } else if (isNewInstall) {
-            Intent intent = new Intent(this, ProgressBarActivity.class);
+            Intent intent = new Intent(this, ProgressBarActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+            finish();
         } else if (isInitialized) {
             Toolbar toolbar = findViewById(R.id.action_bar);
             setSupportActionBar(toolbar);
             setUpTabs();
             FeaturesDialog dialog = new FeaturesDialog();
+            dialog.setCancelable(false);
             dialog.show(getSupportFragmentManager(), "features");
             BackgroundManager backgroundManager = new BackgroundManager(this);
             backgroundManager.scheduleRefresh();

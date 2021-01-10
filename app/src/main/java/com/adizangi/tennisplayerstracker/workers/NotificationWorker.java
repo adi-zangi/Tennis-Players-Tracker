@@ -7,6 +7,7 @@ package com.adizangi.tennisplayerstracker.workers;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.adizangi.tennisplayerstracker.R;
 import com.adizangi.tennisplayerstracker.activities.MainActivity;
@@ -82,12 +83,6 @@ public class NotificationWorker extends Worker {
     private String addMatchesToContent(String currentContent,
                                        List<String> selectedPlayers,
                                        Map<String, PlayerStats> stats) {
-        System.out.println("stats");
-        for(String player : stats.keySet()) {
-            System.out.println(player);
-            System.out.println(stats.get(player).getUpcomingMatch());
-        }
-        System.out.println("selected: " + selectedPlayers);
         StringBuilder upcomingMatches = new StringBuilder();
         for (String player : selectedPlayers) {
             PlayerStats playerStats = stats.get(player);

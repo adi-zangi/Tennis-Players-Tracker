@@ -49,13 +49,13 @@ public class TotalPlayersFetcher {
         for (int rowIndex = 1; rowIndex < 101; rowIndex++) {
             if (rowIndex < mNumOfRows) {  // Check is needed due to bug in the website
                 Elements mColumns = mRows.get(rowIndex).select("td");
-                String playerName = mColumns.get(2).text();
+                String playerName = mColumns.get(1).text();
                 String playerRanking = mColumns.get(0).text();
                 players.add(playerName + " (" + playerRanking + ")");
             }
             if (rowIndex < wNumOfRows) {
                 Elements wColumns = wRows.get(rowIndex).select("td");
-                String playerName = wColumns.get(2).text();
+                String playerName = wColumns.get(1).text();
                 String playerRanking = wColumns.get(0).text();
                 players.add(playerName + " (" + playerRanking + ")");
             }

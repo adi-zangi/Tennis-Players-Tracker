@@ -54,20 +54,26 @@ public class PlayerStatsFetcher {
         for (int rowIndex = 1; rowIndex < 101; rowIndex++) {
             if (rowIndex < mNumOfRows) {  // Check is needed due to bug in the website
                 Elements mColumns = mRows.get(rowIndex).select("td");
-                Element playerNameLink = mColumns.get(2).selectFirst("a");
+                String playerName = mColumns.get(1).text();
+                String playerRanking = mColumns.get(0).text();
+                Element playerNameLink = mColumns.get(1).selectFirst("a");
                 String playerURL = playerNameLink.attr("abs:href");
                 Document playerDocument = Jsoup.connect(playerURL).get();
-                String playerKey = getPlayerKey(playerDocument);
-                PlayerStats playerStats = getPlayerStats(playerDocument);
+                String playerKey = playerName + " (" + playerRanking + ")";
+                PlayerStats playerStats = getPlayerStats(playerDocument,
+                        playerName, playerRanking);
                 stats.put(playerKey, playerStats);
             }
             if (rowIndex < wNumOfRows) {
                 Elements wColumns = wRows.get(rowIndex).select("td");
-                Element playerNameLink = wColumns.get(2).selectFirst("a");
+                String playerName = wColumns.get(1).text();
+                String playerRanking = wColumns.get(0).text();
+                Element playerNameLink = wColumns.get(1).selectFirst("a");
                 String playerURL = playerNameLink.attr("abs:href");
                 Document playerDocument = Jsoup.connect(playerURL).get();
-                String playerKey = getPlayerKey(playerDocument);
-                PlayerStats playerStats = getPlayerStats(playerDocument);
+                String playerKey = playerName + " (" + playerRanking + ")";
+                PlayerStats playerStats = getPlayerStats(playerDocument,
+                        playerName, playerRanking);
                 stats.put(playerKey, playerStats);
             }
         }
@@ -75,22 +81,12 @@ public class PlayerStatsFetcher {
     }
 
     /*
-       Returns the key for the player whose information is in the given document
-       The key is the player's name followed by the player's ranking in parenthesis
-     */
-    private String getPlayerKey(Document playerDocument) {
-        String playerName = getName(playerDocument);
-        String playerRanking = getRanking(playerDocument);
-        return playerName + " (" + playerRanking + ")";
-    }
-
-    /*
        Returns a PlayerStats object for the player whose information is in
        the given document
      */
-    private PlayerStats getPlayerStats(Document playerDocument) {
-        String name = getName(playerDocument);
-        String ranking = "Current ranking: " + getRanking(playerDocument);
+    private PlayerStats getPlayerStats(Document playerDocument,
+                                       String name, String rankingNumber) {
+        String ranking = "Current ranking: " + rankingNumber;
         String titles = getTitles(playerDocument);
         int latestResultIndex = getLatestResultIndex(playerDocument);
         String standing = getTournamentStanding

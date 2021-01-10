@@ -26,7 +26,6 @@ public class FeaturesDialog extends DialogFragment {
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setView(View.inflate(getContext(), R.layout.dialog_features, null))
                 .setPositiveButton(R.string.button_done, null)
-                .setCancelable(false)
                 .create();
         dialog.setCanceledOnTouchOutside(false);
         return dialog;

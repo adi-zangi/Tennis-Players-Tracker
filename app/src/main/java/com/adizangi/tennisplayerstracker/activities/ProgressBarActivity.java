@@ -18,11 +18,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.adizangi.tennisplayerstracker.R;
-import com.adizangi.tennisplayerstracker.dialogs.ErrorDialog;
 import com.adizangi.tennisplayerstracker.dialogs.NetworkTypeDialog;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.utils_data.BackgroundManager;
@@ -51,6 +51,7 @@ public class ProgressBarActivity extends AppCompatActivity
          */
         @Override
         public void onChanged(List<WorkInfo> workInfos) {
+            Log.i("Debug", "observer called with " + workInfos.size() + "workinfos");
             if (!workInfos.isEmpty()) {
                 WorkInfo workInfo = workInfos.get(0);
                 updateProgress(workInfo);
@@ -59,13 +60,11 @@ public class ProgressBarActivity extends AppCompatActivity
                         enqueued();
                         break;
                     case RUNNING:
+                        Log.i("Debug", "Running state called");
                         running();
                         break;
                     case SUCCEEDED:
                         succeeded();
-                        break;
-                    case FAILED:
-                        failed();
                 }
             }
         }
@@ -91,6 +90,7 @@ public class ProgressBarActivity extends AppCompatActivity
         backgroundManager = new BackgroundManager(this);
         prefs = getSharedPreferences(
                 getString(R.string.shared_prefs_filename), Context.MODE_PRIVATE);
+        Log.i("Debug", "Setting observer");
         WorkManager.getInstance(this)
                 .getWorkInfosByTagLiveData(BackgroundManager.FETCH_DATA_WORK_TAG)
                 .observe(this, workStateObserver);
@@ -126,6 +126,7 @@ public class ProgressBarActivity extends AppCompatActivity
     private void initializeActivity() {
         initializeAppValues();
         NetworkTypeDialog dialog = new NetworkTypeDialog();
+        dialog.setCancelable(false);
         dialog.show(getSupportFragmentManager(), "networkType");
     }
 
@@ -227,16 +228,10 @@ public class ProgressBarActivity extends AppCompatActivity
         final int VERSION_CODE = 0;
         loadingStage.setText(R.string.text_finished);
         prefs.edit().putInt(getString(R.string.version_code_key), VERSION_CODE).apply();
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-    }
-
-    /*
-       Shows an error message on the screen
-     */
-    private void failed() {
-        ErrorDialog errorDialog = new ErrorDialog();
-        errorDialog.show(getSupportFragmentManager(), "error");
+        finish();
     }
 
 }
