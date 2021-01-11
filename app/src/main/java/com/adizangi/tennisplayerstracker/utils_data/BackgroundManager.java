@@ -19,20 +19,21 @@ import com.adizangi.tennisplayerstracker.workers.NotificationWorker;
 
 import java.util.Calendar;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import androidx.preference.PreferenceManager;
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
 import androidx.work.Data;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 public class BackgroundManager extends ContextWrapper {
 
-    public static final String FETCH_DATA_WORK_TAG = "fetchData";
-    public static final String NOTIFICATION_WORK_TAG = "notification";
+    public static final String DOWNLOAD_CONTENT_WORK_NAME = "downloadContent";
     public static final String RESCHEDULE_KEY = "reschedule";
 
     /*
@@ -59,77 +60,85 @@ public class BackgroundManager extends ContextWrapper {
     }
 
     /*
-       Schedules a chain of work that fetches data and then sends a
-       notification
-       The chain has a constraint that there is network connection
-       If connection stops, the system will retry the work as soon as possible
-       The work requests contain the tags FETCH_DATA_WORK_TAG and
-       NOTIFICATION_WORK_TAG
+       Starts a chain of background work that downloads content
+       The chain consists of a worker that fetches tennis data from the ESPN
+       website, followed by a worker that sends a notification with the
+       newest events
+       It will begin right away as long as there is network connection
+       If the network disconnects, the work will be retried as soon as possible
+       Returns an array of the UUIDs of the work requests in the chain's order
      */
-    public void fetchDataSendNotif() {
-        Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(getNetworkType())
-                .build();
-        OneTimeWorkRequest fetchDataRequest = new OneTimeWorkRequest.Builder
+    public UUID[] downloadContent() {
+        OneTimeWorkRequest fetchDataReq = new OneTimeWorkRequest.Builder
                 (FetchDataWorker.class)
-                .addTag(FETCH_DATA_WORK_TAG)
-                .setConstraints(constraints)
+                .setConstraints(new Constraints.Builder()
+                        .setRequiredNetworkType(getPermittedNetwork())
+                        .build())
                 .setBackoffCriteria(
                         BackoffPolicy.LINEAR,
                         OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
                         TimeUnit.MILLISECONDS)
                 .build();
-        OneTimeWorkRequest notificationRequest = new OneTimeWorkRequest.Builder
+        OneTimeWorkRequest notificationReq = new OneTimeWorkRequest.Builder
                 (NotificationWorker.class)
-                .addTag(NOTIFICATION_WORK_TAG)
+                .setInputData(new Data.Builder()
+                        .putBoolean(RESCHEDULE_KEY, false)
+                        .build())
                 .build();
         WorkManager.getInstance(this)
-                .beginWith(fetchDataRequest)
-                .then(notificationRequest)
+                .beginUniqueWork(DOWNLOAD_CONTENT_WORK_NAME,
+                        ExistingWorkPolicy.REPLACE,
+                        fetchDataReq)
+                .then(notificationReq)
                 .enqueue();
+        return new UUID[]{fetchDataReq.getId(), notificationReq.getId()};
     }
 
     /*
-       Schedules a chain of work that refreshes the app's data and then sends
-       a notification
-       The work is scheduled to run at midnight, but if the device is on doze
-       mode at midnight, then the work will be delayed until the device exits
-       doze mode
-       The notification worker will receive RESCHEDULE_KEY as input to indicate
-       that it should schedule this refresh sequence for the next day
+       Schedules a repeating chain of work that makes a daily update
+       The chain consists of a worker that fetches updated tennis data from the
+       ESPN website, followed by a worker that sends a notification with the
+       newest events
+       It is scheduled for midnight each day, but if the device is on doze mode
+       at midnight, it will be delayed until the device exits doze mode
+       It also requires network connection to start
+       The repeating chain is created by adding RESCHEDULE_KEY with the value
+       true, so that NotificationWorker will reschedule the next chain
      */
-    public void scheduleRefresh() {
+    public void scheduleDailyUpdates() {
         Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(getNetworkType())
+                .setRequiredNetworkType(getPermittedNetwork())
                 .build();
-        OneTimeWorkRequest fetchDataRequest = new OneTimeWorkRequest.Builder
+        OneTimeWorkRequest fetchDataReq = new OneTimeWorkRequest.Builder
                 (FetchDataWorker.class)
-                .addTag(FETCH_DATA_WORK_TAG)
                 .setConstraints(constraints)
                 .setInitialDelay(getTimeUntilMidnight(), TimeUnit.MILLISECONDS)
                 .build();
-        OneTimeWorkRequest notificationRequest = new OneTimeWorkRequest.Builder
+        OneTimeWorkRequest notificationReq = new OneTimeWorkRequest.Builder
                 (NotificationWorker.class)
-                .addTag(NOTIFICATION_WORK_TAG)
                 .setInputData(new Data.Builder()
                         .putBoolean(RESCHEDULE_KEY, true)
                         .build())
                 .build();
         WorkManager.getInstance(this)
-                .beginWith(fetchDataRequest)
-                .then(notificationRequest)
+                .beginUniqueWork(DOWNLOAD_CONTENT_WORK_NAME,
+                        ExistingWorkPolicy.REPLACE,
+                        fetchDataReq)
+                .then(notificationReq)
                 .enqueue();
     }
 
     /*
-       Cancels and reschedules the __ background work from scheduleDailyRefresh(),
-       so any changes in network preferences and the time zone will be applied
+       Cancels and reschedules the work chain that is created in
+       scheduleDailyUpdates()
+       This method can be used to apply changes in the time zone or network
+       preferences
      */
-    public void rescheduleRefresh() {
-        WorkManager workManager = WorkManager.getInstance(this);
-        workManager.cancelAllWorkByTag(FETCH_DATA_WORK_TAG);
-        workManager.cancelAllWorkByTag(NOTIFICATION_WORK_TAG);
-        scheduleRefresh();
+    public void resetDailyUpdates() {
+        /* Since the work chain was created with the REPLACE policy, it's
+           enough to call scheduleDailyUpdates()
+           The older chain will be cancelled and the newer one will replace it */
+        scheduleDailyUpdates();
     }
 
     /*
@@ -140,7 +149,7 @@ public class BackgroundManager extends ContextWrapper {
     public boolean isConnectedToNetwork() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (getNetworkType() == NetworkType.UNMETERED &&
+        if (getPermittedNetwork() == NetworkType.UNMETERED &&
                 connectivityManager.isActiveNetworkMetered()) {
             return false;
         }
@@ -155,12 +164,10 @@ public class BackgroundManager extends ContextWrapper {
     }
 
     /*
-       Returns true if notifications are enabled and today is a day of the week
-       on which the user should receive a notification, based on the current
-       selections in this app's Settings
-       Returns false otherwise
+       Returns true if notifications are enabled, and if this day of the week is
+       included in the selected notification days in Settings
      */
-    public boolean shouldNotifyToday() {
+    public boolean isNotificationEnabled() {
         SharedPreferences preferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
         boolean areNotificationsEnabled =
@@ -181,7 +188,7 @@ public class BackgroundManager extends ContextWrapper {
        permitted to use
        Returns a NetworkType that corresponds to the preference value
      */
-    private NetworkType getNetworkType() {
+    private NetworkType getPermittedNetwork() {
         SharedPreferences preferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
         boolean useUnmeteredOnly =

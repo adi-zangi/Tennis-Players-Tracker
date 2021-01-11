@@ -47,7 +47,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             networkTypePref.setChecked((boolean) newValue);
-            new BackgroundManager(requireContext()).rescheduleRefresh();
+            new BackgroundManager(requireContext()).resetDailyUpdates();
             return true;
         }
     };
@@ -71,7 +71,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
        Makes the "More notification settings" preference open the notification
        channel settings
        If notifications are on, makes the rest of the notification preferences
-       enabled
+       visible
      */
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

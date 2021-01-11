@@ -20,7 +20,7 @@ public class TimeZoneChangedReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String intentAction = intent.getAction();
         if (intentAction != null && intentAction.equals(Intent.ACTION_TIMEZONE_CHANGED)) {
-            new BackgroundManager(context).rescheduleRefresh();
+            new BackgroundManager(context).resetDailyUpdates();
         }
     }
 }

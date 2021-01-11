@@ -18,7 +18,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -29,7 +28,7 @@ import com.adizangi.tennisplayerstracker.utils_data.BackgroundManager;
 import com.adizangi.tennisplayerstracker.workers.FetchDataWorker;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
 public class ProgressBarActivity extends AppCompatActivity
         implements NetworkTypeDialog.NetworkTypeListener {
@@ -44,23 +43,20 @@ public class ProgressBarActivity extends AppCompatActivity
     private BackgroundManager backgroundManager;
     private SharedPreferences prefs;
 
-    private Observer<List<WorkInfo>> workStateObserver = new Observer<List<WorkInfo>>() {
+    private Observer<WorkInfo> workStateObserver = new Observer<WorkInfo>() {
         /*
            Called when the WorkInfo of the worker changes
            Updates the views based on the WorkInfo
          */
         @Override
-        public void onChanged(List<WorkInfo> workInfos) {
-            Log.i("Debug", "observer called with " + workInfos.size() + "workinfos");
-            if (!workInfos.isEmpty()) {
-                WorkInfo workInfo = workInfos.get(0);
+        public void onChanged(WorkInfo workInfo) {
+            if (workInfo != null) {
                 updateProgress(workInfo);
                 switch (workInfo.getState()) {
                     case ENQUEUED:
                         enqueued();
                         break;
                     case RUNNING:
-                        Log.i("Debug", "Running state called");
                         running();
                         break;
                     case SUCCEEDED:
@@ -90,10 +86,6 @@ public class ProgressBarActivity extends AppCompatActivity
         backgroundManager = new BackgroundManager(this);
         prefs = getSharedPreferences(
                 getString(R.string.shared_prefs_filename), Context.MODE_PRIVATE);
-        Log.i("Debug", "Setting observer");
-        WorkManager.getInstance(this)
-                .getWorkInfosByTagLiveData(BackgroundManager.FETCH_DATA_WORK_TAG)
-                .observe(this, workStateObserver);
         if (savedInstanceState == null) {
             initializeActivity();
         } else {
@@ -162,7 +154,10 @@ public class ProgressBarActivity extends AppCompatActivity
     public void onSelectAnyConnection() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         settings.edit().putBoolean(getString(R.string.pref_network_type_key), false).apply();
-        backgroundManager.fetchDataSendNotif();
+        UUID[] uuids = backgroundManager.downloadContent();
+        WorkManager.getInstance(this)
+                .getWorkInfoByIdLiveData(uuids[0])
+                .observe(this, workStateObserver);
     }
 
     /*
@@ -175,7 +170,10 @@ public class ProgressBarActivity extends AppCompatActivity
     public void onSelectUnmeteredOnly() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         settings.edit().putBoolean(getString(R.string.pref_network_type_key), true).apply();
-        backgroundManager.fetchDataSendNotif();
+        UUID[] uuids = backgroundManager.downloadContent();
+        WorkManager.getInstance(this)
+                .getWorkInfoByIdLiveData(uuids[0])
+                .observe(this, workStateObserver);
     }
 
     /*

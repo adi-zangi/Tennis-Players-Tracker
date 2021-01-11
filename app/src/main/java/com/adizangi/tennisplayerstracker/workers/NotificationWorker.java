@@ -7,7 +7,6 @@ package com.adizangi.tennisplayerstracker.workers;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.adizangi.tennisplayerstracker.R;
 import com.adizangi.tennisplayerstracker.activities.MainActivity;
@@ -54,7 +53,7 @@ public class NotificationWorker extends Worker {
         String contentText = fileManager.readNotificationText();
         List<String> selectedPlayers = fileManager.readSelectedPlayers();
         Map<String, PlayerStats> stats = fileManager.readPlayerStats();
-        if (backgroundManager.shouldNotifyToday() &&
+        if (backgroundManager.isNotificationEnabled() &&
                 !contentText.isEmpty() && !stats.isEmpty()) {
             contentText = addMatchesToContent(contentText, selectedPlayers, stats);
             Intent intent = new Intent(context, MainActivity.class);
@@ -71,7 +70,7 @@ public class NotificationWorker extends Worker {
             notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
         }
         if (getInputData().getBoolean(BackgroundManager.RESCHEDULE_KEY, false)) {
-            backgroundManager.scheduleRefresh();
+            backgroundManager.scheduleDailyUpdates();
         }
         return Result.success();
     }

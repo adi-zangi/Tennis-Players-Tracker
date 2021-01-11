@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.setCancelable(false);
             dialog.show(getSupportFragmentManager(), "features");
             BackgroundManager backgroundManager = new BackgroundManager(this);
-            backgroundManager.scheduleRefresh();
+            backgroundManager.scheduleDailyUpdates();
             prefs.edit().putInt(getString(R.string.version_code_key), currentVersionCode).apply();
         }
     }
