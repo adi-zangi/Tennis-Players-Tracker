@@ -113,10 +113,10 @@ public class FetchDataWorker extends Worker {
                 new SimpleDateFormat("yyyyMMdd", Locale.US);
         String dateOfYesterday = dateFormat.format(calendar.getTime());
         mRankings = Jsoup.connect
-                ("https://www.espn.com/tennis/rankings").get();
+                ("https://www.espn.com/tennis/rankings/_/season/2020").get();
         log("Got men's rankings document");
         wRankings = Jsoup.connect
-                ("https://www.espn.com/tennis/rankings/_/type/wta").get();
+                ("https://www.espn.com/tennis/rankings/_/type/wta/season/2020").get();
         log("Got women's rankings document");
         tSchedule = Jsoup.connect
                 ("http://www.espn.com/tennis/dailyResults").get();
