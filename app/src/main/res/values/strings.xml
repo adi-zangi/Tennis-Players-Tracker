@@ -8,21 +8,24 @@
     <string name="button_remove">Remove</string>
     <string name="button_done">Done</string>
     <string name="button_close">Close</string>
-    <string name="button_any_connection">Any connection</string>
-    <string name="button_unmetered_connection_only">Unmetered connection (wifi) only</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
 
     <!-- Text -->
     <string name="hint_player_search_bar">Search player</string>
     <string name="title_progress_bar">loading data&#8230;</string>
     <string name="text_preparing_to_start">Preparing to start&#8230;</string>
     <string name="text_starting">Starting</string>
-    <string name="text_stopped">Stopped</string>
     <string name="text_retrying">Preparing to retry&#8230;</string>
     <string name="text_finished">Finished</string>
-    <string name="text_no_connection">
-        No Connection
-        \nThe app will not start until there is network connection
+    <string name="text_waiting_message">
+        If this takes more than 5 seconds, internet connection may be too slow
     </string>
+    <string name="text_retrying_message">
+        If this takes more than 15 seconds, internet connection may be too slow
+    </string>
+
+    <!-- Dialogs -->
     <string name="text_welcome">
         Welcome new user! Here is how to use this app: Add instructions with pictures
     </string>
@@ -31,12 +34,13 @@
         All information presented in this app was taken from www.espn.com/tennis.
         \n\nNotification icon was taken from simpleicon.com.
     </string>
-    <string name="dialog_message_network_type">
-        This app uses the network daily for a short time (less than a minute).
-        Which types of network connection should this app use?
-    </string>
-    <string name="dialog_message_error">
-        There was an error. Admin was notified and will work on fixing it.
+    <string name="dialog_title_network_permissions">Network Permissions</string>
+    <string name="dialog_message_network_permissions">
+        This app needs to connect to the internet once a day to update its content.
+        \nConnections to the internet will be brief (up to 10 seconds per day),
+        and will use a very small amount of battery and bandwidth.
+        \nDo you want this app to use mobile data when wifi isn\'t available?
+        \n\n*this can be changed in settings later
     </string>
 
     <!-- Action Bar Items -->
@@ -65,11 +69,10 @@
     <string name="pref_more_settings_summary">Change sound, vibration, priority</string>
 
     <!-- Network Preferences -->
-    <string name="pref_network_type_key">network_type</string>
-    <string name="pref_network_type_title">Use unmetered connection only</string>
+    <string name="pref_connection_key">wifi_only</string>
+    <string name="pref_connection_title">Use wifi only</string>
     <string name="pref_network_type_summary">
-        This app uses the network daily for a short time (less than a minute).
-        If this is off, any working network connection will be used.
+        If this is off, mobile data will be used whenever wifi isn\'t available
     </string>
 
     <!-- Shared Preferences Files -->

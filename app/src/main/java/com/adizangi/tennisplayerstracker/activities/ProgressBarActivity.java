@@ -22,7 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.adizangi.tennisplayerstracker.R;
-import com.adizangi.tennisplayerstracker.dialogs.NetworkTypeDialog;
+import com.adizangi.tennisplayerstracker.dialogs.NetworkPermissionsDialog;
 import com.adizangi.tennisplayerstracker.utils_data.FileManager;
 import com.adizangi.tennisplayerstracker.utils_data.BackgroundManager;
 import com.adizangi.tennisplayerstracker.workers.FetchDataWorker;
@@ -31,37 +31,26 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class ProgressBarActivity extends AppCompatActivity
-        implements NetworkTypeDialog.NetworkTypeListener {
+        implements NetworkPermissionsDialog.OnClickListener {
 
     private static final String PROGRESS_KEY = "progress";
-    private static final String LOADING_STAGE_KEY = "loadingStage";
-    private static final String CONNECTION_WARNING_KEY = "connectionWarning";
+    private static final String PROGRESS_STATE_KEY = "progressState";
+    private static final String MESSAGE_KEY = "message";
 
     private ProgressBar progressBar;
-    private TextView loadingStage;
-    private TextView connectionWarning;
+    private TextView progressState;
+    private TextView message;
     private BackgroundManager backgroundManager;
     private SharedPreferences prefs;
 
-    private Observer<WorkInfo> workStateObserver = new Observer<WorkInfo>() {
+    private Observer<WorkInfo> workObserver = new Observer<WorkInfo>() {
         /*
            Called when the WorkInfo of the worker changes
-           Updates the views based on the WorkInfo
          */
         @Override
         public void onChanged(WorkInfo workInfo) {
             if (workInfo != null) {
-                updateProgress(workInfo);
-                switch (workInfo.getState()) {
-                    case ENQUEUED:
-                        enqueued();
-                        break;
-                    case RUNNING:
-                        running();
-                        break;
-                    case SUCCEEDED:
-                        succeeded();
-                }
+                updateScreen(workInfo);
             }
         }
     };
@@ -72,7 +61,6 @@ public class ProgressBarActivity extends AppCompatActivity
        If this activity is created for the first time, begins initializing the
        app
        If the activity was recreated, restores its previous state
-       Registers an observer for the background task that fetches initial data
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +69,8 @@ public class ProgressBarActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         progressBar = findViewById(R.id.progress_bar);
-        loadingStage = findViewById(R.id.loading_stage);
-        connectionWarning = findViewById(R.id.connection_warning);
+        progressState = findViewById(R.id.progress_state);
+        message = findViewById(R.id.message);
         backgroundManager = new BackgroundManager(this);
         prefs = getSharedPreferences(
                 getString(R.string.shared_prefs_filename), Context.MODE_PRIVATE);
@@ -94,6 +82,42 @@ public class ProgressBarActivity extends AppCompatActivity
     }
 
     /*
+       Called when the user clicks 'Yes' in the network permissions dialog,
+       which indicates the user is allowing the app to use mobile data
+       Begins downloading content using the allowed connection type
+     */
+    @Override
+    public void onSelectYes() {
+        downloadContent(false);
+    }
+
+    /*
+       Called when the user clicks 'No' in the network permissions dialog,
+       which indicates the user is not allowing the app to use mobile data
+       Begins downloading content using the allowed connection type
+     */
+    @Override
+    public void onSelectNo() {
+        downloadContent(true);
+    }
+
+    /*
+       Sets the 'use wifi only' preference in Settings to the given boolean,
+       so that the app will always use the connection type given by the boolean
+       Begins a work chain that downloads content, which consists of a worker
+       that fetches tennis data from the ESPN website, followed by a worker
+       that sends a notification with the newest events
+       Registers a live Observer for the work chain
+     */
+    private void downloadContent(boolean useWifiOnly) {
+        backgroundManager.setNetworkPreference(useWifiOnly);
+        UUID[] uuids = backgroundManager.downloadContent();
+        WorkManager.getInstance(this)
+                .getWorkInfoByIdLiveData(uuids[0])
+                .observe(this, workObserver);
+    }
+
+    /*
        Called when the activity is about to be recreated, such as when the
        screen configuration changes
        Saves the current values in the views to the given Bundle
@@ -101,8 +125,8 @@ public class ProgressBarActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(PROGRESS_KEY, progressBar.getProgress());
-        outState.putCharSequence(LOADING_STAGE_KEY, loadingStage.getText());
-        outState.putCharSequence(CONNECTION_WARNING_KEY, connectionWarning.getText());
+        outState.putCharSequence(PROGRESS_STATE_KEY, progressState.getText());
+        outState.putCharSequence(MESSAGE_KEY, message.getText());
         super.onSaveInstanceState(outState);
     }
 
@@ -117,7 +141,7 @@ public class ProgressBarActivity extends AppCompatActivity
      */
     private void initializeActivity() {
         initializeAppValues();
-        NetworkTypeDialog dialog = new NetworkTypeDialog();
+        NetworkPermissionsDialog dialog = new NetworkPermissionsDialog();
         dialog.setCancelable(false);
         dialog.show(getSupportFragmentManager(), "networkType");
     }
@@ -127,14 +151,15 @@ public class ProgressBarActivity extends AppCompatActivity
      */
     private void restoreActivity(Bundle savedInstanceState) {
         progressBar.setProgress(savedInstanceState.getInt(PROGRESS_KEY));
-        loadingStage.setText(savedInstanceState
-                .getCharSequence(LOADING_STAGE_KEY, ""));
-        connectionWarning.setText(savedInstanceState
-                .getCharSequence(CONNECTION_WARNING_KEY, ""));
+        progressState.setText(savedInstanceState
+                .getCharSequence(PROGRESS_STATE_KEY, ""));
+        message.setText(savedInstanceState
+                .getCharSequence(MESSAGE_KEY, ""));
     }
 
     /*
        Initializes this app's preferences to their default values and the list
+       * defined in preferences.xml
        of the user's selected players to an empty list
        Creates a notification channel for the app
      */
@@ -146,90 +171,46 @@ public class ProgressBarActivity extends AppCompatActivity
     }
 
     /*
-       Called when the user selects the 'any connection' option of the dialog
-       Saves this in Settings so the app will always use any connection
-       Schedules background work that fetches data and sends a notification
+       Gets the state and the progress of the background task from the given
+       WorkInfo
+       Updates the views on the screen based on the state and progress changes
      */
-    @Override
-    public void onSelectAnyConnection() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        settings.edit().putBoolean(getString(R.string.pref_network_type_key), false).apply();
-        UUID[] uuids = backgroundManager.downloadContent();
-        WorkManager.getInstance(this)
-                .getWorkInfoByIdLiveData(uuids[0])
-                .observe(this, workStateObserver);
-    }
-
-    /*
-       Called when the user selects the 'unmetered connection only' option of
-       the dialog
-       Saves this in Settings so the app will always use unmetered connection
-       Schedules background work that fetches data and sends a notification
-     */
-    @Override
-    public void onSelectUnmeteredOnly() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        settings.edit().putBoolean(getString(R.string.pref_network_type_key), true).apply();
-        UUID[] uuids = backgroundManager.downloadContent();
-        WorkManager.getInstance(this)
-                .getWorkInfoByIdLiveData(uuids[0])
-                .observe(this, workStateObserver);
-    }
-
-    /*
-       Gets the progress from the given WorkInfo and updates the progress bar
-     */
-    private void updateProgress(WorkInfo workInfo) {
+    private void updateScreen(WorkInfo workInfo) {
+        /* Updates the progress bar */
         Data progressData = workInfo.getProgress();
-        int progressPercentage = progressData.getInt(FetchDataWorker.PROGRESS_KEY, 0);
+        int progressPercentage = progressData
+                .getInt(FetchDataWorker.PROGRESS_KEY, 0);
         progressBar.setProgress(progressPercentage);
-    }
+        switch (workInfo.getState()) {
+            case ENQUEUED:
+                boolean isRetrying = prefs.getBoolean(getString(R.string.is_worker_retrying_key), false);
+                if (isRetrying) {
+                    /* Shows retrying message and sets isRetrying to false */
+                    progressState.setText(getString(R.string.text_retrying));
+                    message.setText(getString(R.string.text_retrying_message));
+                    prefs.edit().putBoolean(getString(R.string.is_worker_retrying_key), false).apply();
+                } else {
+                    /* Shows regular waiting message */
+                    progressState.setText(getString(R.string.text_preparing_to_start));
+                    message.setText(getString(R.string.text_waiting_message));
+                }
+                break;
+            case RUNNING:
+                /* Shows starting message */
+                progressState.setText(getString(R.string.text_starting));
+                break;
+            case SUCCEEDED:
+                /* Shows success message and sets the version code preference
+                   to 0 to indicate that the app has finished initializing
 
-    /*
-       If the work is waiting to start because there is no network connection,
-       shows a 'No Connection' message on the screen
-       Sets the loading stage TextView to indicate whether the worker is
-       preparing to start, retrying, or waiting for connection
-     */
-    private void enqueued() {
-        boolean isConnectedToNetwork = backgroundManager.isConnectedToNetwork();
-        boolean isRetryingWork = prefs.getBoolean(getString(R.string.is_worker_retrying_key), false);
-        if (!isConnectedToNetwork) {
-            connectionWarning.setText(R.string.text_no_connection);
+                   Switches back to MainActivity */
+                progressState.setText(R.string.text_finished);
+                prefs.edit().putInt(getString(R.string.version_code_key), 0).apply();
+                Intent intent = new Intent(this, MainActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
         }
-        if (isRetryingWork) {
-            if (isConnectedToNetwork) {
-                loadingStage.setText(getString(R.string.text_retrying));
-            } else {
-                loadingStage.setText(R.string.text_stopped);
-            }
-        } else {
-            loadingStage.setText(getString(R.string.text_preparing_to_start));
-        }
-    }
-
-    /*
-       Edits the loading stage TextView to say that the loading has started
-       If a 'No Connection' message is showing, un-shows it
-     */
-    private void running() {
-        loadingStage.setText(getString(R.string.text_starting));
-        connectionWarning.setText("");
-    }
-
-    /*
-       Edits the loading stage TextView to say that the loading is finished
-       Saves a version code in shared preferences to indicate that the app was
-       initialized, and switches back to MainActivity
-     */
-    private void succeeded() {
-        final int VERSION_CODE = 0;
-        loadingStage.setText(R.string.text_finished);
-        prefs.edit().putInt(getString(R.string.version_code_key), VERSION_CODE).apply();
-        Intent intent = new Intent(this, MainActivity.class)
-                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
     }
 
 }

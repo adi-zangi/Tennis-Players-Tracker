@@ -78,7 +78,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.preferences, rootKey);
 
         notificationsPref = findPreference(getString(R.string.pref_notifications_key));
-        networkTypePref = findPreference(getString(R.string.pref_network_type_key));
+        networkTypePref = findPreference(getString(R.string.pref_connection_key));
         daysPref = findPreference(getString(R.string.pref_notification_days_key));
         moreSettingsPref = findPreference(getString(R.string.pref_more_settings_key));
 

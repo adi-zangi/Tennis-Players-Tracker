@@ -51,41 +51,6 @@ public class FetchDataWorker extends Worker {
         super(context, workerParams);
     }
 
-    // threads-
-    // if fails, app status will be saved as failed
-    // when app is fixed, change version code so reloads- so don't need to worry about how save
-        // or add code that if there is update, run worker but don't clear data
-        // make a update activity, which does the same the progress activity except for
-        // initializing app values?
-    // don't need to save all of them at once, but need to build stats map
-    // ThreadPoolExecutor
-        // allocate threads based on the number of available cores
-        // can run many more threads than available cores- since don't use 100% of CPU
-        // core pool size = as many as possible
-        // max pool size = as many as ideally want
-    // use fixed thread pool so know how many stats to get at once
-    // if there is error, shut down the threads in the pool
-    // execute(runnable) to execute task
-    // try using 2 threads per available core
-    // Runnables can call methods in class and pass parameters, but can't use variables in class
-    // need to- get documents get all 3 things, save them, call bm (will go later),
-    // take care of errors, update progress as do this
-        // first, in doWork() get all documents and create all fetchers. fetchers are fields.
-        // comment- executes longest task in as many threads as possible, and execute faster
-        // tasks on this thread. updates observable progress.
-        // in executeInThreads(),
-            // get # of threads, which is 2 * (available cores - 1) + 1 (considering one thread is UI thread)
-            // calculate percent increase for each thread- 60% / # threads
-            // in a for loop, for # of threads, create runnable for each and in each get
-            // 100/threads players (make variable for start index)
-            // make method in stats fetcher accept a range
-            // make stats map a field. threads add sub-map to it.
-            // after for loop, on this thread, get players (20%), notification (40%), and
-            // if there is remainder to stats, get the final stats.
-            // check that getActiveCount() only counts tasks on the pool. after execute this
-            // thread, do (while (count) > 0); (just wait), and after it exits shutdown() and
-            // save all to file manager.
-
     /*
        Fetches the data in the background and saves it in files
        Updates the observable progress while the work is running
@@ -120,7 +85,7 @@ public class FetchDataWorker extends Worker {
             fileManager.storePlayerStats(stats);
             fileManager.storeNotificationText(notificationText);
             log("Stored data in files");
-            setProgress(100); log("Scheduled a notification");
+            setProgress(100);
             setIsRetrying(false);
             log("FetchDataWorker done");
             return Result.success();

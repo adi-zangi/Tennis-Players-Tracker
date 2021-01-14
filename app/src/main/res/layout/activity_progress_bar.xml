@@ -55,7 +55,7 @@
         app:layout_constraintStart_toStartOf="@+id/progress_bar" />
 
     <TextView
-        android:id="@+id/loading_stage"
+        android:id="@+id/progress_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -67,13 +67,14 @@
         app:layout_constraintTop_toBottomOf="@+id/progress_bar" />
 
     <TextView
-        android:id="@+id/connection_warning"
+        android:id="@+id/message"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:textColor="@android:color/holo_red_dark"
-        android:textSize="24sp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="96dp"
+        android:text="@string/text_waiting_message"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

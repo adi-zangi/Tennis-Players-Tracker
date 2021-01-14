@@ -60,6 +60,25 @@ public class BackgroundManager extends ContextWrapper {
     }
 
     /*
+       Returns true if notifications are enabled, and if this day of the week is
+       included in the selected notification days in Settings
+     */
+    public boolean isNotificationEnabled() {
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        boolean areNotificationsEnabled =
+                preferences.getBoolean(getString(R.string.pref_notifications_key), false);
+        Set<String> selectedDays = preferences.getStringSet(
+                getString(R.string.pref_notification_days_key), null);
+        if (areNotificationsEnabled && selectedDays != null) {
+            Calendar calendar = Calendar.getInstance();
+            String today = Integer.toString(calendar.get(Calendar.DAY_OF_WEEK));
+            return selectedDays.contains(today);
+        }
+        return false;
+    }
+
+    /*
        Starts a chain of background work that downloads content
        The chain consists of a worker that fetches tennis data from the ESPN
        website, followed by a worker that sends a notification with the
@@ -142,60 +161,30 @@ public class BackgroundManager extends ContextWrapper {
     }
 
     /*
-       Returns true if there is network connection of a type that this app is
-       permitted to use
-       Returns false otherwise
+       Sets the 'use wifi only' preference in Settings to the given boolean
      */
-    public boolean isConnectedToNetwork() {
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (getPermittedNetwork() == NetworkType.UNMETERED &&
-                connectivityManager.isActiveNetworkMetered()) {
-            return false;
-        }
-        NetworkCapabilities capabilities =
-                connectivityManager.getNetworkCapabilities(
-                        connectivityManager.getActiveNetwork());
-        return capabilities != null &&
-                (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
+    public void setNetworkPreference(boolean useWifiOnly) {
+        SharedPreferences settings =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        settings.edit().putBoolean(getString(R.string.pref_connection_key), useWifiOnly).apply();
     }
 
     /*
-       Returns true if notifications are enabled, and if this day of the week is
-       included in the selected notification days in Settings
+       Gets the value of the 'use wifi only' preference in Settings
+       If the value is true, returns NetworkType.UNMETERED
+       If the value is false, returns NetworkType.CONNECTED
      */
-    public boolean isNotificationEnabled() {
+    public NetworkType getPermittedNetwork() {
         SharedPreferences preferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
-        boolean areNotificationsEnabled =
-                preferences.getBoolean(getString(R.string.pref_notifications_key), false);
-        Set<String> selectedDays = preferences.getStringSet(
-                getString(R.string.pref_notification_days_key), null);
-        if (areNotificationsEnabled && selectedDays != null) {
-            Calendar calendar = Calendar.getInstance();
-            String today = Integer.toString(calendar.get(Calendar.DAY_OF_WEEK));
-            return selectedDays.contains(today);
-        }
-        return false;
-    }
-
-    /*
-       Gets the current value of the network type preference in this app's
-       Settings, which indicates the type of network connection this app is
-       permitted to use
-       Returns a NetworkType that corresponds to the preference value
-     */
-    private NetworkType getPermittedNetwork() {
-        SharedPreferences preferences =
-                PreferenceManager.getDefaultSharedPreferences(this);
-        boolean useUnmeteredOnly =
-                preferences.getBoolean(getString(R.string.pref_network_type_key), true);
-        if (useUnmeteredOnly) {
+        boolean useWifiOnly = preferences.getBoolean(getString(R.string.pref_connection_key), true);
+        if (useWifiOnly) {
+            /* Returns NetworkType.UNMETERED so that only unmetered connection
+               (wifi) will be used */
             return NetworkType.UNMETERED;
         } else {
+            /* Returns NetworkType.CONNECTED so that any working connection
+               will be used, including wifi and cellular data */
             return NetworkType.CONNECTED;
         }
     }

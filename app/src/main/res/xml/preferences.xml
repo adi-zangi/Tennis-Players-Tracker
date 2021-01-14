@@ -26,9 +26,9 @@
     <PreferenceCategory app:title="@string/category_network">
 
         <SwitchPreferenceCompat
-            app:key="@string/pref_network_type_key"
+            app:key="@string/pref_connection_key"
             app:summary="@string/pref_network_type_summary"
-            app:title="@string/pref_network_type_title" />
+            app:title="@string/pref_connection_title" />
 
     </PreferenceCategory>
 

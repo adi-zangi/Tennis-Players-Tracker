@@ -31,7 +31,7 @@ public class NotificationFetcher {
        May throw IOException
      */
     public String getNotificationText() throws IOException {
-        String notification = yesterdayResults() + todayNews();
+        String notification = yesterdayResults() + todaySchedule();
         return notification;
     }
 
@@ -101,7 +101,7 @@ public class NotificationFetcher {
        If there are no tournaments today, returns an empty string
        May throw IOException
      */
-    private String todayNews() throws IOException {
+    private String todaySchedule() throws IOException {
         if (tSchedule.select("h3.noMatch").size() > 0) {
             /* No matches yesterday- returns an empty string */
             return "";
