@@ -18,6 +18,9 @@ The user can also get notifications about the most recent tournaments.
   Then switch to the Stats tab by swiping on the screen or by clicking on the tab's name. This tab displays the statistics of each player including their singles titles and most recent match result: <br />
   <img src="/screenshots/view_statistics.png?raw=true" width="300" height="600" />
 </p>
+<p>
+  You can also receive notifications about the most recent tournaments: <br />
+  <img src="/screenshots/notification.png?raw=true" width="300" height="600" />
 
 ## Collaborators
 Created by Adi Zangi.
