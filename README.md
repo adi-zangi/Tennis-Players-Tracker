@@ -15,7 +15,7 @@ The user can also get notifications about the most recent tournaments.
   <img src="/screenshots/select_players.png?raw=true" width="300" height="600" />
 </p>
 <p>
-  Then switch to the Stats tab by swiping on the screen or by clicking on the tab's name. This tab displays the statistics of each player including their singles titles and most recent match result: <br />
+  Then switch to the Stats tab by swiping on the screen or by clicking on the tab's name. This tab displays the statistics of each player in your Players list including their singles titles and most recent match result: <br />
   <img src="/screenshots/view_statistics.png?raw=true" width="300" height="600" />
 </p>
 <p>
