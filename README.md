@@ -1,5 +1,5 @@
 # Tennis Players Tracker
-This app is a tool for people who like to watch professional tennis.
+This app is a tool for people who like to watch professional tennis to track their favorite players' progress in tournaments.
 
 ## Features
 The user can select tennis players and view statistics and tournament results for each of those players, which are refreshed daily.
